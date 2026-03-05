@@ -1,0 +1,121 @@
+basePath: /
+definitions:
+  dto.AuthLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.Response:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Users'
+        type: array
+      success:
+        type: boolean
+    type: object
+  dto.ResponseToken:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
+  dto.Users:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      phone:
+        type: string
+      picture:
+        type: string
+      role:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: Coffeshop BE documentation
+  title: Coffeshop Backend
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseToken'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseToken'
+      summary: Login
+      tags:
+      - Authentication
+  /users:
+    get:
+      description: Get users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Get users
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: 'Type "Bearer" followed by a space and JWT token. Example: "Bearer
+      eyJhbGciO..."'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
