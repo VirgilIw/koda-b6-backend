@@ -10,22 +10,55 @@ definitions:
     - email
     - password
     type: object
+  dto.CreateProductRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      is_birthday_package:
+        type: boolean
+      is_buyget1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  dto.CreateProductResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      is_birthday_package:
+        type: boolean
+      is_buyget1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+    type: object
   dto.Product:
     properties:
       description:
         type: string
       id:
         type: integer
-      isBirthdayPackage:
+      is_birthday_package:
         type: boolean
-      isBuy1Get1:
+      is_buyget1:
         type: boolean
-      isFlashSale:
+      is_flash_sale:
         type: boolean
       name:
         type: string
       price:
-        format: float64
         type: number
     type: object
   dto.ProductsResponse:
@@ -73,6 +106,34 @@ definitions:
         type: boolean
       token:
         type: string
+    type: object
+  dto.SingleProductResponse:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.CreateProductResponse'
+      success:
+        type: boolean
+    type: object
+  dto.UpdateProductRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      is_birthday_package:
+        type: boolean
+      is_buyget1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
     type: object
   dto.Users:
     properties:
@@ -131,6 +192,36 @@ paths:
       tags:
       - Authentication
   /products:
+    delete:
+      consumes:
+      - application/json
+      description: Delete product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - Products
     get:
       description: Get products
       produces:
@@ -151,6 +242,102 @@ paths:
       security:
       - BearerAuth: []
       summary: Get products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Create new product
+      parameters:
+      - description: Create product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+      security:
+      - BearerAuth: []
+      summary: Create product
+      tags:
+      - Products
+  /products/{id}:
+    get:
+      description: Get a single product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get product by ID
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: Update existing product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Update product
       tags:
       - Products
   /users:

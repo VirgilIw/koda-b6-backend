@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -43,5 +44,180 @@ func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 		Success: true,
 		Message: "Success get data",
 		Result:  products,
+	})
+}
+
+// bad request dari user
+// internal server dari kode kita
+
+// GetProductsById godoc
+// @Summary      Get product by ID
+// @Description  Get a single product by ID
+// @Tags         Products
+// @Produce      json
+// @Param        id   path   int  true  "Product ID"
+// @Success      200  {object}  dto.ProductsResponse
+// @Failure      400  {object}  dto.ProductsResponse
+// @Failure      500  {object}  dto.ProductsResponse
+// @Security     BearerAuth
+// @Router       /products/{id} [get]
+func (p *ProductHandler) GetProductById(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil || id <= 0 {
+		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
+			Success: false,
+			Message: "invalid id",
+			Result:  nil,
+		})
+		return
+	}
+
+	product, err := p.service.GetProductById(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, dto.ProductsResponse{
+			Success: false,
+			Message: "product not found",
+			Result:  nil,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ProductsResponse{
+		Success: true,
+		Message: "success get data by id",
+		Result:  []dto.Product{product},
+	})
+}
+
+// UpdateProduct godoc
+// @Summary      Update product
+// @Description  Update existing product
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Param        id      path  int  true  "Product ID"
+// @Param        request body  dto.UpdateProductRequest true "Update product request"
+// @Success      200  {object}  dto.ProductsResponse
+// @Failure      400  {object}  dto.ProductsResponse
+// @Failure      500  {object}  dto.ProductsResponse
+// @Security     BearerAuth
+// @Router       /products/{id} [patch]
+func (p *ProductHandler) UpdateProduct(ctx *gin.Context) {
+	var req dto.UpdateProductRequest
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
+			Success: false,
+			Message: "bad request",
+			Error:   "invalid product id",
+		})
+		return
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	req.Id = id
+
+	if err := p.service.UpdateProduct(ctx, req); err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ProductsResponse{
+			Success: false,
+			Message: "failed update product",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ProductsResponse{
+		Success: true,
+		Message: "success update product",
+	})
+}
+
+// UpdateProduct godoc
+// @Summary      Create product
+// @Description  Create new product
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Param        request body  dto.CreateProductRequest true "Create product request"
+// @Success      201  {object}  dto.SingleProductResponse
+// @Failure      400  {object}  dto.SingleProductResponse
+// @Failure      500  {object}  dto.SingleProductResponse
+// @Security     BearerAuth
+// @Router       /products [post]
+func (p *ProductHandler) CreateProduct(ctx *gin.Context) {
+	var req dto.CreateProductRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	data, err := p.service.CreateProduct(ctx.Request.Context(), req)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ProductsResponse{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, dto.SingleProductResponse{
+		Success: true,
+		Message: "success create product",
+		Result:  data,
+	})
+}
+
+// DeleteProduct godoc
+// @Summary      Delete product
+// @Description  Delete product
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Param        id      path  int  true  "Product ID"
+// @Success      200  {object}  dto.ProductsResponse
+// @Failure      400  {object}  dto.ProductsResponse
+// @Failure      500  {object}  dto.ProductsResponse
+// @Security     BearerAuth
+// @Router       /products [delete]
+func (p *ProductHandler) DeleteProduct(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	if err := p.service.DeleteProduct(ctx.Request.Context(), id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ProductsResponse{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, dto.ProductsResponse{
+		Success: true,
+		Message: "delete product success",
 	})
 }

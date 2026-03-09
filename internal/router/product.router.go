@@ -10,4 +10,8 @@ func RouterProduct(app *gin.Engine, c *di.Container) {
 	handler := c.ProductHandler()
 
 	products.GET("", handler.GetProducts)
+	products.GET("/:id", handler.GetProductById)
+	products.POST("", handler.CreateProduct)
+	products.PATCH("/:id", handler.UpdateProduct)
+	products.DELETE("/:id", handler.DeleteProduct)
 }
