@@ -14,4 +14,5 @@ func RouterUser(app *gin.Engine, c *di.Container) {
 	handler := c.UserHandler()
 
 	user.GET("", handler.GetUsers)
+	user.PATCH("", handler.UpdateProfile)
 }

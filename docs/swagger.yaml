@@ -23,6 +23,15 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseOneData:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.Users'
+      success:
+        type: boolean
+    type: object
   dto.ResponseToken:
     properties:
       error:
@@ -111,6 +120,60 @@ paths:
       security:
       - BearerAuth: []
       summary: Get users
+      tags:
+      - Users
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update the logged-in user's profile, including optional picture
+        upload
+      parameters:
+      - description: Full name
+        in: formData
+        name: fullname
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        type: string
+      - description: Phone number
+        in: formData
+        name: phone
+        type: string
+      - description: Address
+        in: formData
+        name: address
+        type: string
+      - description: Role
+        in: formData
+        name: role
+        type: string
+      - description: Profile picture
+        in: formData
+        name: picture
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+      security:
+      - BearerAuth: []
+      summary: Update profile
       tags:
       - Users
 securityDefinitions:
