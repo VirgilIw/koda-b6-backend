@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/lib"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
 )
@@ -80,4 +81,53 @@ func (u *UserService) UpdateProfile(ctx context.Context, req dto.UpdateUserReque
 	}
 
 	return user, nil
+}
+
+func (u *UserService) DeleteUser(ctx context.Context, id int) error {
+	if id <= 0 {
+		return errors.New("invalid user id")
+	}
+
+	return u.repo.DeleteUser(ctx, id)
+}
+
+func (u *UserService) CreateUser(ctx context.Context, req dto.CreateUserRequest) (dto.CreateUserResponse, error) {
+	// Mapping DTO request → Model
+	reqUser := model.UserModel{
+		FullName: req.FullName,
+		Email:    req.Email,
+		Password: req.Password, // akan di-hash
+		Phone:    &req.Phone,
+		Address:  &req.Address,
+		Picture:  &req.Picture,
+		Role:     &req.Role,
+	}
+
+	// Hash password
+	hashed, err := lib.HashPassword(reqUser.Password)
+	if err != nil {
+		return dto.CreateUserResponse{}, err
+	}
+	reqUser.Password = hashed
+
+	newUser, err := u.repo.CreateUser(ctx, reqUser)
+	if err != nil {
+		return dto.CreateUserResponse{}, err
+	}
+
+	// Mapping Model → DTO response
+	resp := dto.CreateUserResponse{
+		Id:        newUser.Id,
+		FullName:  newUser.FullName,
+		Email:     newUser.Email,
+		Phone:     *newUser.Phone,
+		Address:   *newUser.Address,
+		Picture:   *newUser.Picture,
+		Role:      *newUser.Role,
+		CreatedAt: *newUser.CreatedAt,
+		UpdatedAt: *newUser.UpdatedAt,
+		LastLogin: newUser.LastLoginAt,
+	}
+
+	return resp, nil
 }

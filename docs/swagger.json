@@ -91,6 +91,86 @@
                     }
                 }
             },
+            "post": {
+                "description": "Create user with optional picture upload",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Full Name",
+                        "name": "full_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone Number",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Role",
+                        "name": "role",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Profile Picture",
+                        "name": "picture",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "security": [
                     {
@@ -169,6 +249,52 @@
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseOneData"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete users",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
                         }
                     }
                 }
