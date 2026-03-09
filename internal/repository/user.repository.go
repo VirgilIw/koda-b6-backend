@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -22,7 +24,11 @@ func NewUserRepository(db *pgxpool.Pool, rdb *redis.Client) *UserRepository {
 }
 
 func (u *UserRepository) GetUsers(ctx context.Context) ([]model.UserModel, error) {
-	query := `
+	cachedKey := "users:all"
+	valueCache, err := u.rdb.Get(ctx, cachedKey).Result()
+
+	if err == redis.Nil {
+		query := `
 SELECT 
     id,
     fullname,
@@ -38,15 +44,28 @@ SELECT
    	lastlogin_at
 FROM users;
 	`
+		rows, err := u.db.Query(ctx, query)
+		if err != nil {
+			return nil, err
+		}
 
-	rows, err := u.db.Query(ctx, query)
-	if err != nil {
+		defer rows.Close()
+
+		users, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.UserModel])
+
+		val, err := json.Marshal(users)
+		u.rdb.Set(ctx, cachedKey, string(val), time.Minute*15)
+
+		return users, nil
+	} else if err != nil {
 		return nil, err
+	} else {
+		users := []model.UserModel{}
+		if err := json.Unmarshal([]byte(valueCache), &users); err != nil {
+			return nil, err
+		}
+		return users, nil
 	}
-
-	defer rows.Close()
-
-	return pgx.CollectRows(rows, pgx.RowToStructByName[model.UserModel])
 }
 
 func (u *UserRepository) GetByEmail(ctx context.Context, email string) (model.UserModel, error) {
