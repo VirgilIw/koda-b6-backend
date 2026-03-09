@@ -26,9 +26,10 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 // @Success      200  {object}  dto.Response
 // @Failure      400  {object}  dto.Response
 // @Failure      500  {object}  dto.Response
+// @Security     BearerAuth
 // @Router       /users [get]
 func (u *UserHandler) GetUsers(ctx *gin.Context) {
-	datas, err := u.service.GetUsers(ctx)
+	datas, err := u.service.GetUsers(ctx.Request.Context())
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.Response{

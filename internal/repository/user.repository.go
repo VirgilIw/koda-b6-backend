@@ -4,16 +4,20 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 )
 
 type UserRepository struct {
-	conn *pgx.Conn
+	db  *pgxpool.Pool
+	rdb *redis.Client
 }
 
-func NewUserRepository(conn *pgx.Conn) *UserRepository {
+func NewUserRepository(db *pgxpool.Pool, rdb *redis.Client) *UserRepository {
 	return &UserRepository{
-		conn: conn,
+		db:  db,
+		rdb: rdb,
 	}
 }
 
@@ -24,18 +28,18 @@ SELECT
     fullname,
     email,
     password,
-    COALESCE(phone, '') AS phone,
-    COALESCE(address, '') AS address,
-    COALESCE(picture, '') AS picture,
-    COALESCE(role, '') AS role,
-    COALESCE(created_at, NOW()) AS created_at,
-    COALESCE(updated_at, NOW()) AS updated_at,
+    phone,
+    address,
+    picture,
+    role,
+    created_at,
+    updated_at,
     deleted_at,
-    COALESCE(lastlogin_at, NOW()) AS lastlogin_at
+   	lastlogin_at
 FROM users;
 	`
 
-	rows, err := u.conn.Query(ctx, query)
+	rows, err := u.db.Query(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +69,7 @@ WHERE email = $1;`
 
 	var user model.UserModel
 
-	err := u.conn.QueryRow(ctx, query, email).Scan(
+	err := u.db.QueryRow(ctx, query, email).Scan(
 		&user.Id,
 		&user.FullName,
 		&user.Email,

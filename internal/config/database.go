@@ -5,40 +5,35 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func InitDB() (*pgx.Conn, error) {
+type configDB struct {
+	host     string
+	port     string
+	user     string
+	password string
+	dbName   string
+}
 
-	host := os.Getenv("PGHOST")
-	port := os.Getenv("PGPORT")
-	user := os.Getenv("PGUSER")
-	password := os.Getenv("PGPASSWORD")
-	dbName := os.Getenv("PGDATABASE")
-	sslMode := os.Getenv("PGSSLMODE")
-
-	if host == "" || port == "" || user == "" || password == "" || dbName == "" {
-		return nil, fmt.Errorf("database environment variables not set")
+func InitDB() (*pgxpool.Pool, error) {
+	config := configDB{
+		host:     os.Getenv("DB_HOST"),
+		port:     os.Getenv("DB_PORT"),
+		user:     os.Getenv("DB_USERNAME"),
+		password: os.Getenv("DB_PASSWORD"),
+		dbName:   os.Getenv("DB_NAME"),
 	}
 
-	if sslMode == "" {
-		sslMode = "disable"
-	}
-
-	connString := fmt.Sprintf(
-		"postgresql://%s:%s@%s:%s/%s?sslmode=%s",
-		user,
-		password,
-		host,
-		port,
-		dbName,
-		sslMode,
+	return pgxpool.New(
+		context.Background(),
+		fmt.Sprintf(
+			"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+			config.user,
+			config.password,
+			config.host,
+			config.port,
+			config.dbName,
+		),
 	)
-
-	conn, err := pgx.Connect(context.Background(), connString)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
 }
