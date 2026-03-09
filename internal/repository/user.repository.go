@@ -172,3 +172,59 @@ WHERE id = $9;
 
 	return nil
 }
+
+func (u *UserRepository) DeleteUser(ctx context.Context, id int) error {
+	query := `DELETE FROM users WHERE id = $1`
+	_, err := u.db.Exec(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserRepository) CreateUser(ctx context.Context, user model.UserModel) (model.UserModel, error) {
+	query := `
+INSERT INTO users (fullname, email, password, phone, address, picture, role, created_at, updated_at)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+RETURNING id, fullname, email, password, phone, address, picture, role, created_at, updated_at, deleted_at, lastlogin_at;
+`
+
+	var newUser model.UserModel
+
+	// Simpan hasil QueryRow di variable row
+	row := u.db.QueryRow(ctx, query,
+		user.FullName, // $1
+		user.Email,    // $2
+		user.Password, // $3
+		user.Phone,    // $4
+		user.Address,  // $5
+		user.Picture,  // $6
+		user.Role,     // $7
+		time.Now(),    // $8 created_at
+		time.Now(),    // $9 updated_at
+	)
+
+	// Panggil Scan dari row
+	err := row.Scan(
+		&newUser.Id,
+		&newUser.FullName,
+		&newUser.Email,
+		&newUser.Password,
+		&newUser.Phone,
+		&newUser.Address,
+		&newUser.Picture,
+		&newUser.Role,
+		&newUser.CreatedAt,
+		&newUser.UpdatedAt,
+		&newUser.DeletedAt,
+		&newUser.LastLoginAt,
+	)
+	if err != nil {
+		return model.UserModel{}, err
+	}
+
+	// Hapus cache supaya GetUsers tidak menampilkan data lama
+	u.rdb.Del(ctx, "users:all")
+
+	return newUser, nil
+}

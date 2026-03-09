@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -135,5 +136,119 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		Success: true,
 		Message: "profile updated",
 		Result:  respUser,
+	})
+}
+
+// DeleteUser godoc
+// @Summary      Delete users
+// @Description  Delete users
+// @Tags         Users
+// @Produce      json
+// @Param        id    path 	int true  "User Id"
+// @Success      200  {object}  dto.Response
+// @Failure      400  {object}  dto.Response
+// @Failure      500  {object}  dto.Response
+// @Security     BearerAuth
+// @Router       /users/{id} [delete]
+func (h *UserHandler) DeleteUser(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "bad request",
+		})
+		return
+	}
+
+	if err := h.service.DeleteUser(c.Request.Context(), id); err != nil {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "bad request",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, dto.Response{
+		Success: true,
+		Message: "success delete user",
+	})
+}
+
+// CreateUser godoc
+// @Summary      Create a new user
+// @Description  Create user with optional picture upload
+// @Tags         Users
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        full_name   formData  string  true   "Full Name"
+// @Param        email       formData  string  true   "Email"
+// @Param        password    formData  string  true   "Password"
+// @Param        phone       formData  string  false  "Phone Number"
+// @Param        address     formData  string  false  "Address"
+// @Param        role        formData  string  false  "Role"
+// @Param        picture     formData  file    false  "Profile Picture"
+// @Success      201 {object} dto.Response
+// @Failure      400 {object} dto.Response
+// @Failure      500 {object} dto.Response
+// @Router       /users [post]
+func (h *UserHandler) CreateUser(c *gin.Context) {
+	// Tangkap file gambar
+	file, err := c.FormFile("picture")
+	if err != nil && err != http.ErrMissingFile {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "failed to get picture",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	// Tangkap field lain
+	fullName := c.PostForm("fullname")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	phone := c.PostForm("phone")
+	address := c.PostForm("address")
+	role := c.PostForm("role")
+
+	// Mapping ke DTO / Model
+	req := dto.CreateUserRequest{
+		FullName: fullName,
+		Email:    email,
+		Password: password,
+		Phone:    phone,
+		Address:  address,
+		Role:     role,
+	}
+
+	if file != nil {
+		path := "./images/"
+
+		if err := c.SaveUploadedFile(file, path+file.Filename); err != nil {
+			c.JSON(http.StatusInternalServerError, dto.Response{
+				Success: false,
+				Message: "failed to save picture",
+				Error:   err.Error(),
+			})
+			return
+		}
+		req.Picture = file.Filename
+	}
+
+	// Panggil service
+	_, err = h.service.CreateUser(c.Request.Context(), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, dto.Response{
+			Success: false,
+			Message: "failed to create user",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, dto.Response{
+		Success: true,
+		Message: "create user success",
 	})
 }
