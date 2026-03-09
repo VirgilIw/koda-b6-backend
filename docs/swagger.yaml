@@ -10,6 +10,37 @@ definitions:
     - email
     - password
     type: object
+  dto.Product:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      isBirthdayPackage:
+        type: boolean
+      isBuy1Get1:
+        type: boolean
+      isFlashSale:
+        type: boolean
+      name:
+        type: string
+      price:
+        format: float64
+        type: number
+    type: object
+  dto.ProductsResponse:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Product'
+        type: array
+      success:
+        type: boolean
+    type: object
   dto.Response:
     properties:
       error:
@@ -99,6 +130,29 @@ paths:
       summary: Login
       tags:
       - Authentication
+  /products:
+    get:
+      description: Get products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get products
+      tags:
+      - Products
   /users:
     get:
       description: Get users
