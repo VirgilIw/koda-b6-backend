@@ -13,7 +13,7 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/router"
 )
 
-// @title Coffeshop BackendSELECT * FROM products
+// @title Coffeshop Backend
 // @version 1.0
 // @description Coffeshop BE documentation
 // @host localhost:8888
