@@ -93,9 +93,12 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 
 	file, err := c.FormFile("picture")
 	if err == nil {
+
+		// agar nama file tidak sama gunaakn time.now.unix
+		// filepath.base = menghapus bagian folder/path, menyisakan nama file terakhir serta ekstensi filenya.
 		filename := fmt.Sprintf("%d_%s", time.Now().Unix(), filepath.Base(file.Filename))
-		path := "./images/" + filename
-		if err := c.SaveUploadedFile(file, path); err != nil {
+		path := "./images/"
+		if err := c.SaveUploadedFile(file, path+filename); err != nil {
 			c.JSON(http.StatusInternalServerError, dto.Response{
 				Success: false,
 				Message: "failed to upload picture",
