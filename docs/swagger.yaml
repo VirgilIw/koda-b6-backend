@@ -108,6 +108,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
       summary: Get users
       tags:
       - Users
