@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/virgiIw/koda-b6-coffeshopdb/docs"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/config"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/router"
@@ -25,26 +24,25 @@ import (
 func main() {
 
 	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found")
+		log.Fatal(err)
 	}
-
-	docs.SwaggerInfo.BasePath = "/"
-
-	r := gin.Default()
 
 	db, err := config.InitDB()
-
 	if err != nil {
-		log.Fatal("Failed to connect database:", err)
+		log.Fatal(err)
 	}
 
-	defer db.Close(context.Background())
+	defer db.Close()
 
-	container := di.NewContainer(db)
+	rdb := config.InitRedis()
 
-	router.Init(r, container)
+	app := gin.Default()
+
+	container := di.NewContainer(db, rdb)
+
+	router.Init(app, container)
 
 	port := os.Getenv("PORT")
 
-	r.Run("localhost:" + port)
+	app.Run(fmt.Sprintf("localhost:%s", port))
 }
