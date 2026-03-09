@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/virgiIw/koda-b6-coffeshopdb/docs"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/middleware"
