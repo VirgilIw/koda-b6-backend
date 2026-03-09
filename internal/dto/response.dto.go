@@ -7,6 +7,12 @@ type Response struct {
 	Result  []Users `json:"result"`
 }
 
+type ResponseOneData struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Result  Users  `json:"result"`
+}
+
 type ResponseToken struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`

@@ -75,14 +75,14 @@ SELECT
     fullname,
     email,
     password,
-    COALESCE(phone, '') AS phone,
-    COALESCE(address, '') AS address,
-    COALESCE(picture, '') AS picture,
-    COALESCE(role, '') AS role,
-    COALESCE(created_at, NOW()) AS created_at,
-    COALESCE(updated_at, NOW()) AS updated_at,
+ 	phone,
+ 	address,
+	picture,
+	role,
+	created_at,
+	updated_at,
     deleted_at,
-    COALESCE(lastlogin_at, NOW()) AS lastlogin_at
+	lastlogin_at
 FROM users
 WHERE email = $1;`
 
@@ -108,4 +108,67 @@ WHERE email = $1;`
 	}
 
 	return user, nil
+}
+
+func (u *UserRepository) GetById(ctx context.Context, id int) (model.UserModel, error) {
+	query := `
+SELECT id, fullname, email, password, phone, address, picture, role, created_at, updated_at, deleted_at, lastlogin_at
+FROM users
+WHERE id = $1;
+`
+	var user model.UserModel
+	err := u.db.QueryRow(ctx, query, id).Scan(
+		&user.Id,
+		&user.FullName,
+		&user.Email,
+		&user.Password,
+		&user.Phone,
+		&user.Address,
+		&user.Picture,
+		&user.Role,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+		&user.DeletedAt,
+		&user.LastLoginAt,
+	)
+	if err != nil {
+		return model.UserModel{}, err
+	}
+	return user, nil
+}
+
+func (u *UserRepository) UpdateUser(ctx context.Context, user model.UserModel) error {
+	query := `
+UPDATE users SET
+	fullname = $1,
+	email = $2,
+	password = $3,
+	phone = $4,
+	address = $5,
+	picture = $6,
+	role = $7,
+	updated_at = $8
+WHERE id = $9;
+`
+
+	_, err := u.db.Exec(ctx, query,
+		user.FullName,
+		user.Email,
+		user.Password,
+		user.Phone,
+		user.Address,
+		user.Picture,
+		user.Role,
+		time.Now(),
+		user.Id,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	// Optional: invalidate cache
+	u.rdb.Del(ctx, "users:all")
+
+	return nil
 }
