@@ -27,7 +27,7 @@ func GenerateToken(userId int) (string, error) {
 		},
 	}
 
-	// token akan dikembalikan
+	// token akan dikembalikan dengan newwithclaims
 	// signingmethodHS256 = algoritma jwt
 	// signedstring = signature, diberikan setelah token di generate
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -39,4 +39,24 @@ func GenerateToken(userId int) (string, error) {
 
 	// struktur jwt (Header.Payload.Signature)
 	return tokenString, nil
+}
+
+func VerifyToken(tokenString string) (*CustomClaims, bool) {
+	godotenv.Load()
+	mySecret := os.Getenv("SECRET_KEY")
+
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(t *jwt.Token) (any, error) {
+		return []byte(mySecret), nil
+	})
+	// secret key harus byte slice
+	if err != nil || !token.Valid {
+		return &CustomClaims{}, false // token invalid
+	}
+
+	claims, ok := token.Claims.(*CustomClaims)
+	if !ok {
+		return &CustomClaims{}, false
+	}
+
+	return claims, true // token valid
 }
