@@ -18,6 +18,10 @@ type Container struct {
 
 	authService *service.AuthService
 	authHandler *handler.AuthHandler
+
+	productRepo    *repository.ProductRepository
+	productService *service.ProductService
+	productHandler *handler.ProductHandler
 }
 
 func NewContainer(db *pgxpool.Pool, rdb *redis.Client) *Container {
@@ -39,6 +43,10 @@ func (c *Container) initDependencies() {
 
 	c.authService = service.NewAuthService(c.userRepo)
 	c.authHandler = handler.NewAuthHandler(c.authService)
+
+	c.productRepo = repository.NewProductRepository(c.db, c.rdb)
+	c.productService = service.NewProductService(c.productRepo)
+	c.productHandler = handler.NewProductService(c.productService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -47,4 +55,8 @@ func (c *Container) UserHandler() *handler.UserHandler {
 
 func (c *Container) AuthHandler() *handler.AuthHandler {
 	return c.authHandler
+}
+
+func (c *Container) ProductHandler() *handler.ProductHandler {
+	return c.productHandler
 }
