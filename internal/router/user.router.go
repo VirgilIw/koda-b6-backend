@@ -14,6 +14,8 @@ func RouterUser(app *gin.Engine, c *di.Container) {
 	handler := c.UserHandler()
 
 	user.GET("", handler.GetUsers)
+	user.GET("/:id", handler.GetUserById)
+	user.POST("", handler.CreateUser)
 	user.PATCH("", handler.UpdateProfile)
 	user.DELETE("/:id", handler.DeleteUser)
 }
