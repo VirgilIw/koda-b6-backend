@@ -26,6 +26,10 @@ type Container struct {
 	orderRepo    *repository.OrderRepository
 	orderService *service.OrderService
 	orderHandler *handler.OrderHandler
+
+	categoryRepo    *repository.CategorieRepository
+	categoryService *service.CategorieService
+	categoryHandler *handler.CategorieHandler
 }
 
 func NewContainer(db *pgxpool.Pool, rdb *redis.Client) *Container {
@@ -55,6 +59,10 @@ func (c *Container) initDependencies() {
 	c.orderRepo = repository.NewOrderRepository(c.db)
 	c.orderService = service.NewOrderService(c.orderRepo)
 	c.orderHandler = handler.NewOrderHandler(c.orderService)
+
+	c.categoryRepo = repository.NewCategoriesRepository(c.db)
+	c.categoryService = service.NewCategoriesService(c.categoryRepo)
+	c.categoryHandler = handler.NewCategoriesHandler(c.categoryService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -71,4 +79,8 @@ func (c *Container) ProductHandler() *handler.ProductHandler {
 
 func (c *Container) OrderHandler() *handler.OrderHandler {
 	return c.orderHandler
+}
+
+func (c *Container) CategoriesHandler() *handler.CategorieHandler {
+	return c.categoryHandler
 }

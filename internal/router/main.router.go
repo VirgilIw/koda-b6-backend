@@ -20,4 +20,5 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterAuth(app, c)
 	RouterProduct(app, c)
 	RouterOrder(app, c)
+	RouterCategories(app, c)
 }
