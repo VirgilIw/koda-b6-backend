@@ -61,6 +61,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/orders/coupon/{id}": {
+            "get": {
+                "description": "Get Coupon By ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get Coupon",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Coupon ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCoupon"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCoupon"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCoupon"
+                        }
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
                 "security": [
@@ -622,6 +666,29 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.Coupon": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.CreateProductRequest": {
             "type": "object",
             "properties": {
@@ -798,6 +865,23 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/dto.Users"
                     }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseCoupon": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.Coupon"
                 },
                 "success": {
                     "type": "boolean"

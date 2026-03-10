@@ -19,4 +19,5 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterUser(app, c)
 	RouterAuth(app, c)
 	RouterProduct(app, c)
+	RouterOrder(app, c)
 }
