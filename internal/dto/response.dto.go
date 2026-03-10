@@ -77,3 +77,10 @@ type ResponseOneCoupon struct {
 	Error   string `json:"error,omitempty"`
 	Result  Coupon `json:"result"`
 }
+
+type ResponseCategories struct {
+	Success bool       `json:"success"`
+	Message string     `json:"message"`
+	Error   string     `json:"error,omitempty"`
+	Result  []Category `json:"result"`
+}

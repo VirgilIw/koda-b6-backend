@@ -10,6 +10,19 @@ definitions:
     - email
     - password
     type: object
+  dto.Category:
+    properties:
+      categories_name:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   dto.Coupon:
     properties:
       created_at:
@@ -157,6 +170,19 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseCategories:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Category'
+        type: array
+      success:
+        type: boolean
+    type: object
   dto.ResponseCoupon:
     properties:
       error:
@@ -272,6 +298,27 @@ paths:
       summary: Login
       tags:
       - Authentication
+  /categories:
+    get:
+      description: get all category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+      summary: get all category
+      tags:
+      - Category
   /coupons:
     get:
       description: Get list of coupons
