@@ -201,14 +201,14 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a single product by ID",
+                "description": "Get a single product by ID and calculate price based on selected size and variant",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Products"
                 ],
-                "summary": "Get product by ID",
+                "summary": "Get product by ID size variant",
                 "parameters": [
                     {
                         "type": "integer",
@@ -216,17 +216,37 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "Regular/Medium/Large",
+                        "description": "Size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "Hot/Iced",
+                        "description": "Variant",
+                        "name": "variant",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
+                            "$ref": "#/definitions/dto.ProductDetailResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductsResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/dto.ProductsResponse"
                         }
@@ -657,16 +677,22 @@ const docTemplate = `{
         "dto.Product": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
+                "image_path": {
+                    "type": "string"
+                },
                 "is_birthday_package": {
                     "type": "boolean"
                 },
-                "is_buyget1": {
+                "is_buy1get1": {
                     "type": "boolean"
                 },
                 "is_flash_sale": {
@@ -677,6 +703,64 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                },
+                "rating": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.ProductDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "size_prices": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "sizes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "total_testimonials": {
+                    "type": "integer"
+                },
+                "variant_prices": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "variants": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ProductDetailResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.ProductDetail"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },

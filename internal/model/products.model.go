@@ -14,3 +14,14 @@ type ProductModel struct {
 	ImagePath         *string   `db:"image_path"`
 	Rating            *float64  `db:"rating"`
 }
+
+type ProductDetail struct {
+	ID                int      `db:"id"`
+	Name              string   `db:"name"`
+	Price             int      `db:"price"`
+	Variants          string   `db:"variants"`
+	VariantPrices     []int    `db:"variant_prices"`
+	TotalTestimonials int      `db:"total_testimonials"`
+	Sizes             []string `db:"sizes"`
+	SizePrices        []int    `db:"size_prices"`
+}

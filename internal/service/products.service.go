@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -40,32 +39,6 @@ func (p *ProductService) GetProducts(ctx context.Context) ([]dto.Product, error)
 	return result, nil
 }
 
-func (p *ProductService) GetProductById(ctx context.Context, id int) (dto.Product, error) {
-	data, err := p.repo.GetProductById(ctx, id)
-
-	if err != nil {
-		return dto.Product{}, err
-	}
-
-	if id <= 0 {
-		return dto.Product{}, errors.New("invalid id")
-	}
-
-	var products dto.Product
-
-	products = dto.Product{
-		Id:                data.Id,
-		Name:              data.Name,
-		Description:       data.Description,
-		Price:             data.Price,
-		IsBuy1Get1:        data.IsBuy1Get1,
-		IsFlashSale:       data.IsFlashSale,
-		IsBirthdayPackage: data.IsBirthdayPackage,
-	}
-
-	return products, nil
-}
-
 func (p *ProductService) UpdateProduct(ctx context.Context, req dto.UpdateProductRequest) error {
 	if err := p.repo.UpdateProduct(ctx, req); err != nil {
 		return err
@@ -101,4 +74,24 @@ func (p *ProductService) DeleteProduct(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (p *ProductService) GetDetailProductById(ctx context.Context, id int, selectedSize string, selectedVariant string) (dto.ProductDetail, error) {
+	detail, err := p.repo.GetDetailProductById(ctx, id)
+	if err != nil {
+		return dto.ProductDetail{}, err
+	}
+
+	productDetail := dto.ProductDetail{
+		ID:                detail.ID,
+		Name:              detail.Name,
+		Price:             detail.Price,
+		Variants:          detail.Variants,
+		VariantPrices:     detail.VariantPrices,
+		TotalTestimonials: detail.TotalTestimonials,
+		Sizes:             detail.Sizes,
+		SizePrices:        detail.SizePrices,
+	}
+
+	return productDetail, nil
 }

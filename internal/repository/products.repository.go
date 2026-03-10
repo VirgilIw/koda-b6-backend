@@ -46,37 +46,6 @@ func (p *ProductRepository) GetProducts(ctx context.Context) ([]model.ProductMod
 	return products, nil
 }
 
-func (p *ProductRepository) GetProductById(ctx context.Context, id int) (model.ProductModel, error) {
-	query := `
-SELECT 
-    id,
-    name,
-    description,
-    price,
-    created_at,
-    updated_at,
-    deleted_at,
-    is_buy1get1,
-    is_flash_sale,
-    is_birthday_package
-FROM products
-WHERE id = $1;
-`
-
-	rows, err := p.db.Query(ctx, query, id)
-	if err != nil {
-		return model.ProductModel{}, err
-	}
-	defer rows.Close()
-
-	product, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ProductModel])
-	if err != nil {
-		return model.ProductModel{}, err
-	}
-
-	return product, nil
-}
-
 func (p *ProductRepository) UpdateProduct(ctx context.Context, req dto.UpdateProductRequest) error {
 	query := `
 	UPDATE products
@@ -161,6 +130,33 @@ func (p *ProductRepository) DeleteProduct(ctx context.Context, id int) error {
 	return nil
 }
 
-// func (p *ProductRepository) GetDetailProduct(ctx context.Context, id int) {
-// query:=`select id from`
-// }
+func (p *ProductRepository) GetDetailProductById(ctx context.Context, id int) (model.ProductDetail, error) {
+	query := `
+SELECT 
+    p.id,
+    p.name,
+    p.price,
+    string_agg(DISTINCT v.variant_name, ', ') AS variants,
+    ARRAY_AGG(DISTINCT v.additional_price) AS variant_prices,
+    COUNT(DISTINCT t.id) AS total_testimonials,
+    ARRAY_AGG(DISTINCT s.size_name) AS sizes,
+    ARRAY_AGG(DISTINCT s.additional_price) AS size_prices
+FROM products p
+LEFT JOIN product_variants pv ON pv.product_id = p.id
+LEFT JOIN variants v ON v.id = pv.variant_id
+LEFT JOIN testimonials t ON t.product_id = p.id
+LEFT JOIN product_sizes ps ON ps.product_id = p.id
+LEFT JOIN sizes s ON s.id = ps.size_id
+WHERE p.id = $1
+GROUP BY p.id, p.name,p.price;`
+
+	rows, err := p.db.Query(ctx, query, id)
+
+	if err != nil {
+		return model.ProductDetail{}, err
+	}
+
+	detail, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ProductDetail])
+
+	return detail, nil
+}

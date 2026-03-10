@@ -15,6 +15,24 @@ type Product struct {
 	Rating            float64   `json:"rating"`
 }
 
+type ProductDetail struct {
+	ID                int      `json:"id"`
+	Name              string   `json:"name"`
+	Price             int      `json:"price"`
+	Variants          string   `json:"variants"`
+	VariantPrices     []int    `json:"variant_prices"`
+	TotalTestimonials int      `json:"total_testimonials"`
+	Sizes             []string `json:"sizes"`
+	SizePrices        []int    `json:"size_prices"`
+}
+
+type ProductDetailResponse struct {
+	Success bool          `json:"success,omitempty"`
+	Message string        `json:"message,omitempty"`
+	Error   string        `json:"error,omitempty"`
+	Result  ProductDetail `json:"result,omitempty"`
+}
+
 type ProductsResponse struct {
 	Success bool      `json:"success,omitempty"`
 	Message string    `json:"message,omitempty"`

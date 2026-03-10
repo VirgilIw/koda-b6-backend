@@ -51,19 +51,22 @@ func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 // internal server dari kode kita
 
 // GetProductsById godoc
-// @Summary      Get product by ID
-// @Description  Get a single product by ID
+// @Summary      Get product by ID size variant
+// @Description  Get a single product by ID and calculate price based on selected size and variant
 // @Tags         Products
 // @Produce      json
-// @Param        id   path   int  true  "Product ID"
-// @Success      200  {object}  dto.ProductsResponse
+// @Param        id       path   int     true  "Product ID"
+// @Param        size     query  string false "Size" example(Regular/Medium/Large)
+// @Param        variant  query  string false "Variant" example(Hot/Iced)
+// @Success      200  {object}  dto.ProductDetailResponse
 // @Failure      400  {object}  dto.ProductsResponse
+// @Failure      404  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
 // @Router       /products/{id} [get]
-func (p *ProductHandler) GetProductById(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	id, err := strconv.Atoi(idParam)
+func (p *ProductHandler) GetDetailProductById(ctx *gin.Context) {
+	// ambil id dari path
+	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil || id <= 0 {
 		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
 			Success: false,
@@ -73,7 +76,11 @@ func (p *ProductHandler) GetProductById(ctx *gin.Context) {
 		return
 	}
 
-	product, err := p.service.GetProductById(ctx, id)
+	// ambil selectedSize dan selectedVariant dari query params
+	selectedSize := ctx.Query("size")
+	selectedVariant := ctx.Query("variant")
+
+	product, err := p.service.GetDetailProductById(ctx, id, selectedSize, selectedVariant)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, dto.ProductsResponse{
 			Success: false,
@@ -83,10 +90,10 @@ func (p *ProductHandler) GetProductById(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, dto.ProductsResponse{
+	ctx.JSON(http.StatusOK, dto.ProductDetailResponse{
 		Success: true,
 		Message: "success get data by id",
-		Result:  []dto.Product{product},
+		Result:  product,
 	})
 }
 
