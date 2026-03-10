@@ -11,5 +11,7 @@ func RouterOrder(app *gin.Engine, c *di.Container) {
 
 	orders.GET("/:id", handler.GetCouponById)
 	orders.GET("", handler.GetCoupons)
-
+	orders.PATCH("/:id", handler.EditCoupon)
+	orders.POST("", handler.CreateCoupon)
+	orders.DELETE("/:id", handler.DeleteCoupon)
 }
