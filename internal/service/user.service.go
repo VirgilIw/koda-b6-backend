@@ -46,6 +46,29 @@ func (u *UserService) GetUsers(ctx context.Context) ([]dto.Users, error) {
 	return result, nil
 }
 
+func (u *UserService) GetUserById(ctx context.Context, id int) (dto.Users, error) {
+	data, err := u.repo.GetById(ctx, id)
+
+	if err != nil {
+		return dto.Users{}, err
+	}
+
+	var result dto.Users
+
+	result = dto.Users{
+		Id:       data.Id,
+		FullName: data.FullName,
+		Email:    data.Email,
+		Password: data.Password,
+		Picture:  data.Picture,
+		Phone:    data.Phone,
+		Address:  data.Address,
+		Role:     data.Role,
+	}
+
+	return result, nil
+}
+
 // UpdateProfile updates user profile based on UpdateUserRequest
 func (u *UserService) UpdateProfile(ctx context.Context, req dto.UpdateUserRequest) (model.UserModel, error) {
 	user, err := u.repo.GetById(ctx, req.Id)

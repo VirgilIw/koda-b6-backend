@@ -51,6 +51,47 @@ func (u *UserHandler) GetUsers(ctx *gin.Context) {
 	})
 }
 
+// GetUsersById godoc
+// @Summary      Get users by id
+// @Description  Get users by id
+// @Tags         Users
+// @Produce      json
+// @Param        id   path  int  true  "users id"
+// @Success      200  {object}  dto.ResponseOneData
+// @Failure      400  {object}  dto.Response
+// @Failure      500  {object}  dto.Response
+// @Security     BearerAuth
+// @Router       /users/{id} [get]
+func (u *UserHandler) GetUserById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	user, err := u.service.GetUserById(ctx.Request.Context(), id)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.Response{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseOneData{
+		Success: true,
+		Message: "success get data by id",
+		Result:  user,
+	})
+}
+
 // UpdateProfile godoc
 // @Summary      Update profile
 // @Description  Update the logged-in user's profile, including optional picture upload
