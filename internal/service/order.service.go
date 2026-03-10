@@ -37,3 +37,26 @@ func (o *OrderService) GetCouponById(ctx context.Context, id int) (dto.Coupon, e
 
 	return data, nil
 }
+
+func (o *OrderService) GetCoupons(ctx context.Context) ([]dto.Coupon, error) {
+	coupon, err := o.repo.GetCoupons(ctx)
+
+	if err != nil {
+		return []dto.Coupon{}, err
+	}
+
+	var data []dto.Coupon
+
+	for _, v := range coupon {
+		data = append(data, dto.Coupon{
+			ID:          v.ID,
+			Title:       v.Title,
+			Description: v.Description,
+			Value:       v.Value,
+			Image:       v.Image,
+			CreatedAt:   v.CreatedAt,
+		})
+	}
+
+	return data, nil
+}

@@ -6,9 +6,10 @@ import (
 )
 
 func RouterOrder(app *gin.Engine, c *di.Container) {
-	orders := app.Group("/orders")
+	orders := app.Group("/coupons")
 	handler := c.OrderHandler()
 
-	orders.GET("/coupon/:id", handler.GetCouponById)
+	orders.GET("/:id", handler.GetCouponById)
+	orders.GET("", handler.GetCoupons)
 
 }

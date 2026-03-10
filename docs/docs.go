@@ -61,7 +61,33 @@ const docTemplate = `{
                 }
             }
         },
-        "/orders/coupon/{id}": {
+        "/coupons": {
+            "get": {
+                "description": "Get list of coupons",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Coupons"
+                ],
+                "summary": "Get All Coupons",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCoupon"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCoupon"
+                        }
+                    }
+                }
+            }
+        },
+        "/coupons/{id}": {
             "get": {
                 "description": "Get Coupon By ID",
                 "consumes": [
@@ -71,7 +97,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Orders"
+                    "Coupons"
                 ],
                 "summary": "Get Coupon",
                 "parameters": [
