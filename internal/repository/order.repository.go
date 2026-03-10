@@ -43,3 +43,29 @@ func (o *OrderRepository) GetCouponById(ctx context.Context, id int) (model.Coup
 
 	return data, nil
 }
+
+func (o *OrderRepository) GetCoupons(ctx context.Context) ([]model.Coupon, error) {
+	query := `  SELECT 
+		id,
+		title,
+		description,
+		value,
+		created_at,
+		image
+	FROM coupons
+`
+
+	rows, err := o.db.Query(ctx, query)
+	if err != nil {
+		return []model.Coupon{}, err
+	}
+
+	defer rows.Close()
+
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.Coupon])
+	if err != nil {
+		return []model.Coupon{}, err
+	}
+
+	return data, nil
+}

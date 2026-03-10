@@ -63,3 +63,10 @@ type ResponseCoupon struct {
 	Error   string `json:"error,omitempty"`
 	Result  Coupon `json:"result"`
 }
+
+type ResponseAllCoupon struct {
+	Success bool     `json:"success"`
+	Message string   `json:"message"`
+	Error   string   `json:"error,omitempty"`
+	Result  []Coupon `json:"result"`
+}

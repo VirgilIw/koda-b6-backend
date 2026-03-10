@@ -259,7 +259,24 @@ paths:
       summary: Login
       tags:
       - Authentication
-  /orders/coupon/{id}:
+  /coupons:
+    get:
+      description: Get list of coupons
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+      summary: Get All Coupons
+      tags:
+      - Coupons
+  /coupons/{id}:
     get:
       consumes:
       - application/json
@@ -287,7 +304,7 @@ paths:
             $ref: '#/definitions/dto.ResponseCoupon'
       summary: Get Coupon
       tags:
-      - Orders
+      - Coupons
   /products:
     delete:
       consumes:
