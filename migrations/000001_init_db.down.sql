@@ -1,0 +1,16 @@
+DROP TABLE "transaction_products";
+DROP TABLE "transactions";
+DROP TABLE "reviews";
+DROP TABLE "cart";
+DROP TABLE "product_images";
+DROP TABLE "images";
+DROP TABLE "product_variants";
+DROP TABLE "variants";
+DROP TABLE "product_sizes";
+DROP TABLE "sizes";
+DROP TABLE "product_categories";
+DROP TABLE "testimonials";
+DROP TABLE "coupons";
+DROP TABLE "products";
+DROP TABLE "categories";
+DROP TABLE "users";
