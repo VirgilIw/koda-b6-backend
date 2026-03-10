@@ -10,6 +10,21 @@ definitions:
     - email
     - password
     type: object
+  dto.Coupon:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      title:
+        type: string
+      value:
+        type: string
+    type: object
   dto.CreateProductRequest:
     properties:
       description:
@@ -129,6 +144,17 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseCoupon:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.Coupon'
+      success:
+        type: boolean
+    type: object
   dto.ResponseOneData:
     properties:
       message:
@@ -233,6 +259,35 @@ paths:
       summary: Login
       tags:
       - Authentication
+  /orders/coupon/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Coupon By ID
+      parameters:
+      - description: Coupon ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+      summary: Get Coupon
+      tags:
+      - Orders
   /products:
     delete:
       consumes:
