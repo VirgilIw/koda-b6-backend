@@ -1,3 +1,5 @@
 .env
 tmp
 note.txt
+
+query.sql

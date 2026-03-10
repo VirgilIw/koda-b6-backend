@@ -24,18 +24,16 @@ func NewProductRepository(db *pgxpool.Pool, rdb *redis.Client) *ProductRepositor
 }
 
 func (p *ProductRepository) GetProducts(ctx context.Context) ([]model.ProductModel, error) {
-	query := `SELECT 
-    id,
-    name,
-    description,
-    price,
-    created_at,
-    updated_at,
-    deleted_at,
-    is_buy1get1,
-    is_flash_sale,
-    is_birthday_package
-	FROM products Order by id;`
+	query := `select 
+    p.id, p.name, p.description, p.price,
+    p.is_flash_sale, p.is_buy1get1, p.is_birthday_package, p.created_at,
+    t.rating,i.image_path 
+	from products p
+	left join product_images pi on pi.product_id = p.id
+	left join images i on i.id = pi.image_id
+	left join testimonials t ON t.product_id = p.id
+	order by p.id;`
+
 	rows, err := p.db.Query(ctx, query)
 	if err != nil {
 		return []model.ProductModel{}, err
@@ -162,3 +160,7 @@ func (p *ProductRepository) DeleteProduct(ctx context.Context, id int) error {
 	}
 	return nil
 }
+
+// func (p *ProductRepository) GetDetailProduct(ctx context.Context, id int) {
+// query:=`select id from`
+// }
