@@ -25,6 +25,19 @@ definitions:
       value:
         type: string
     type: object
+  dto.CouponRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      title:
+        type: string
+      value:
+        type: string
+    type: object
   dto.CreateProductRequest:
     properties:
       description:
@@ -276,7 +289,64 @@ paths:
       summary: Get All Coupons
       tags:
       - Coupons
+    post:
+      consumes:
+      - application/json
+      description: Create a new coupon
+      parameters:
+      - description: Coupon request body
+        in: body
+        name: coupon
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CouponRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+      summary: Create Coupon
+      tags:
+      - Coupons
   /coupons/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a coupon
+      parameters:
+      - description: Coupon request id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+      summary: Delete Coupon
+      tags:
+      - Coupons
     get:
       consumes:
       - application/json
@@ -303,6 +373,39 @@ paths:
           schema:
             $ref: '#/definitions/dto.ResponseCoupon'
       summary: Get Coupon
+      tags:
+      - Coupons
+    patch:
+      consumes:
+      - application/json
+      description: Edit a coupon
+      parameters:
+      - description: Coupon request body
+        in: body
+        name: coupon
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CouponRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCoupon'
+      summary: Edit Coupon
       tags:
       - Coupons
   /products:

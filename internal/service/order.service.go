@@ -60,3 +60,63 @@ func (o *OrderService) GetCoupons(ctx context.Context) ([]dto.Coupon, error) {
 
 	return data, nil
 }
+
+func (o *OrderService) CreateCoupon(ctx context.Context, req dto.CouponRequest) (dto.Coupon, error) {
+	coupon, err := o.repo.CreateCoupon(ctx, req)
+
+	if err != nil {
+		return dto.Coupon{}, err
+	}
+
+	var result dto.Coupon
+
+	result = dto.Coupon{
+		ID:          coupon.ID,
+		Title:       coupon.Title,
+		Description: coupon.Description,
+		Value:       coupon.Value,
+		Image:       coupon.Image,
+	}
+
+	return result, nil
+}
+
+func (o *OrderService) EditCoupon(ctx context.Context, req dto.CouponRequest) (dto.Coupon, error) {
+	coupon, err := o.repo.EditCoupon(ctx, req)
+
+	if err != nil {
+		return dto.Coupon{}, err
+	}
+
+	var result dto.Coupon
+
+	result = dto.Coupon{
+		ID:          coupon.ID,
+		Title:       coupon.Title,
+		Description: coupon.Description,
+		Value:       coupon.Value,
+		Image:       coupon.Image,
+	}
+
+	return result, nil
+}
+
+func (o *OrderService) DeleteCoupon(ctx context.Context, id int) (dto.Coupon, error) {
+	coupon, err := o.repo.DeleteCoupon(ctx, id)
+
+	if err != nil {
+		return dto.Coupon{}, err
+	}
+
+	var result dto.Coupon
+
+	result = dto.Coupon{
+		ID:          coupon.ID,
+		Title:       coupon.Title,
+		Description: coupon.Description,
+		Value:       coupon.Value,
+		Image:       coupon.Image,
+	}
+
+	return result, nil
+}
