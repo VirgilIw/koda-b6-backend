@@ -4,3 +4,9 @@ type ForgotPwdRequest struct {
 	Email   string `json:"email" validate:"required,email"`
 	CodeOtp int    `json:"code_otp" validate:"required"`
 }
+
+type ResetPasswordRequest struct {
+	Email       string
+	CodeOtp     int
+	NewPassword string
+}
