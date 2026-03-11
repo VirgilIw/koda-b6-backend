@@ -5,7 +5,7 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
 )
 
-func RouterCategories(app *gin.Engine, c *di.Container) {
+func RouterCategories(app *gin.RouterGroup, c *di.Container) {
 	categories := app.Group("/categories")
 	handler := c.CategoriesHandler()
 

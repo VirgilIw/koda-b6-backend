@@ -5,7 +5,7 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
 )
 
-func RouterProduct(app *gin.Engine, c *di.Container) {
+func RouterProduct(app *gin.RouterGroup, c *di.Container) {
 	products := app.Group("/products")
 	handler := c.ProductHandler()
 

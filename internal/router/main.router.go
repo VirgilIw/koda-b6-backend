@@ -16,10 +16,15 @@ func Init(app *gin.Engine, c *di.Container) {
 
 	app.Use(middleware.CorsMiddleware())
 
-	RouterUser(app, c)
+	// auth tetap public
 	RouterAuth(app, c)
-	RouterProduct(app, c)
-	RouterOrder(app, c)
-	RouterCategories(app, c)
-	RouterSizes(app, c)
+
+	// admin routes
+	admin := app.Group("/admin")
+
+	RouterUser(admin, c)
+	RouterProduct(admin, c)
+	RouterOrder(admin, c)
+	RouterCategories(admin, c)
+	RouterSizes(admin, c)
 }
