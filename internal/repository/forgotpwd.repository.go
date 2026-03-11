@@ -19,6 +19,7 @@ func NewForgotPwdRepository(db *pgxpool.Pool) *ForgotPwdRepository {
 	}
 }
 
+// request masuk, bakal compare dengan data dari table
 func (f *ForgotPwdRepository) GetDataByEmailAndCode(ctx context.Context, req dto.ForgotPwdRequest) (model.ForgotPassword, error) {
 	query := `SELECT id, email, code_otp, created_at
 				FROM forgot_password
