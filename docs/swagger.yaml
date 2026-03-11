@@ -88,7 +88,7 @@ definitions:
       name:
         type: string
       price:
-        type: number
+        type: integer
     type: object
   dto.ForgotPwdRequest:
     properties:
@@ -123,9 +123,7 @@ definitions:
       name:
         type: string
       price:
-        type: number
-      rating:
-        type: number
+        type: integer
     type: object
   dto.ProductDetail:
     properties:
@@ -163,6 +161,21 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ProductRecommendedResponse:
+    properties:
+      id:
+        type: integer
+      image_path:
+        type: string
+      message:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      rating:
+        type: number
+    type: object
   dto.ProductsResponse:
     properties:
       error:
@@ -178,11 +191,14 @@ definitions:
     type: object
   dto.ResetPasswordRequest:
     properties:
-      codeOtp:
+      code_otp:
+        example: 123456
         type: integer
       email:
+        example: user@email.com
         type: string
-      newPassword:
+      new_password:
+        example: newpassword123
         type: string
     type: object
   dto.Response:
@@ -250,6 +266,19 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/dto.Users'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseRecommended:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.ProductRecommendedResponse'
+        type: array
       success:
         type: boolean
     type: object
@@ -373,6 +402,170 @@ info:
   title: Coffeshop Backend
   version: "1.0"
 paths:
+  /admin/products:
+    delete:
+      consumes:
+      - application/json
+      description: Delete product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      description: Get products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Create new product
+      parameters:
+      - description: Create product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SingleProductResponse'
+      security:
+      - BearerAuth: []
+      summary: Create product
+      tags:
+      - Products
+  /admin/products/{id}:
+    get:
+      description: Get a single product by ID and calculate price based on selected
+        size and variant
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Size
+        example: Regular/Medium/Large
+        in: query
+        name: size
+        type: string
+      - description: Variant
+        example: Hot/Iced
+        in: query
+        name: variant
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get product by ID size variant
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: Update existing product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Update product
+      tags:
+      - Products
   /auth/forgot-password:
     post:
       consumes:
@@ -394,10 +587,6 @@ paths:
             $ref: '#/definitions/dto.ResponseForgotPwd'
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseForgotPwd'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/dto.ResponseForgotPwd'
       summary: Request OTP for forgot password
@@ -449,15 +638,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: Password reset successfully
+          description: OK
           schema:
             $ref: '#/definitions/dto.ResponseResetPwd'
         "400":
-          description: Invalid request or OTP
-          schema:
-            $ref: '#/definitions/dto.ResponseResetPwd'
-        "500":
-          description: Internal server error
+          description: Bad Request
           schema:
             $ref: '#/definitions/dto.ResponseResetPwd'
       summary: Reset user password
@@ -740,170 +925,25 @@ paths:
       summary: Edit Coupon
       tags:
       - Coupons
-  /products:
-    delete:
-      consumes:
-      - application/json
-      description: Delete product
-      parameters:
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete product
-      tags:
-      - Products
+  /recommended-products:
     get:
-      description: Get products
+      description: Get recommended product based on minimum 3 reviews
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
+            $ref: '#/definitions/dto.ResponseRecommended'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/dto.ProductsResponse'
+            $ref: '#/definitions/dto.ResponseRecommended'
       security:
       - BearerAuth: []
-      summary: Get products
+      summary: Get Recommended product
       tags:
-      - Products
-    post:
-      consumes:
-      - application/json
-      description: Create new product
-      parameters:
-      - description: Create product request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateProductRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.SingleProductResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.SingleProductResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.SingleProductResponse'
-      security:
-      - BearerAuth: []
-      summary: Create product
-      tags:
-      - Products
-  /products/{id}:
-    get:
-      description: Get a single product by ID and calculate price based on selected
-        size and variant
-      parameters:
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Size
-        example: Regular/Medium/Large
-        in: query
-        name: size
-        type: string
-      - description: Variant
-        example: Hot/Iced
-        in: query
-        name: variant
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-      security:
-      - BearerAuth: []
-      summary: Get product by ID size variant
-      tags:
-      - Products
-    patch:
-      consumes:
-      - application/json
-      description: Update existing product
-      parameters:
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update product request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UpdateProductRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-      security:
-      - BearerAuth: []
-      summary: Update product
-      tags:
-      - Products
+      - Recommended Products
   /sizes:
     get:
       consumes:

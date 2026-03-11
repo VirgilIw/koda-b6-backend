@@ -28,7 +28,7 @@ func NewProductService(service *service.ProductService) *ProductHandler {
 // @Failure      400  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
-// @Router       /products [get]
+// @Router       /admin/products [get]
 func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 	products, err := p.service.GetProducts(ctx.Request.Context())
 	if err != nil {
@@ -63,7 +63,7 @@ func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 // @Failure      404  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
-// @Router       /products/{id} [get]
+// @Router       /admin/products/{id} [get]
 func (p *ProductHandler) GetDetailProductById(ctx *gin.Context) {
 	// ambil id dari path
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -109,7 +109,7 @@ func (p *ProductHandler) GetDetailProductById(ctx *gin.Context) {
 // @Failure      400  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
-// @Router       /products/{id} [patch]
+// @Router       /admin/products/{id} [patch]
 func (p *ProductHandler) UpdateProduct(ctx *gin.Context) {
 	var req dto.UpdateProductRequest
 
@@ -160,7 +160,7 @@ func (p *ProductHandler) UpdateProduct(ctx *gin.Context) {
 // @Failure      400  {object}  dto.SingleProductResponse
 // @Failure      500  {object}  dto.SingleProductResponse
 // @Security     BearerAuth
-// @Router       /products [post]
+// @Router       /admin/products [post]
 func (p *ProductHandler) CreateProduct(ctx *gin.Context) {
 	var req dto.CreateProductRequest
 
@@ -202,7 +202,7 @@ func (p *ProductHandler) CreateProduct(ctx *gin.Context) {
 // @Failure      400  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
-// @Router       /products [delete]
+// @Router       /admin/products [delete]
 func (p *ProductHandler) DeleteProduct(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 
