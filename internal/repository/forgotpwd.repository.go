@@ -19,48 +19,14 @@ func NewForgotPwdRepository(db *pgxpool.Pool) *ForgotPwdRepository {
 	}
 }
 
-// request masuk, bakal compare dengan data dari table
-func (f *ForgotPwdRepository) GetDataByEmailAndCode(ctx context.Context, req dto.ForgotPwdRequest) (model.ForgotPassword, error) {
-	query := `SELECT id, email, code_otp, created_at
-				FROM forgot_password
-				WHERE email = $1 AND code_otp = $2`
-
-	rows, err := f.db.Query(ctx, query, req.Email, req.CodeOtp)
-
-	if err != nil {
-		return model.ForgotPassword{}, err
-	}
-
-	forgotPwd, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ForgotPassword])
-
-	if err != nil {
-		return model.ForgotPassword{}, err
-	}
-
-	return forgotPwd, nil
-
-}
-
-func (f *ForgotPwdRepository) DeleteDataByCode(ctx context.Context, req dto.ForgotPwdRequest) error {
-	query := `DELETE FROM forgot_password WHERE code_otp = $1; `
-
-	_, err := f.db.Exec(ctx, query, req.CodeOtp)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (f *ForgotPwdRepository) CreateForgotRequest(ctx context.Context, req dto.ForgotPwdRequest) (model.ForgotPassword, error) {
+func (f *ForgotPwdRepository) GetDataByEmailAndCode(ctx context.Context, req dto.ForgotPwdRequest, codeOtp int) (model.ForgotPassword, error) {
 	query := `
-		INSERT INTO forgot_password (email, code_otp)
-		VALUES ($1, $2)
-		RETURNING id, email, code_otp, created_at
+		SELECT id, email, code_otp, created_at
+		FROM forgot_password
+		WHERE email = $1 AND code_otp = $2
 	`
 
-	rows, err := f.db.Query(ctx, query, req.Email, req.CodeOtp)
+	rows, err := f.db.Query(ctx, query, req.Email, codeOtp)
 
 	if err != nil {
 		return model.ForgotPassword{}, err
@@ -72,5 +38,42 @@ func (f *ForgotPwdRepository) CreateForgotRequest(ctx context.Context, req dto.F
 		return model.ForgotPassword{}, err
 	}
 
+	return data, nil
+}
+
+func (f *ForgotPwdRepository) DeleteDataByCode(ctx context.Context, req dto.ForgotPwdRequest, codeOtp int) error {
+
+	query := `
+		DELETE FROM forgot_password
+		WHERE email = $1 AND code_otp = $2
+	`
+
+	_, err := f.db.Exec(ctx, query, req.Email, codeOtp)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (f *ForgotPwdRepository) CreateForgotRequest(ctx context.Context, req dto.ForgotPwdRequest, codeOtp int) (model.ForgotPassword, error) {
+
+	query := `
+		INSERT INTO forgot_password (email, code_otp)
+		VALUES ($1, $2)
+		RETURNING id, email, code_otp, created_at
+	`
+
+	rows, err := f.db.Query(ctx, query, req.Email, codeOtp)
+
+	if err != nil {
+		return model.ForgotPassword{}, err
+	}
+	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ForgotPassword])
+
+	if err != nil {
+		return model.ForgotPassword{}, err
+	}
 	return data, nil
 }

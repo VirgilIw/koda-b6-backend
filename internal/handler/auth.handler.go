@@ -9,12 +9,14 @@ import (
 )
 
 type AuthHandler struct {
-	service *service.AuthService
+	authService   *service.AuthService
+	forgotService *service.ForgotPwdService
 }
 
-func NewAuthHandler(service *service.AuthService) *AuthHandler {
+func NewAuthHandler(authService *service.AuthService, forgotService *service.ForgotPwdService) *AuthHandler {
 	return &AuthHandler{
-		service: service,
+		authService:   authService,
+		forgotService: forgotService,
 	}
 }
 
@@ -41,7 +43,7 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 		return
 	}
 
-	token := l.service.AuthLogin(ctx, data.Email, data.Password)
+	token := l.authService.AuthLogin(ctx, data.Email, data.Password)
 
 	if token != "" {
 		ctx.JSON(http.StatusOK, dto.ResponseToken{
@@ -56,5 +58,79 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 		Success: false,
 		Message: "login failed",
 		Error:   "invalid email or password",
+	})
+}
+
+// ForgotPassword godoc
+// @Summary Request OTP for forgot password
+// @Description Send OTP code to user's email for password reset
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body dto.ForgotPwdRequest true "Forgot Password Request"
+// @Success 200 {object} dto.ResponseForgotPwd
+// @Failure 400 {object} dto.ResponseForgotPwd
+// @Router /auth/forgot-password [post]
+func (a *AuthHandler) ForgotPassword(ctx *gin.Context) {
+
+	var req dto.ForgotPwdRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseForgotPwd{
+			Success: false,
+			Message: "invalid request body",
+		})
+		return
+	}
+
+	result, err := a.forgotService.RequestForgotPassword(ctx.Request.Context(), req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseForgotPwd{
+			Success: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseForgotPwd{
+		Success: true,
+		Message: "OTP sent to email",
+		Result:  result,
+	})
+}
+
+// ResetPassword godoc
+// @Summary Reset user password
+// @Description Reset password using OTP sent to user's email
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body dto.ResetPasswordRequest true "Reset Password Request"
+// @Success 200 {object} dto.ResponseResetPwd
+// @Failure 400 {object} dto.ResponseResetPwd
+// @Router /auth/reset-password [patch]
+func (a *AuthHandler) ResetPassword(ctx *gin.Context) {
+	var req dto.ResetPasswordRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseResetPwd{
+			Success: false,
+			Message: "invalid request body",
+		})
+		return
+	}
+
+	err := a.forgotService.ResetPassword(ctx.Request.Context(), req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseResetPwd{
+			Success: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseResetPwd{
+		Success: true,
+		Message: "password reset successful",
 	})
 }

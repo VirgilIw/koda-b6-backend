@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/auth/forgot-password": {
             "post": {
-                "description": "Endpoint to request a one-time password (OTP) when a user forgets their password. The OTP will be sent to the user's email.",
+                "description": "Send OTP code to user's email for password reset",
                 "consumes": [
                     "application/json"
                 ],
@@ -41,19 +41,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OTP sent successfully (do not expose OTP)",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseForgotPwd"
                         }
                     },
                     "400": {
-                        "description": "Bad request or email not found",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseForgotPwd"
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseForgotPwd"
                         }
@@ -102,6 +102,52 @@ const docTemplate = `{
                         "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "patch": {
+                "description": "Reset password using OTP sent to user's email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset user password",
+                "parameters": [
+                    {
+                        "description": "Reset Password Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResetPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseResetPwd"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or OTP",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseResetPwd"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseResetPwd"
                         }
                     }
                 }
@@ -1349,13 +1395,9 @@ const docTemplate = `{
         "dto.ForgotPwdRequest": {
             "type": "object",
             "required": [
-                "code_otp",
                 "email"
             ],
             "properties": {
-                "code_otp": {
-                    "type": "integer"
-                },
                 "email": {
                     "type": "string"
                 }
@@ -1482,6 +1524,20 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ResetPasswordRequest": {
+            "type": "object",
+            "properties": {
+                "codeOtp": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "newPassword": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.Response": {
             "type": "object",
             "properties": {
@@ -1581,6 +1637,20 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/dto.Users"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseResetPwd": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
                 },
                 "success": {
                     "type": "boolean"

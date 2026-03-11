@@ -10,4 +10,6 @@ func RouterAuth(app *gin.Engine, c *di.Container) {
 	handler := c.AuthHandler()
 
 	auth.POST("/login", handler.AuthLogin)
+	auth.PATCH("/reset-password", handler.ResetPassword)
+	auth.POST("/forgot-password", handler.ForgotPassword)
 }

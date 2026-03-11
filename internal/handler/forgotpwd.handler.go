@@ -1,61 +1,96 @@
 package handler
 
-import (
-	"net/http"
+// import (
+// 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
-	"github.com/virgiIw/koda-b6-coffeshopdb/internal/service"
-)
+// 	"github.com/gin-gonic/gin"
+// 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
+// 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/service"
+// )
 
-type ForgotPwdHandler struct {
-	service *service.ForgotPwdService
-}
+// type ForgotPwdHandler struct {
+// 	service *service.ForgotPwdService
+// }
 
-func NewForgotPwdHandler(service *service.ForgotPwdService) *ForgotPwdHandler {
-	return &ForgotPwdHandler{
-		service: service,
-	}
-}
+// func NewForgotPwdHandler(service *service.ForgotPwdService) *ForgotPwdHandler {
+// 	return &ForgotPwdHandler{
+// 		service: service,
+// 	}
+// }
 
-// ForgotPassword godoc
-// @Summary      Request OTP for forgot password
-// @Description  Endpoint to request a one-time password (OTP) when a user forgets their password. The OTP will be sent to the user's email.
-// @Tags         Authentication
-// @Accept       json
-// @Produce      json
-// @Param        request  body     dto.ForgotPwdRequest  true  "Forgot Password Request"
-// @Success      200     {object}  dto.ResponseForgotPwd "OTP sent successfully (do not expose OTP)"
-// @Failure      400     {object}  dto.ResponseForgotPwd   "Bad request or email not found"
-// @Failure      500     {object}  dto.ResponseForgotPwd   "Internal server error"
-// @Router       /auth/forgot-password [post]
-func (f *ForgotPwdHandler) ForgotPassword(ctx *gin.Context) {
+// // ForgotPassword godoc
+// // @Summary Request OTP for forgot password
+// // @Description Send OTP code to user's email for password reset
+// // @Tags Authentication
+// // @Accept json
+// // @Produce json
+// // @Param request body dto.ForgotPwdRequest true "Forgot Password Request"
+// // @Success 200 {object} dto.ResponseForgotPwd
+// // @Failure 400 {object} dto.ResponseForgotPwd
+// // @Failure 500 {object} dto.ResponseForgotPwd
+// // @Router /auth/forgot-password [post]
+// func (f *ForgotPwdHandler) ForgotPassword(ctx *gin.Context) {
 
-	var req dto.ForgotPwdRequest
+// 	var req dto.ForgotPwdRequest
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, dto.ResponseForgotPwd{
-			Success: false,
-			Message: "bad request",
-			Error:   err.Error(),
-		})
-		return
-	}
+// 	if err := ctx.ShouldBindJSON(&req); err != nil {
+// 		ctx.JSON(http.StatusBadRequest, dto.ResponseForgotPwd{
+// 			Success: false,
+// 			Message: "invalid request body",
+// 		})
+// 		return
+// 	}
 
-	fpwd, err := f.service.RequestForgotPassword(ctx.Request.Context(), req)
+// 	result, err := f.service.RequestForgotPassword(ctx.Request.Context(), req)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusBadRequest, dto.ResponseForgotPwd{
+// 			Success: false,
+// 			Message: err.Error(),
+// 		})
+// 		return
+// 	}
 
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, dto.ResponseForgotPwd{
-			Success: false,
-			Message: "internal server error",
-			Error:   err.Error(),
-		})
-		return
-	}
+// 	ctx.JSON(http.StatusOK, dto.ResponseForgotPwd{
+// 		Success: true,
+// 		Message: "OTP sent to email",
+// 		Result:  result,
+// 	})
+// }
 
-	ctx.JSON(http.StatusOK, dto.ResponseForgotPwd{
-		Success: true,
-		Message: "success forgot password",
-		Result:  fpwd,
-	})
-}
+// // ResetPassword godoc
+// // @Summary Reset user password
+// // @Description Reset password using OTP sent to user's email
+// // @Tags Authentication
+// // @Accept json
+// // @Produce json
+// // @Param request body dto.ResetPasswordRequest true "Reset Password Request"
+// // @Success 200 {object} dto.ResponseResetPwd "Password reset successfully"
+// // @Failure 400 {object} dto.ResponseResetPwd "Invalid request or OTP"
+// // @Failure 500 {object} dto.ResponseResetPwd "Internal server error"
+// // @Router /auth/reset-password [patch]
+// func (f *ForgotPwdHandler) ResetPassword(ctx *gin.Context) {
+
+// 	var req dto.ResetPasswordRequest
+
+// 	if err := ctx.ShouldBindJSON(&req); err != nil {
+// 		ctx.JSON(http.StatusBadRequest, dto.ResponseResetPwd{
+// 			Success: false,
+// 			Message: "invalid request body",
+// 		})
+// 		return
+// 	}
+
+// 	err := f.service.ResetPassword(ctx.Request.Context(), req)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusBadRequest, dto.ResponseResetPwd{
+// 			Success: false,
+// 			Message: err.Error(),
+// 		})
+// 		return
+// 	}
+
+// 	ctx.JSON(http.StatusOK, dto.ResponseResetPwd{
+// 		Success: true,
+// 		Message: "password reset successful",
+// 	})
+// }
