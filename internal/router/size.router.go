@@ -11,5 +11,6 @@ func RouterSizes(app *gin.Engine, c *di.Container) {
 
 	sizes.GET("", handler.GetSizes)
 	sizes.GET("/:id", handler.GetSizeByID)
+	sizes.PATCH("/:id", handler.UpdateSize)
 
 }

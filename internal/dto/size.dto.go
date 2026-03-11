@@ -3,7 +3,7 @@ package dto
 import "time"
 
 type Size struct {
-	ID              int        `json:"id"`
+	ID              int        `json:"id,omitempty"`
 	SizeName        string     `json:"size_name"`
 	CreatedAt       time.Time  `json:"created_at"`
 	UpdatedAt       *time.Time `json:"updated_at,omitempty"`
@@ -11,16 +11,13 @@ type Size struct {
 	AdditionalPrice int        `json:"additional_price"`
 }
 
-type ResponseSizes struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-	Error   string `json:"error,omitempty"`
-	Result  []Size `json:"result,omitempty"`
+type SizeRequest struct {
+	ID              int    `json:"id"`
+	SizeName        string `json:"size_name"`
+	AdditionalPrice int    `json:"additional_price"`
 }
 
-type ResponseSize struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-	Error   string `json:"error,omitempty"`
-	Result  Size   `json:"result,omitempty"`
+type SizeUpdateRequest struct {
+	SizeName        string `json:"size_name"`
+	AdditionalPrice int    `json:"additional_price"`
 }

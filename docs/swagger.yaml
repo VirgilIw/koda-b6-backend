@@ -280,6 +280,13 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.SizeUpdateRequest:
+    properties:
+      additional_price:
+        type: integer
+      size_name:
+        type: string
+    type: object
   dto.UpdateProductRequest:
     properties:
       description:
@@ -844,6 +851,44 @@ paths:
           schema:
             $ref: '#/definitions/dto.ResponseSize'
       summary: get size by id
+      tags:
+      - Sizes
+    patch:
+      consumes:
+      - application/json
+      description: update size by id
+      parameters:
+      - description: size id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update size request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SizeUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+      summary: update size
       tags:
       - Sizes
   /users:
