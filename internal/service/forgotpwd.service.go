@@ -10,19 +10,19 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
 )
 
-type ForgotService struct {
+type ForgotPwdService struct {
 	fpwdRepo *repository.ForgotPwdRepository
 	userRepo *repository.UserRepository
 }
 
-func NewForgotService(fpwdrepo *repository.ForgotPwdRepository, userRepo *repository.UserRepository) *ForgotService {
-	return &ForgotService{
+func NewForgotService(fpwdrepo *repository.ForgotPwdRepository, userRepo *repository.UserRepository) *ForgotPwdService {
+	return &ForgotPwdService{
 		fpwdRepo: fpwdrepo,
 		userRepo: userRepo,
 	}
 }
 
-func (f *ForgotService) RequestForgotPassword(ctx context.Context, req dto.ForgotPwdRequest) (dto.ForgotPwdResponse, error) {
+func (f *ForgotPwdService) RequestForgotPassword(ctx context.Context, req dto.ForgotPwdRequest) (dto.ForgotPwdResponse, error) {
 	// pastikan email ada di repo user
 	user, err := f.userRepo.GetByEmail(ctx, req.Email)
 	if err != nil {
@@ -54,7 +54,7 @@ func (f *ForgotService) RequestForgotPassword(ctx context.Context, req dto.Forgo
 	return forgotResp, nil
 }
 
-func (f *ForgotService) ResetPassword(ctx context.Context, req dto.ResetPasswordRequest) error {
+func (f *ForgotPwdService) ResetPassword(ctx context.Context, req dto.ResetPasswordRequest) error {
 
 	// verifikasi OTP valid atau gak
 	forgotData, err := f.fpwdRepo.GetDataByEmailAndCode(ctx, dto.ForgotPwdRequest{

@@ -90,6 +90,23 @@ definitions:
       price:
         type: number
     type: object
+  dto.ForgotPwdRequest:
+    properties:
+      code_otp:
+        type: integer
+      email:
+        type: string
+    required:
+    - code_otp
+    - email
+    type: object
+  dto.ForgotPwdResponse:
+    properties:
+      codeOtp:
+        type: integer
+      email:
+        type: string
+    type: object
   dto.Product:
     properties:
       created_at:
@@ -207,6 +224,17 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/dto.Coupon'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseForgotPwd:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.ForgotPwdResponse'
       success:
         type: boolean
     type: object
@@ -330,6 +358,37 @@ info:
   title: Coffeshop Backend
   version: "1.0"
 paths:
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Endpoint to request a one-time password (OTP) when a user forgets
+        their password. The OTP will be sent to the user's email.
+      parameters:
+      - description: Forgot Password Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ForgotPwdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully (do not expose OTP)
+          schema:
+            $ref: '#/definitions/dto.ResponseForgotPwd'
+        "400":
+          description: Bad request or email not found
+          schema:
+            $ref: '#/definitions/dto.ResponseForgotPwd'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseForgotPwd'
+      summary: Request OTP for forgot password
+      tags:
+      - Authentication
   /auth/login:
     post:
       consumes:

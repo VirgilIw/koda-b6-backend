@@ -15,6 +15,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/forgot-password": {
+            "post": {
+                "description": "Endpoint to request a one-time password (OTP) when a user forgets their password. The OTP will be sent to the user's email.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Request OTP for forgot password",
+                "parameters": [
+                    {
+                        "description": "Forgot Password Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ForgotPwdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP sent successfully (do not expose OTP)",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseForgotPwd"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request or email not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseForgotPwd"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseForgotPwd"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Authenticate user and return JWT token",
@@ -1300,6 +1346,32 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ForgotPwdRequest": {
+            "type": "object",
+            "required": [
+                "code_otp",
+                "email"
+            ],
+            "properties": {
+                "code_otp": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ForgotPwdResponse": {
+            "type": "object",
+            "properties": {
+                "codeOtp": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.Product": {
             "type": "object",
             "properties": {
@@ -1478,6 +1550,23 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/dto.Coupon"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseForgotPwd": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.ForgotPwdResponse"
                 },
                 "success": {
                     "type": "boolean"
