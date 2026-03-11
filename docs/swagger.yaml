@@ -219,6 +219,30 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseSize:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.Size'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseSizes:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Size'
+        type: array
+      success:
+        type: boolean
+    type: object
   dto.ResponseToken:
     properties:
       error:
@@ -240,6 +264,21 @@ definitions:
         $ref: '#/definitions/dto.CreateProductResponse'
       success:
         type: boolean
+    type: object
+  dto.Size:
+    properties:
+      additional_price:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      size_name:
+        type: string
+      updated_at:
+        type: string
     type: object
   dto.UpdateProductRequest:
     properties:
@@ -755,6 +794,58 @@ paths:
       summary: Update product
       tags:
       - Products
+  /sizes:
+    get:
+      consumes:
+      - application/json
+      description: Get all sizes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSizes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSizes'
+      summary: get all sizes
+      tags:
+      - Sizes
+  /sizes/{id}:
+    get:
+      consumes:
+      - application/json
+      description: retrieve size by id
+      parameters:
+      - description: size id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+      summary: get size by id
+      tags:
+      - Sizes
   /users:
     get:
       description: Get users
