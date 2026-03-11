@@ -5,6 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 )
 
@@ -42,6 +43,28 @@ func (s *SizesRepository) GetSizeById(ctx context.Context, id int) (model.Size, 
 			  WHERE ID = $1;`
 
 	rows, err := s.db.Query(ctx, query, id)
+	if err != nil {
+		return model.Size{}, err
+	}
+	defer rows.Close()
+
+	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Size])
+	if err != nil {
+		return model.Size{}, err
+	}
+
+	return data, nil
+}
+
+func (s *SizesRepository) UpdateSizeById(ctx context.Context, id int, req dto.SizeUpdateRequest) (model.Size, error) {
+	query := `UPDATE sizes
+SET size_name=$1,
+    additional_price=$2,
+    updated_at=now()
+WHERE id=$3
+RETURNING id, size_name, created_at, updated_at, deleted_at, additional_price;`
+
+	rows, err := s.db.Query(ctx, query, req.SizeName, req.AdditionalPrice, id)
 	if err != nil {
 		return model.Size{}, err
 	}

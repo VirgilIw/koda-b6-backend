@@ -91,3 +91,17 @@ type ResponseCategory struct {
 	Error   string   `json:"error,omitempty"`
 	Result  Category `json:"result"`
 }
+
+type ResponseSizes struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Error   string `json:"error,omitempty"`
+	Result  []Size `json:"result,omitempty"`
+}
+
+type ResponseSize struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Error   string `json:"error,omitempty"`
+	Result  Size   `json:"result"`
+}

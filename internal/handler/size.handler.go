@@ -86,3 +86,53 @@ func (h *SizesHandler) GetSizeByID(ctx *gin.Context) {
 		Result:  size,
 	})
 }
+
+// Update size by ID godoc
+// @Summary      update size
+// @Description  update size by id
+// @Tags         Sizes
+// @Accept       json
+// @Produce      json
+// @Param        id        path int            true "size id"
+// @Param        request   body dto.SizeUpdateRequest true "update size request"
+// @Success      200       {object} dto.ResponseSize
+// @Failure      400       {object} dto.ResponseSize
+// @Failure      404       {object} dto.ResponseSize
+// @Failure      500       {object} dto.ResponseSize
+// @Router       /sizes/{id} [patch]
+func (h *SizesHandler) UpdateSize(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil || id <= 0 {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseSize{
+			Success: false,
+			Message: "invalid size id",
+		})
+		return
+	}
+
+	var req dto.SizeUpdateRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseSize{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	updatedSize, err := h.service.UpdateSize(ctx.Request.Context(), id, req)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseSize{
+			Success: false,
+			Message: "failed to update size",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseSize{
+		Success: true,
+		Message: "success update size",
+		Result:  updatedSize,
+	})
+}

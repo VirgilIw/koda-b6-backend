@@ -59,3 +59,26 @@ func (s *SizesService) GetSizeByID(ctx context.Context, id int) (dto.Size, error
 
 	return result, nil
 }
+
+func (s *SizesService) UpdateSize(ctx context.Context, id int, req dto.SizeUpdateRequest) (dto.Size, error) {
+
+	if id <= 0 {
+		return dto.Size{}, errors.New("invalid size id")
+	}
+
+	size, err := s.repo.UpdateSizeById(ctx, id, req)
+	if err != nil {
+		return dto.Size{}, err
+	}
+
+	result := dto.Size{
+		ID:              size.ID,
+		SizeName:        size.SizeName,
+		CreatedAt:       size.CreatedAt,
+		UpdatedAt:       size.UpdatedAt,
+		DeletedAt:       size.DeletedAt,
+		AdditionalPrice: size.AdditionalPrice,
+	}
+
+	return result, nil
+}
