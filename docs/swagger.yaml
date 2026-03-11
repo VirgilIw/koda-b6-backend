@@ -23,6 +23,11 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.CategoryRequest:
+    properties:
+      categories_name:
+        type: string
+    type: object
   dto.Coupon:
     properties:
       created_at:
@@ -183,6 +188,17 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseCategory:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.Category'
+      success:
+        type: boolean
+    type: object
   dto.ResponseCoupon:
     properties:
       error:
@@ -318,7 +334,127 @@ paths:
             $ref: '#/definitions/dto.ResponseCategories'
       summary: get all category
       tags:
-      - Category
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: create category
+      parameters:
+      - description: create category
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: create category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: Delete category
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      description: get category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: get category by id
+      tags:
+      - Categories
+    patch:
+      consumes:
+      - application/json
+      description: update category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update category
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: update category
+      tags:
+      - Categories
   /coupons:
     get:
       description: Get list of coupons

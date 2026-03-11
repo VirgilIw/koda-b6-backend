@@ -84,3 +84,10 @@ type ResponseCategories struct {
 	Error   string     `json:"error,omitempty"`
 	Result  []Category `json:"result"`
 }
+
+type ResponseCategory struct {
+	Success bool     `json:"success"`
+	Message string   `json:"message"`
+	Error   string   `json:"error,omitempty"`
+	Result  Category `json:"result"`
+}

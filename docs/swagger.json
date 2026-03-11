@@ -62,7 +62,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Category"
+                    "Categories"
                 ],
                 "summary": "get all category",
                 "responses": {
@@ -82,6 +82,187 @@
                         "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseCategories"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "create category",
+                "parameters": [
+                    {
+                        "description": "create category",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "description": "get category by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "get category by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "update category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "update category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "update category",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseCategory"
                         }
                     }
                 }
@@ -874,6 +1055,14 @@
                 }
             }
         },
+        "dto.CategoryRequest": {
+            "type": "object",
+            "properties": {
+                "categories_name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.Coupon": {
             "type": "object",
             "properties": {
@@ -1113,6 +1302,23 @@
                     "items": {
                         "$ref": "#/definitions/dto.Category"
                     }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseCategory": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.Category"
                 },
                 "success": {
                     "type": "boolean"

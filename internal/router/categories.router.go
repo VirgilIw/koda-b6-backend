@@ -10,5 +10,9 @@ func RouterCategories(app *gin.Engine, c *di.Container) {
 	handler := c.CategoriesHandler()
 
 	categories.GET("", handler.GetCategories)
+	categories.GET("/:id", handler.GetCategoryByID)
+	categories.POST("", handler.CreateCategory)
+	categories.PATCH("/:id", handler.UpdateCategory)
+	categories.DELETE("/:id", handler.DeleteCategory)
 
 }
