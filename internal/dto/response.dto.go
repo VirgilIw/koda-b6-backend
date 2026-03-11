@@ -117,3 +117,9 @@ type ResponseForgotPwd struct {
 	Error   string            `json:"error,omitempty"`
 	Result  ForgotPwdResponse `json:"result"`
 }
+
+type ResponseResetPwd struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Error   string `json:"error,omitempty"`
+}
