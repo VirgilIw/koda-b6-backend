@@ -24,23 +24,28 @@ func NewProductRepository(db *pgxpool.Pool, rdb *redis.Client) *ProductRepositor
 }
 
 func (p *ProductRepository) GetProducts(ctx context.Context) ([]model.ProductModel, error) {
-	query := `select 
-    p.id, p.name, p.description, p.price,
-    p.is_flash_sale, p.is_buy1get1, p.is_birthday_package, p.created_at,
-    t.rating,i.image_path 
-	from products p
-	left join product_images pi on pi.product_id = p.id
-	left join images i on i.id = pi.image_id
-	left join testimonials t ON t.product_id = p.id
-	order by p.id;`
+	query := `
+	SELECT 
+		id,
+		name,
+		description,
+		price,
+		created_at,
+		is_flash_sale,
+		is_buy1get1,
+		is_birthday_package
+	FROM products
+	ORDER BY id;
+	`
 
 	rows, err := p.db.Query(ctx, query)
 	if err != nil {
-		return []model.ProductModel{}, err
+		return nil, err
 	}
+
 	products, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.ProductModel])
 	if err != nil {
-		return []model.ProductModel{}, err
+		return nil, err
 	}
 
 	return products, nil
@@ -159,4 +164,42 @@ GROUP BY p.id, p.name,p.price;`
 	detail, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ProductDetail])
 
 	return detail, nil
+}
+
+func (p *ProductRepository) GetRecommendedProducts(ctx context.Context) ([]model.RecommendedProductModel, error) {
+	query := `SELECT 
+    p.id,
+    p.name,
+    p.description,
+    p.price,
+    AVG(t.rating) AS rating,
+    STRING_AGG(t.message, ' | ') AS review_messages,
+    (
+        SELECT i.image_path
+        FROM product_images pi
+        JOIN images i ON i.id = pi.image_id
+        WHERE pi.product_id = p.id
+        LIMIT 1
+    ) AS image_path,
+    COUNT(DISTINCT t.id) AS total_review
+FROM products p
+LEFT JOIN testimonials t 
+    ON t.product_id = p.id
+GROUP BY p.id, p.name, p.description, p.price
+HAVING COUNT(DISTINCT t.id) >= 3
+ORDER BY total_review DESC
+LIMIT 4;`
+
+	rows, err := p.db.Query(ctx, query)
+	if err != nil {
+		return []model.RecommendedProductModel{}, err
+	}
+
+	products, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.RecommendedProductModel])
+
+	if err != nil {
+		return []model.RecommendedProductModel{}, err
+	}
+
+	return products, nil
 }
