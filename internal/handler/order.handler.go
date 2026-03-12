@@ -29,7 +29,7 @@ func NewOrderHandler(service *service.OrderService) *OrderHandler {
 // @Success      200  {object}  dto.ResponseCoupon
 // @Failure      400  {object}  dto.ResponseCoupon
 // @Failure      500  {object}  dto.ResponseCoupon
-// @Router       /coupons/{id} [get]
+// @Router       /admin/coupons/{id} [get]
 func (o *OrderHandler) GetCouponById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -65,7 +65,7 @@ func (o *OrderHandler) GetCouponById(ctx *gin.Context) {
 // @Produce      json
 // @Success      200  {object}  dto.ResponseCoupon
 // @Failure      500  {object}  dto.ResponseCoupon
-// @Router       /coupons [get]
+// @Router       /admin/coupons [get]
 func (o *OrderHandler) GetCoupons(ctx *gin.Context) {
 	result, err := o.service.GetCoupons(ctx.Request.Context())
 	if err != nil {
@@ -94,7 +94,7 @@ func (o *OrderHandler) GetCoupons(ctx *gin.Context) {
 // @Success      201     {object}  dto.ResponseCoupon
 // @Failure      400     {object}  dto.ResponseCoupon
 // @Failure      500     {object}  dto.ResponseCoupon
-// @Router       /coupons [post]
+// @Router       /admin/coupons [post]
 func (o *OrderHandler) CreateCoupon(ctx *gin.Context) {
 	var req dto.CouponRequest
 
@@ -135,7 +135,7 @@ func (o *OrderHandler) CreateCoupon(ctx *gin.Context) {
 // @Failure      400  {object}  dto.ResponseCoupon
 // @Failure      404  {object}  dto.ResponseCoupon
 // @Failure      500  {object}  dto.ResponseCoupon
-// @Router       /coupons/{id} [patch]
+// @Router       /admin/coupons/{id} [patch]
 func (o *OrderHandler) EditCoupon(ctx *gin.Context) {
 	var req dto.CouponRequest
 
@@ -175,7 +175,7 @@ func (o *OrderHandler) EditCoupon(ctx *gin.Context) {
 // @Success      200     {object}  dto.ResponseCoupon
 // @Failure      400     {object}  dto.ResponseCoupon
 // @Failure      500     {object}  dto.ResponseCoupon
-// @Router       /coupons/{id} [Delete]
+// @Router       /admin/coupons/{id} [Delete]
 func (o *OrderHandler) DeleteCoupon(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 
