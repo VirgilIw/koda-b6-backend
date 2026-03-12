@@ -150,3 +150,10 @@ type ResponseVariants struct {
 	Error   string    `json:"error,omitempty"`
 	Result  []Variant `json:"result"`
 }
+
+type ResponseVariant struct {
+	Success bool    `json:"success"`
+	Message string  `json:"message"`
+	Error   string  `json:"error,omitempty"`
+	Result  Variant `json:"result"`
+}

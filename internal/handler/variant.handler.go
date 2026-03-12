@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -46,4 +47,44 @@ func (v *VariantHandler) GetVariants(ctx *gin.Context) {
 		Result:  variants,
 	})
 
+}
+
+// Get Variant By Id godoc
+// @Summary      Get variant by id
+// @Description  Retrieve variant by id
+// @Tags         Variants
+// @Produce      json
+// @Param        id   path  int  true  "variant id"
+// @Success      200  {object}  dto.ResponseVariant
+// @Failure      400  {object}  dto.ResponseVariant
+// @Failure      500  {object}  dto.ResponseVariant
+// @Security     BearerAuth
+// @Router       /admin/variants/{id} [get]
+func (v *VariantHandler) GetVariantById(ctx *gin.Context) {
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseVariant{
+			Success: false,
+			Message: "invalid id",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	variant, err := v.service.GetVariantById(ctx.Request.Context(), id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseVariant{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseVariant{
+		Success: true,
+		Message: "success get variant by id",
+		Result:  variant,
+	})
 }

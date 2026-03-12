@@ -10,4 +10,5 @@ func RouterVariant(app *gin.RouterGroup, c *di.Container) {
 	handler := c.VariantHandler()
 
 	variants.GET("", handler.GetVariants)
+	variants.GET("/:id", handler.GetVariantById)
 }

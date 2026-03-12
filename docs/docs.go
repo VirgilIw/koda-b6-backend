@@ -717,6 +717,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/variants/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve variant by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Variants"
+                ],
+                "summary": "Get variant by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "variant id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseVariant"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseVariant"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseVariant"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "Send OTP code to user's email for password reset",
@@ -1933,6 +1979,23 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.ResponseVariant": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.Variant"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },

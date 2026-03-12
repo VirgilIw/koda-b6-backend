@@ -350,6 +350,17 @@ definitions:
       token:
         type: string
     type: object
+  dto.ResponseVariant:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.Variant'
+      success:
+        type: boolean
+    type: object
   dto.ResponseVariants:
     properties:
       error:
@@ -934,6 +945,35 @@ paths:
       security:
       - BearerAuth: []
       summary: Get all variants
+      tags:
+      - Variants
+  /admin/variants/{id}:
+    get:
+      description: Retrieve variant by id
+      parameters:
+      - description: variant id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+      security:
+      - BearerAuth: []
+      summary: Get variant by id
       tags:
       - Variants
   /auth/forgot-password:
