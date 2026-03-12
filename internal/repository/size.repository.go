@@ -29,8 +29,6 @@ RETURNING id, size_name, created_at, updated_at, deleted_at,  additional_price`
 		return model.Size{}, err
 	}
 
-	defer rows.Close()
-
 	result, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Size])
 
 	if err != nil {
@@ -48,7 +46,6 @@ func (s *SizesRepository) GetSizes(ctx context.Context) ([]model.Size, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.Size])
 	if err != nil {
@@ -67,7 +64,6 @@ func (s *SizesRepository) GetSizeById(ctx context.Context, id int) (model.Size, 
 	if err != nil {
 		return model.Size{}, err
 	}
-	defer rows.Close()
 
 	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Size])
 	if err != nil {
@@ -89,7 +85,6 @@ RETURNING id, size_name, created_at, updated_at, deleted_at, additional_price;`
 	if err != nil {
 		return model.Size{}, err
 	}
-	defer rows.Close()
 
 	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Size])
 	if err != nil {
