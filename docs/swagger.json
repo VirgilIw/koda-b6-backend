@@ -1489,6 +1489,29 @@
         }
     },
     "definitions": {
+        "dto.AllVariant": {
+            "type": "object",
+            "properties": {
+                "additional_price": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "variant_name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.AuthLoginRequest": {
             "type": "object",
             "required": [
@@ -2055,7 +2078,7 @@
                 "result": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Variant"
+                        "$ref": "#/definitions/dto.AllVariant"
                     }
                 },
                 "success": {
@@ -2212,17 +2235,8 @@
                 "additional_price": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 },
                 "variant_name": {
                     "type": "string"

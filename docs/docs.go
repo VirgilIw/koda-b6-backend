@@ -1495,6 +1495,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.AllVariant": {
+            "type": "object",
+            "properties": {
+                "additional_price": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "variant_name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.AuthLoginRequest": {
             "type": "object",
             "required": [
@@ -2061,7 +2084,7 @@ const docTemplate = `{
                 "result": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Variant"
+                        "$ref": "#/definitions/dto.AllVariant"
                     }
                 },
                 "success": {
@@ -2218,17 +2241,8 @@ const docTemplate = `{
                 "additional_price": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 },
                 "variant_name": {
                     "type": "string"
