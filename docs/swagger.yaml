@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  dto.AllVariant:
+    properties:
+      additional_price:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      variant_name:
+        type: string
+    type: object
   dto.AuthLoginRequest:
     properties:
       email:
@@ -369,7 +384,7 @@ definitions:
         type: string
       result:
         items:
-          $ref: '#/definitions/dto.Variant'
+          $ref: '#/definitions/dto.AllVariant'
         type: array
       success:
         type: boolean
@@ -471,14 +486,8 @@ definitions:
     properties:
       additional_price:
         type: integer
-      created_at:
-        type: string
-      deleted_at:
-        type: string
       id:
         type: integer
-      updated_at:
-        type: string
       variant_name:
         type: string
     type: object
