@@ -480,6 +480,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/variants": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve all variants",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Variants"
+                ],
+                "summary": "Get all variants",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseVariants"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseVariants"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "Send OTP code to user's email for password reset",
@@ -1905,6 +1936,26 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ResponseVariants": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Variant"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "dto.Reviews": {
             "type": "object",
             "properties": {
@@ -2044,6 +2095,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.Variant": {
+            "type": "object",
+            "properties": {
+                "additional_price": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "variant_name": {
                     "type": "string"
                 }
             }

@@ -143,3 +143,10 @@ type ResponseReviews struct {
 	Error   string    `json:"error,omitempty"`
 	Result  []Reviews `json:"result"`
 }
+
+type ResponseVariants struct {
+	Success bool      `json:"success"`
+	Message string    `json:"message"`
+	Error   string    `json:"error,omitempty"`
+	Result  []Variant `json:"result"`
+}
