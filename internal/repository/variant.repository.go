@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -54,4 +55,21 @@ FROM variants where id = $1`
 	}
 
 	return data, nil
+}
+
+func (v *VariantRepository) DeleteVariant(ctx context.Context, id int) error {
+	query := `DELETE FROM variants
+WHERE id=$1`
+
+	cmdTag, err := v.db.Exec(ctx, query, id)
+
+	if err != nil {
+		return err
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		return errors.New("variant not found")
+	}
+
+	return nil
 }

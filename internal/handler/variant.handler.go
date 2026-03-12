@@ -88,3 +88,42 @@ func (v *VariantHandler) GetVariantById(ctx *gin.Context) {
 		Result:  variant,
 	})
 }
+
+// Delete Variant By Id godoc
+// @Summary      Delete variant by id
+// @Description  Delete variant by id
+// @Tags         Variants
+// @Produce      json
+// @Param        id   path  int  true  "variant id"
+// @Success      200  {object}  dto.ResponseVariant
+// @Failure      400  {object}  dto.ResponseVariant
+// @Failure      404  {object}  dto.ResponseVariant
+// @Failure      500  {object}  dto.ResponseVariant
+// @Security     BearerAuth
+// @Router       /admin/variants/{id} [delete]
+func (v *VariantHandler) DeleteVariant(ctx *gin.Context) {
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseVariant{
+			Success: false,
+			Message: "invalid id",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	if err := v.service.DeleteVariant(ctx.Request.Context(), id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseVariant{
+			Success: false,
+			Message: "failed to delete variant",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseVariant{
+		Success: true,
+		Message: "success delete variant",
+	})
+}
