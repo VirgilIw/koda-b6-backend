@@ -28,4 +28,5 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterOrder(admin, c)
 	RouterCategories(admin, c)
 	RouterSizes(admin, c)
+	RouterVariant(admin, c)
 }

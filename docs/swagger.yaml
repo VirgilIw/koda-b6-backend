@@ -350,6 +350,19 @@ definitions:
       token:
         type: string
     type: object
+  dto.ResponseVariants:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Variant'
+        type: array
+      success:
+        type: boolean
+    type: object
   dto.Reviews:
     properties:
       authorTitle:
@@ -441,6 +454,21 @@ definitions:
       picture:
         type: string
       role:
+        type: string
+    type: object
+  dto.Variant:
+    properties:
+      additional_price:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      variant_name:
         type: string
     type: object
 host: localhost:8888
@@ -889,6 +917,25 @@ paths:
       summary: update size
       tags:
       - Sizes
+  /admin/variants:
+    get:
+      description: Retrieve all variants
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseVariants'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseVariants'
+      security:
+      - BearerAuth: []
+      summary: Get all variants
+      tags:
+      - Variants
   /auth/forgot-password:
     post:
       consumes:
