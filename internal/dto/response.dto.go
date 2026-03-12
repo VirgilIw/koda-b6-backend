@@ -145,15 +145,15 @@ type ResponseReviews struct {
 }
 
 type ResponseVariants struct {
-	Success bool      `json:"success"`
-	Message string    `json:"message"`
-	Error   string    `json:"error,omitempty"`
-	Result  []Variant `json:"result"`
+	Success bool         `json:"success"`
+	Message string       `json:"message"`
+	Error   string       `json:"error,omitempty"`
+	Result  []AllVariant `json:"result,omitempty"`
 }
 
 type ResponseVariant struct {
-	Success bool    `json:"success"`
-	Message string  `json:"message"`
+	Success bool    `json:"success,omitempty"`
+	Message string  `json:"message,omitempty"`
 	Error   string  `json:"error,omitempty"`
 	Result  Variant `json:"result"`
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -17,18 +18,18 @@ func NewVariantService(repo *repository.VariantRepository) *VariantService {
 	}
 }
 
-func (v *VariantService) GetVariants(ctx context.Context) ([]dto.Variant, error) {
+func (v *VariantService) GetVariants(ctx context.Context) ([]dto.AllVariant, error) {
 	variant, err := v.repo.GetVariants(ctx)
 
 	if err != nil {
-		return []dto.Variant{}, err
+		return []dto.AllVariant{}, err
 	}
 
-	var result []dto.Variant
+	var result []dto.AllVariant
 
 	for _, v := range variant {
 
-		result = append(result, dto.Variant{
+		result = append(result, dto.AllVariant{
 			ID:              v.ID,
 			VariantName:     v.VariantName,
 			AdditionalPrice: v.AdditionalPrice,
@@ -42,6 +43,11 @@ func (v *VariantService) GetVariants(ctx context.Context) ([]dto.Variant, error)
 }
 
 func (v *VariantService) GetVariantById(ctx context.Context, id int) (dto.Variant, error) {
+
+	if id <= 0 {
+		return dto.Variant{}, errors.New("id not valid")
+	}
+
 	variant, err := v.repo.GetVariantById(ctx, id)
 
 	if err != nil {
@@ -54,10 +60,23 @@ func (v *VariantService) GetVariantById(ctx context.Context, id int) (dto.Varian
 		ID:              variant.ID,
 		VariantName:     variant.VariantName,
 		AdditionalPrice: variant.AdditionalPrice,
-		CreatedAt:       variant.CreatedAt,
-		UpdatedAt:       variant.UpdatedAt,
-		DeletedAt:       variant.DeletedAt,
+		// CreatedAt:       variant.CreatedAt,
+		// UpdatedAt:       variant.UpdatedAt,
+		// DeletedAt:       variant.DeletedAt,
 	}
 
 	return result, nil
+}
+
+func (v *VariantService) DeleteVariant(ctx context.Context, id int) error {
+
+	if id <= 0 {
+		return errors.New("id not valid")
+	}
+
+	if err := v.repo.DeleteVariant(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
 }

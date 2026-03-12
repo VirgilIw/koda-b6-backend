@@ -948,6 +948,38 @@ paths:
       tags:
       - Variants
   /admin/variants/{id}:
+    delete:
+      description: Delete variant by id
+      parameters:
+      - description: variant id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseVariant'
+      security:
+      - BearerAuth: []
+      summary: Delete variant by id
+      tags:
+      - Variants
     get:
       description: Retrieve variant by id
       parameters:
