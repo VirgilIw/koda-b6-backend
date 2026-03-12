@@ -20,7 +20,7 @@ func NewLandingRepository(db *pgxpool.Pool) *LandingRepository {
 
 func (r *LandingRepository) GetReviews(ctx context.Context) ([]model.Reviews, error) {
 	query := `SELECT id, "name", image, author_title, message, rating, created_at, product_id
-FROM testimonials;`
+FROM testimonials order by id;`
 	rows, err := r.db.Query(ctx, query)
 
 	if err != nil {

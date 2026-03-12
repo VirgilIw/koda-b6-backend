@@ -67,7 +67,7 @@ func (r *LandingHandler) GetReviews(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, dto.ResponseReviews{
 		Success: true,
-		Message: "success get all review",
+		Message: "success get all reviews",
 		Result:  reviews,
 	})
 }
