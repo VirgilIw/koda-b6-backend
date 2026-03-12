@@ -596,6 +596,120 @@ paths:
       summary: Update product
       tags:
       - Products
+  /admin/sizes:
+    get:
+      consumes:
+      - application/json
+      description: Get all sizes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSizes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSizes'
+      summary: get all sizes
+      tags:
+      - Sizes
+  /admin/sizes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete size
+      parameters:
+      - description: size id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+      summary: Delete size
+      tags:
+      - Sizes
+    get:
+      consumes:
+      - application/json
+      description: retrieve size by id
+      parameters:
+      - description: size id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+      summary: get size by id
+      tags:
+      - Sizes
+    patch:
+      consumes:
+      - application/json
+      description: update size by id
+      parameters:
+      - description: size id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update size request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SizeUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSize'
+      summary: update size
+      tags:
+      - Sizes
   /auth/forgot-password:
     post:
       consumes:
@@ -989,96 +1103,6 @@ paths:
       summary: Get all reviews
       tags:
       - LandingPage
-  /sizes:
-    get:
-      consumes:
-      - application/json
-      description: Get all sizes
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseSizes'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseSizes'
-      summary: get all sizes
-      tags:
-      - Sizes
-  /sizes/{id}:
-    get:
-      consumes:
-      - application/json
-      description: retrieve size by id
-      parameters:
-      - description: size id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-      summary: get size by id
-      tags:
-      - Sizes
-    patch:
-      consumes:
-      - application/json
-      description: update size by id
-      parameters:
-      - description: size id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: update size request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SizeUpdateRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseSize'
-      summary: update size
-      tags:
-      - Sizes
   /users:
     get:
       description: Get users

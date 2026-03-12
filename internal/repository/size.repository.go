@@ -77,3 +77,14 @@ RETURNING id, size_name, created_at, updated_at, deleted_at, additional_price;`
 
 	return data, nil
 }
+
+func (s *SizesRepository) DeleteSizeById(ctx context.Context, id int) error {
+	query := `DELETE FROM sizes WHERE id=$1`
+
+	_, err := s.db.Exec(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

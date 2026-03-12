@@ -12,5 +12,6 @@ func RouterSizes(app *gin.RouterGroup, c *di.Container) {
 	sizes.GET("", handler.GetSizes)
 	sizes.GET("/:id", handler.GetSizeByID)
 	sizes.PATCH("/:id", handler.UpdateSize)
+	sizes.DELETE("/:id", handler.DeleteSizeById)
 
 }

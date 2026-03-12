@@ -82,3 +82,11 @@ func (s *SizesService) UpdateSize(ctx context.Context, id int, req dto.SizeUpdat
 
 	return result, nil
 }
+
+func (s *SizesService) DeleteSizeById(ctx context.Context, id int) error {
+	if err := s.repo.DeleteSizeById(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
+}

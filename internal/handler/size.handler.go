@@ -27,7 +27,7 @@ func NewSizesHandler(service *service.SizesService) *SizesHandler {
 // @Produce      json
 // @Success      200  {object}  dto.ResponseSizes
 // @Failure      500  {object}  dto.ResponseSizes
-// @Router       /sizes [get]
+// @Router       /admin/sizes [get]
 func (h *SizesHandler) GetSizes(ctx *gin.Context) {
 	sizes, err := h.service.GetSizes(ctx.Request.Context())
 
@@ -58,7 +58,7 @@ func (h *SizesHandler) GetSizes(ctx *gin.Context) {
 // @Failure      400  {object}  dto.ResponseSize
 // @Failure      404  {object}  dto.ResponseSize
 // @Failure      500  {object}  dto.ResponseSize
-// @Router       /sizes/{id} [get]
+// @Router       /admin/sizes/{id} [get]
 func (h *SizesHandler) GetSizeByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -99,7 +99,7 @@ func (h *SizesHandler) GetSizeByID(ctx *gin.Context) {
 // @Failure      400       {object} dto.ResponseSize
 // @Failure      404       {object} dto.ResponseSize
 // @Failure      500       {object} dto.ResponseSize
-// @Router       /sizes/{id} [patch]
+// @Router       /admin/sizes/{id} [patch]
 func (h *SizesHandler) UpdateSize(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil || id <= 0 {
@@ -134,5 +134,42 @@ func (h *SizesHandler) UpdateSize(ctx *gin.Context) {
 		Success: true,
 		Message: "success update size",
 		Result:  updatedSize,
+	})
+}
+
+// Delete Size godoc
+// @Summary      Delete size
+// @Description  Delete size
+// @Tags         Sizes
+// @Accept       json
+// @Produce      json
+// @Param        id    path 	int true "size id"
+// @Success      200  {object}  dto.ResponseSize
+// @Failure      500  {object}  dto.ResponseSize
+// @Router       /admin/sizes/{id} [delete]
+func (h *SizesHandler) DeleteSizeById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseSize{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	if err = h.service.DeleteSizeById(ctx.Request.Context(), id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseSize{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseSize{
+		Success: true,
+		Message: "success deleted size",
 	})
 }
