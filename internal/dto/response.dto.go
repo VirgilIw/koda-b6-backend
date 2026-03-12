@@ -113,6 +113,12 @@ type ResponseSize struct {
 	Result  Size   `json:"result"`
 }
 
+type ResponseSizeCreate struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Error   string      `json:"error,omitempty"`
+	Result  SizeRequest `json:"result"`
+}
 type ForgotPwdResponse struct {
 	Email   string
 	CodeOtp int

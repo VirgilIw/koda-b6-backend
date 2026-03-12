@@ -18,6 +18,22 @@ func NewSizesService(repo *repository.SizesRepository) *SizesService {
 	}
 }
 
+func (s *SizesService) CreateSize(ctx context.Context, req dto.SizeRequest) (dto.SizeRequest, error) {
+	size, err := s.repo.CreateSize(ctx, req)
+	if err != nil {
+		return dto.SizeRequest{}, err
+	}
+
+	var result dto.SizeRequest
+
+	result = dto.SizeRequest{
+		SizeName:        size.SizeName,
+		AdditionalPrice: size.AdditionalPrice,
+	}
+
+	return result, nil
+}
+
 func (s *SizesService) GetSizes(ctx context.Context) ([]dto.Size, error) {
 	sizes, err := s.repo.GetSizes(ctx)
 	if err != nil {

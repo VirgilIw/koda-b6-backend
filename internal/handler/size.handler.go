@@ -19,6 +19,46 @@ func NewSizesHandler(service *service.SizesService) *SizesHandler {
 	}
 }
 
+// Create New size godoc
+// @Summary      Create New size
+// @Description  Create New size
+// @Tags         Sizes
+// @Accept       json
+// @Produce      json
+// @Param req body dto.SizeRequest true "Create New Size"
+// @Success      200  {object}  dto.ResponseSizeCreate
+// @Failure      500  {object}  dto.ResponseSizeCreate
+// @Router       /admin/sizes [post]
+func (h *SizesHandler) CreateSize(ctx *gin.Context) {
+	var req dto.SizeRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseSizeCreate{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	size, err := h.service.CreateSize(ctx, req)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseSizeCreate{
+			Success: false,
+			Message: "failed to create size",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.ResponseSizeCreate{
+		Success: true,
+		Message: "success create new size",
+		Result:  size,
+	})
+}
+
 // Get all sizes godoc
 // @Summary      get all sizes
 // @Description  Get all sizes

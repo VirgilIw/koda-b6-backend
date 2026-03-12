@@ -19,6 +19,27 @@ func NewSizesRepository(db *pgxpool.Pool) *SizesRepository {
 	}
 }
 
+func (s *SizesRepository) CreateSize(ctx context.Context, req dto.SizeRequest) (model.Size, error) {
+	query := `INSERT INTO sizes (size_name, additional_price)
+VALUES ($1, $2)
+RETURNING id, size_name, created_at, updated_at, deleted_at,  additional_price`
+	rows, err := s.db.Query(ctx, query, req.SizeName, req.AdditionalPrice)
+
+	if err != nil {
+		return model.Size{}, err
+	}
+
+	defer rows.Close()
+
+	result, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Size])
+
+	if err != nil {
+		return model.Size{}, err
+	}
+
+	return result, nil
+}
+
 func (s *SizesRepository) GetSizes(ctx context.Context) ([]model.Size, error) {
 	query := `SELECT id, size_name, created_at, updated_at, deleted_at, additional_price
               FROM sizes;`
