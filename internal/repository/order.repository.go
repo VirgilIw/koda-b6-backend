@@ -35,8 +35,6 @@ func (o *OrderRepository) GetCouponById(ctx context.Context, id int) (model.Coup
 		return model.Coupon{}, err
 	}
 
-	defer rows.Close()
-
 	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Coupon])
 	if err != nil {
 		return model.Coupon{}, err
@@ -61,8 +59,6 @@ func (o *OrderRepository) GetCoupons(ctx context.Context) ([]model.Coupon, error
 		return []model.Coupon{}, err
 	}
 
-	defer rows.Close()
-
 	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.Coupon])
 	if err != nil {
 		return []model.Coupon{}, err
@@ -81,8 +77,6 @@ RETURNING id, title, description, value, image`
 	if err != nil {
 		return model.Coupon{}, nil
 	}
-
-	defer rows.Close()
 
 	coupon, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Coupon])
 
@@ -104,8 +98,6 @@ RETURNING id, title, description, value, image;`
 		return model.Coupon{}, err
 	}
 
-	defer rows.Close()
-
 	coupon, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Coupon])
 	if err != nil {
 		return model.Coupon{}, err
@@ -124,8 +116,6 @@ RETURNING id, title, description, value, image, created_at;`
 	if err != nil {
 		return model.Coupon{}, nil
 	}
-
-	defer rows.Close()
 
 	coupon, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Coupon])
 
