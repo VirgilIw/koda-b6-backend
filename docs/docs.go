@@ -817,17 +817,12 @@ const docTemplate = `{
         },
         "/recommended-products": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Get recommended product based on minimum 3 reviews",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Recommended Products"
+                    "LandingPage"
                 ],
                 "summary": "Get Recommended product",
                 "responses": {
@@ -841,6 +836,32 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseRecommended"
+                        }
+                    }
+                }
+            }
+        },
+        "/reviews": {
+            "get": {
+                "description": "Retrieve all product reviews",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get all reviews",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseReviews"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseReviews"
                         }
                     }
                 }
@@ -1719,6 +1740,26 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ResponseReviews": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Reviews"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "dto.ResponseSize": {
             "type": "object",
             "properties": {
@@ -1770,6 +1811,32 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.Reviews": {
+            "type": "object",
+            "properties": {
+                "authorTitle": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
                 }
             }
         },

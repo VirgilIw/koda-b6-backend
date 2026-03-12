@@ -38,6 +38,10 @@ type Container struct {
 	sizesRepo    *repository.SizesRepository
 	sizesService *service.SizesService
 	sizesHandler *handler.SizesHandler
+
+	landingRepo    *repository.LandingRepository
+	landingService *service.LandingService
+	landingHandler *handler.LandingHandler
 }
 
 func NewContainer(db *pgxpool.Pool, rdb *redis.Client) *Container {
@@ -79,6 +83,9 @@ func (c *Container) initDependencies() {
 	c.sizesService = service.NewSizesService(c.sizesRepo)
 	c.sizesHandler = handler.NewSizesHandler(c.sizesService)
 
+	c.landingRepo = repository.NewLandingRepository(c.db)
+	c.landingService = service.NewLandingService(c.landingRepo)
+	c.landingHandler = handler.NewLandingService(c.landingService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -103,4 +110,8 @@ func (c *Container) CategoriesHandler() *handler.CategoriesHandler {
 
 func (c *Container) SizesHandler() *handler.SizesHandler {
 	return c.sizesHandler
+}
+
+func (c *Container) LandingHandler() *handler.LandingHandler {
+	return c.landingHandler
 }
