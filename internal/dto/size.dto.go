@@ -12,7 +12,6 @@ type Size struct {
 }
 
 type SizeRequest struct {
-	ID              int    `json:"id"`
 	SizeName        string `json:"size_name"`
 	AdditionalPrice int    `json:"additional_price"`
 }

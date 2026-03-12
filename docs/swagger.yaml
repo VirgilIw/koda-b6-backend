@@ -315,6 +315,17 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseSizeCreate:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.SizeRequest'
+      success:
+        type: boolean
+    type: object
   dto.ResponseSizes:
     properties:
       error:
@@ -380,6 +391,13 @@ definitions:
       size_name:
         type: string
       updated_at:
+        type: string
+    type: object
+  dto.SizeRequest:
+    properties:
+      additional_price:
+        type: integer
+      size_name:
         type: string
     type: object
   dto.SizeUpdateRequest:
@@ -613,6 +631,31 @@ paths:
           schema:
             $ref: '#/definitions/dto.ResponseSizes'
       summary: get all sizes
+      tags:
+      - Sizes
+    post:
+      consumes:
+      - application/json
+      description: Create New size
+      parameters:
+      - description: Create New Size
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SizeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSizeCreate'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseSizeCreate'
+      summary: Create New size
       tags:
       - Sizes
   /admin/sizes/{id}:

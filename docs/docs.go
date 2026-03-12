@@ -297,6 +297,44 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create New size",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sizes"
+                ],
+                "summary": "Create New size",
+                "parameters": [
+                    {
+                        "description": "Create New Size",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SizeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseSizeCreate"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseSizeCreate"
+                        }
+                    }
+                }
             }
         },
         "/admin/sizes/{id}": {
@@ -1813,6 +1851,23 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ResponseSizeCreate": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.SizeRequest"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "dto.ResponseSizes": {
             "type": "object",
             "properties": {
@@ -1912,6 +1967,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SizeRequest": {
+            "type": "object",
+            "properties": {
+                "additional_price": {
+                    "type": "integer"
+                },
+                "size_name": {
                     "type": "string"
                 }
             }
