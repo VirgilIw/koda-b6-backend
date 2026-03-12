@@ -43,7 +43,7 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 		return
 	}
 
-	token := l.authService.AuthLogin(ctx, data.Email, data.Password)
+	token := l.authService.AuthLogin(ctx.Request.Context(), data.Email, data.Password)
 
 	if token != "" {
 		ctx.JSON(http.StatusOK, dto.ResponseToken{
