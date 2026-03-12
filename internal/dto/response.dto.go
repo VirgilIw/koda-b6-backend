@@ -130,3 +130,10 @@ type ResponseResetPwd struct {
 	Message string `json:"message"`
 	Error   string `json:"error,omitempty"`
 }
+
+type ResponseReviews struct {
+	Success bool      `json:"success"`
+	Message string    `json:"message"`
+	Error   string    `json:"error,omitempty"`
+	Result  []Reviews `json:"result"`
+}

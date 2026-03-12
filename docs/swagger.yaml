@@ -291,6 +291,19 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseReviews:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.Reviews'
+        type: array
+      success:
+        type: boolean
+    type: object
   dto.ResponseSize:
     properties:
       error:
@@ -325,6 +338,23 @@ definitions:
         type: boolean
       token:
         type: string
+    type: object
+  dto.Reviews:
+    properties:
+      authorTitle:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      message:
+        type: string
+      name:
+        type: string
+      rating:
+        type: number
     type: object
   dto.SingleProductResponse:
     properties:
@@ -939,11 +969,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/dto.ResponseRecommended'
-      security:
-      - BearerAuth: []
       summary: Get Recommended product
       tags:
-      - Recommended Products
+      - LandingPage
+  /reviews:
+    get:
+      description: Retrieve all product reviews
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseReviews'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseReviews'
+      summary: Get all reviews
+      tags:
+      - LandingPage
   /sizes:
     get:
       consumes:
