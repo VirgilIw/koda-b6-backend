@@ -171,6 +171,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Edit a coupon",
                 "consumes": [
                     "application/json"
@@ -184,7 +189,14 @@ const docTemplate = `{
                 "summary": "Edit Coupon",
                 "parameters": [
                     {
-                        "description": "Coupon request body",
+                        "type": "integer",
+                        "description": "Coupon ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Coupon request",
                         "name": "coupon",
                         "in": "body",
                         "required": true,
@@ -1700,9 +1712,6 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "image": {
                     "type": "string"
