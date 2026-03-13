@@ -157,3 +157,17 @@ type ResponseVariant struct {
 	Error   string  `json:"error,omitempty"`
 	Result  Variant `json:"result"`
 }
+
+type ResponseCreateVariant struct {
+	Success bool       `json:"success,omitempty"`
+	Message string     `json:"message,omitempty"`
+	Error   string     `json:"error,omitempty"`
+	Result  AllVariant `json:"result,omitempty"`
+}
+
+type ResponseUpdateVariant struct {
+	Success bool       `json:"success,omitempty"`
+	Message string     `json:"message,omitempty"`
+	Error   string     `json:"error,omitempty"`
+	Result  AllVariant `json:"result,omitempty"`
+}

@@ -18,6 +18,27 @@ func NewVariantService(repo *repository.VariantRepository) *VariantService {
 	}
 }
 
+func (v *VariantService) CreateVariant(ctx context.Context, req dto.VariantRequest) (dto.AllVariant, error) {
+	data, err := v.repo.CreateVariant(ctx, req)
+
+	if err != nil {
+		return dto.AllVariant{}, err
+	}
+
+	var result dto.AllVariant
+
+	result = dto.AllVariant{
+		ID:              data.ID,
+		VariantName:     data.VariantName,
+		AdditionalPrice: data.AdditionalPrice,
+		CreatedAt:       data.CreatedAt,
+		UpdatedAt:       data.UpdatedAt,
+		DeletedAt:       data.DeletedAt,
+	}
+
+	return result, nil
+}
+
 func (v *VariantService) GetVariants(ctx context.Context) ([]dto.AllVariant, error) {
 	variant, err := v.repo.GetVariants(ctx)
 
@@ -60,10 +81,40 @@ func (v *VariantService) GetVariantById(ctx context.Context, id int) (dto.Varian
 		ID:              variant.ID,
 		VariantName:     variant.VariantName,
 		AdditionalPrice: variant.AdditionalPrice,
-		// CreatedAt:       variant.CreatedAt,
-		// UpdatedAt:       variant.UpdatedAt,
-		// DeletedAt:       variant.DeletedAt,
 	}
+
+	return result, nil
+}
+
+func (v *VariantService) UpdateVariant(ctx context.Context, req dto.VariantRequest, id int) (dto.AllVariant, error) {
+
+	if id <= 0 {
+		return dto.AllVariant{}, errors.New("id not valid")
+	}
+
+	if req.VariantName == "" {
+		return dto.AllVariant{}, errors.New("variant name is required")
+	}
+
+	if req.AdditionalPrice < 0 {
+		return dto.AllVariant{}, errors.New("additional price cannot be under zero")
+	}
+
+	data, err := v.repo.UpdateVariant(ctx, req, id)
+
+	if err != nil {
+		return dto.AllVariant{}, errors.New("variant not found")
+	}
+
+	result := dto.AllVariant{
+		ID:              data.ID,
+		VariantName:     data.VariantName,
+		AdditionalPrice: data.AdditionalPrice,
+		CreatedAt:       data.CreatedAt,
+		UpdatedAt:       data.UpdatedAt,
+		DeletedAt:       data.DeletedAt,
+	}
+	// fmt.Println(result)
 
 	return result, nil
 }

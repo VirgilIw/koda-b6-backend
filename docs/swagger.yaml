@@ -264,6 +264,17 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ResponseCreateVariant:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.AllVariant'
+      success:
+        type: boolean
+    type: object
   dto.ResponseForgotPwd:
     properties:
       error:
@@ -364,6 +375,17 @@ definitions:
         type: boolean
       token:
         type: string
+    type: object
+  dto.ResponseUpdateVariant:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.AllVariant'
+      success:
+        type: boolean
     type: object
   dto.ResponseVariant:
     properties:
@@ -487,6 +509,13 @@ definitions:
       additional_price:
         type: integer
       id:
+        type: integer
+      variant_name:
+        type: string
+    type: object
+  dto.VariantRequest:
+    properties:
+      additional_price:
         type: integer
       variant_name:
         type: string
@@ -956,6 +985,37 @@ paths:
       summary: Get all variants
       tags:
       - Variants
+    post:
+      consumes:
+      - application/json
+      description: Create new variant
+      parameters:
+      - description: Create variant request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.VariantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseUpdateVariant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseUpdateVariant'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseUpdateVariant'
+      security:
+      - BearerAuth: []
+      summary: Create new variant
+      tags:
+      - Variants
   /admin/variants/{id}:
     delete:
       description: Delete variant by id
@@ -1015,6 +1075,46 @@ paths:
       security:
       - BearerAuth: []
       summary: Get variant by id
+      tags:
+      - Variants
+    patch:
+      consumes:
+      - application/json
+      description: Update variant by id
+      parameters:
+      - description: variant id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update variant request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.VariantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCreateVariant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCreateVariant'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseCreateVariant'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCreateVariant'
+      security:
+      - BearerAuth: []
+      summary: Update variant by id
       tags:
       - Variants
   /auth/forgot-password:
