@@ -16,3 +16,8 @@ type Variant struct {
 	VariantName     string `json:"variant_name,omitempty"`
 	AdditionalPrice int    `json:"additional_price,omitempty"`
 }
+
+type VariantRequest struct {
+	VariantName     string `json:"variant_name,omitempty"`
+	AdditionalPrice int    `json:"additional_price,omitempty"`
+}
