@@ -83,7 +83,7 @@ RETURNING id, title, description, value, image`
 	return coupon, nil
 }
 
-func (o *OrderRepository) EditCoupon(ctx context.Context, req dto.CouponRequest) (model.Coupon, error) {
+func (o *OrderRepository) EditCoupon(ctx context.Context, req dto.CouponRequest, id int) (model.Coupon, error) {
 	query := `UPDATE items
 SET title = $1,
     description = $2,
@@ -92,7 +92,7 @@ SET title = $1,
 WHERE id = $5
 RETURNING id, title, description, value, image;`
 
-	rows, err := o.db.Query(ctx, query, req.Title, req.Description, req.Value, req.Image, req.ID)
+	rows, err := o.db.Query(ctx, query, req.Title, req.Description, req.Value, req.Image, id)
 
 	if err != nil {
 		return model.Coupon{}, err

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -81,16 +82,34 @@ func (o *OrderService) CreateCoupon(ctx context.Context, req dto.CouponRequest) 
 	return result, nil
 }
 
-func (o *OrderService) EditCoupon(ctx context.Context, req dto.CouponRequest) (dto.Coupon, error) {
-	coupon, err := o.repo.EditCoupon(ctx, req)
+func (o *OrderService) EditCoupon(ctx context.Context, req dto.CouponRequest, id int) (dto.Coupon, error) {
 
+	if id <= 0 {
+		return dto.Coupon{}, errors.New("id not valid")
+	}
+
+	if req.Description == "" {
+		return dto.Coupon{}, errors.New("description is required")
+	}
+
+	if req.Title == "" {
+		return dto.Coupon{}, errors.New("title is required")
+	}
+
+	if req.Value == "" {
+		return dto.Coupon{}, errors.New("value is required")
+	}
+
+	if req.Image == "" {
+		return dto.Coupon{}, errors.New("image is required")
+	}
+
+	coupon, err := o.repo.EditCoupon(ctx, req, id)
 	if err != nil {
 		return dto.Coupon{}, err
 	}
 
-	var result dto.Coupon
-
-	result = dto.Coupon{
+	result := dto.Coupon{
 		ID:          coupon.ID,
 		Title:       coupon.Title,
 		Description: coupon.Description,

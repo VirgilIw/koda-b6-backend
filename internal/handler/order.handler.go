@@ -125,18 +125,30 @@ func (o *OrderHandler) CreateCoupon(ctx *gin.Context) {
 }
 
 // EditCoupon godoc
-// @Summary      Edit Coupon
-// @Description  Edit a coupon
-// @Tags         Coupons
-// @Accept       json
-// @Produce      json
-// @Param        coupon body dto.CouponRequest true "Coupon request body"
-// @Success      200  {object}  dto.ResponseCoupon
-// @Failure      400  {object}  dto.ResponseCoupon
-// @Failure      404  {object}  dto.ResponseCoupon
-// @Failure      500  {object}  dto.ResponseCoupon
-// @Router       /admin/coupons/{id} [patch]
+// @Summary Edit Coupon
+// @Description Edit a coupon
+// @Tags Coupons
+// @Accept json
+// @Produce json
+// @Param id path int true "Coupon ID"
+// @Param coupon body dto.CouponRequest true "Coupon request"
+// @Success 200 {object} dto.ResponseCoupon
+// @Failure 400 {object} dto.ResponseCoupon
+// @Failure 404 {object} dto.ResponseCoupon
+// @Failure 500 {object} dto.ResponseCoupon
+// @Security BearerAuth
+// @Router /admin/coupons/{id} [patch]
 func (o *OrderHandler) EditCoupon(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseCoupon{
+			Success: false,
+			Message: "invalid id",
+			Error:   err.Error(),
+		})
+		return
+	}
+
 	var req dto.CouponRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -148,7 +160,7 @@ func (o *OrderHandler) EditCoupon(ctx *gin.Context) {
 		return
 	}
 
-	result, err := o.service.EditCoupon(ctx, req)
+	result, err := o.service.EditCoupon(ctx.Request.Context(), req, id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, dto.ResponseCoupon{
 			Success: false,
