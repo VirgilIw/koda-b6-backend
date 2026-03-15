@@ -46,6 +46,10 @@ type Container struct {
 	variantRepo    *repository.VariantRepository
 	variantService *service.VariantService
 	variantHandler *handler.VariantHandler
+
+	imagesRepo    *repository.ImageRepository
+	imagesService *service.ImageService
+	imagesHandler *handler.ImageHandler
 }
 
 func NewContainer(db *pgxpool.Pool, rdb *redis.Client) *Container {
@@ -94,6 +98,10 @@ func (c *Container) initDependencies() {
 	c.variantRepo = repository.NewVariantRepository(c.db)
 	c.variantService = service.NewVariantService(c.variantRepo)
 	c.variantHandler = handler.NewVariantHandler(c.variantService)
+
+	c.imagesRepo = repository.NewImageRepository(c.db)
+	c.imagesService = service.NewImageService(c.imagesRepo)
+	c.imagesHandler = handler.NewImageHandler(c.imagesService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -126,4 +134,8 @@ func (c *Container) LandingHandler() *handler.LandingHandler {
 
 func (c *Container) VariantHandler() *handler.VariantHandler {
 	return c.variantHandler
+}
+
+func (c *Container) ImagesHandler() *handler.ImageHandler {
+	return c.imagesHandler
 }
