@@ -645,6 +645,147 @@ info:
   title: Coffeshop Backend
   version: "1.0"
 paths:
+  /admin/categories:
+    get:
+      description: get all category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseCategories'
+      summary: get all category
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: create category
+      parameters:
+      - description: create category
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: create category
+      tags:
+      - Categories
+  /admin/categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: Delete category
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      description: get category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: get category by id
+      tags:
+      - Categories
+    patch:
+      consumes:
+      - application/json
+      description: update category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update category
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCategory'
+      summary: update category
+      tags:
+      - Categories
   /admin/coupons:
     get:
       description: Get list of coupons
@@ -1582,147 +1723,6 @@ paths:
       summary: Add product to cart
       tags:
       - Cart
-  /categories:
-    get:
-      description: get all category
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseCategories'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseCategories'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/dto.ResponseCategories'
-      summary: get all category
-      tags:
-      - Categories
-    post:
-      consumes:
-      - application/json
-      description: create category
-      parameters:
-      - description: create category
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CategoryRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-      summary: create category
-      tags:
-      - Categories
-  /categories/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete category
-      parameters:
-      - description: category id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-      summary: Delete category
-      tags:
-      - Categories
-    get:
-      consumes:
-      - application/json
-      description: get category by id
-      parameters:
-      - description: category id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-      summary: get category by id
-      tags:
-      - Categories
-    patch:
-      consumes:
-      - application/json
-      description: update category
-      parameters:
-      - description: category id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: update category
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CategoryRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ResponseCategory'
-      summary: update category
-      tags:
-      - Categories
   /recommended-products:
     get:
       description: Get recommended product based on minimum 3 reviews
