@@ -27,7 +27,7 @@ func NewCategoriesHandler(service *service.CategoriesService) *CategoriesHandler
 // @Success      200      {object}  dto.ResponseCategories
 // @Failure      400      {object}  dto.ResponseCategories
 // @Failure      401      {object}  dto.ResponseCategories
-// @Router       /categories [get]
+// @Router       /admin/categories [get]
 func (c *CategoriesHandler) GetCategories(ctx *gin.Context) {
 
 	categories, err := c.service.GetCategories(ctx.Request.Context())
@@ -58,7 +58,7 @@ func (c *CategoriesHandler) GetCategories(ctx *gin.Context) {
 // @Success      200      {object}  dto.ResponseCategory
 // @Failure      400      {object}  dto.ResponseCategory
 // @Failure      401      {object}  dto.ResponseCategory
-// @Router       /categories/{id} [get]
+// @Router       /admin/categories/{id} [get]
 func (c *CategoriesHandler) GetCategoryByID(ctx *gin.Context) {
 
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -100,7 +100,7 @@ func (c *CategoriesHandler) GetCategoryByID(ctx *gin.Context) {
 // @Success      201      {object}  dto.ResponseCategory
 // @Failure      400      {object}  dto.ResponseCategory
 // @Failure      500      {object}  dto.ResponseCategory
-// @Router       /categories [post]
+// @Router       /admin/categories [post]
 func (c *CategoriesHandler) CreateCategory(ctx *gin.Context) {
 	var catName dto.CategoryRequest
 
@@ -142,7 +142,7 @@ func (c *CategoriesHandler) CreateCategory(ctx *gin.Context) {
 // @Success      200      {object}  dto.ResponseCategory
 // @Failure      400      {object}  dto.ResponseCategory
 // @Failure      500      {object}  dto.ResponseCategory
-// @Router       /categories/{id} [patch]
+// @Router       /admin/categories/{id} [patch]
 func (c *CategoriesHandler) UpdateCategory(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 
@@ -194,7 +194,7 @@ func (c *CategoriesHandler) UpdateCategory(ctx *gin.Context) {
 // @Success      200      {object}  dto.ResponseCategory
 // @Failure      400      {object}  dto.ResponseCategory
 // @Failure      500      {object}  dto.ResponseCategory
-// @Router       /categories/{id} [delete]
+// @Router       /admin/categories/{id} [delete]
 func (c *CategoriesHandler) DeleteCategory(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 
