@@ -33,7 +33,7 @@ func (c *CartHandler) AddToCart(ctx *gin.Context) {
 	var req dto.AddToCartRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, dto.ResponseCart{
+		ctx.JSON(http.StatusBadRequest, dto.ResponseCart{
 			Success: false,
 			Message: "bad request",
 			Error:   err.Error(),
@@ -43,7 +43,7 @@ func (c *CartHandler) AddToCart(ctx *gin.Context) {
 
 	err := c.service.AddToCart(ctx.Request.Context(), req)
 	if err != nil {
-		ctx.JSON(500, dto.ResponseCart{
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseCart{
 			Success: false,
 			Message: "failed add to cart",
 			Error:   err.Error(),
@@ -51,7 +51,7 @@ func (c *CartHandler) AddToCart(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, dto.ResponseCart{
+	ctx.JSON(http.StatusOK, dto.ResponseCart{
 		Success: true,
 		Message: "success add to cart",
 	})
