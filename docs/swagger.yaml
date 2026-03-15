@@ -181,6 +181,23 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.ProductFilter:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      is_birthday_package:
+        type: boolean
+      is_buy1get1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
   dto.ProductRecommendedResponse:
     properties:
       id:
@@ -321,6 +338,23 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/dto.Users'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseProductFilter:
+    properties:
+      error:
+        type: string
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      result:
+        items:
+          $ref: '#/definitions/dto.ProductFilter'
+        type: array
       success:
         type: boolean
     type: object
@@ -1004,6 +1038,69 @@ paths:
       security:
       - BearerAuth: []
       summary: Update product
+      tags:
+      - Products
+  /admin/products/search:
+    get:
+      description: Get products with optional filters such as name, category, price
+        range, and promotions
+      parameters:
+      - description: Product name
+        in: query
+        name: name
+        type: string
+      - description: Product category
+        in: query
+        name: category
+        type: string
+      - description: Minimum price
+        in: query
+        name: min_price
+        type: integer
+      - description: Maximum price
+        in: query
+        name: max_price
+        type: integer
+      - description: Flash sale filter
+        in: query
+        name: is_flash_sale
+        type: boolean
+      - description: Buy 1 Get 1 filter
+        in: query
+        name: is_buy1get1
+        type: boolean
+      - description: Birthday package filter
+        in: query
+        name: is_birthday_package
+        type: boolean
+      - description: Cheap product filter (<25000)
+        in: query
+        name: cheap
+        type: boolean
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of data per page (default 4)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseProductFilter'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseProductFilter'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseProductFilter'
+      summary: Search products with filters
       tags:
       - Products
   /admin/sizes:

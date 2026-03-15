@@ -581,6 +581,100 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/products/search": {
+            "get": {
+                "description": "Get products with optional filters such as name, category, price range, and promotions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Search products with filters",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product category",
+                        "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Minimum price",
+                        "name": "min_price",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Maximum price",
+                        "name": "max_price",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Flash sale filter",
+                        "name": "is_flash_sale",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Buy 1 Get 1 filter",
+                        "name": "is_buy1get1",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Birthday package filter",
+                        "name": "is_birthday_package",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Cheap product filter (\u003c25000)",
+                        "name": "cheap",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of data per page (default 4)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseProductFilter"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseProductFilter"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseProductFilter"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/products/{id}": {
             "get": {
                 "security": [
@@ -2111,6 +2205,32 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ProductFilter": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_birthday_package": {
+                    "type": "boolean"
+                },
+                "is_buy1get1": {
+                    "type": "boolean"
+                },
+                "is_flash_sale": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.ProductRecommendedResponse": {
             "type": "object",
             "properties": {
@@ -2324,6 +2444,32 @@ const docTemplate = `{
                 },
                 "result": {
                     "$ref": "#/definitions/dto.Users"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseProductFilter": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ProductFilter"
+                    }
                 },
                 "success": {
                     "type": "boolean"

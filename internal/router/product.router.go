@@ -7,11 +7,16 @@ import (
 
 func RouterProduct(app *gin.RouterGroup, c *di.Container) {
 	products := app.Group("/products")
-	handler := c.ProductHandler()
 
-	products.GET("", handler.GetProducts)
-	products.GET("/:id", handler.GetDetailProductById)
-	products.POST("", handler.CreateProduct)
-	products.PATCH("/:id", handler.UpdateProduct)
-	products.DELETE("/:id", handler.DeleteProduct)
+	productHandler := c.ProductHandler()
+	searchHandler := c.SearchHandler()
+
+	products.GET("", productHandler.GetProducts)
+	products.GET("/:id", productHandler.GetDetailProductById)
+
+	products.GET("/search", searchHandler.SearchProducts)
+
+	products.POST("", productHandler.CreateProduct)
+	products.PATCH("/:id", productHandler.UpdateProduct)
+	products.DELETE("/:id", productHandler.DeleteProduct)
 }

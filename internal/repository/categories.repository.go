@@ -135,3 +135,30 @@ WHERE id = $1`
 
 	return nil
 }
+
+func (c *CategoriesRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+
+	query := `
+	SELECT EXISTS(
+		SELECT 1
+		FROM categories
+		WHERE categories_name ILIKE '%' || $1 || '%'
+	) AS exists
+	`
+
+	rows, err := c.db.Query(ctx, query, name)
+	if err != nil {
+		return false, err
+	}
+
+	result, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.CategoryExist])
+	if err != nil {
+		return false, err
+	}
+
+	if len(result) == 0 {
+		return false, nil
+	}
+
+	return result[0].Exists, nil
+}
