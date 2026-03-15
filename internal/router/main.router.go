@@ -20,6 +20,7 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterAuth(app, c)
 	RouterRecommendProduct(app, c)
 	RouterLanding(app, c)
+	RouterCart(app, c)
 	// admin routes
 	admin := app.Group("/admin")
 

@@ -1,5 +1,22 @@
 basePath: /
 definitions:
+  dto.AddToCartRequest:
+    properties:
+      product_id:
+        type: integer
+      qty:
+        type: integer
+      size_id:
+        type: integer
+      user_id:
+        type: integer
+      variant_id:
+        type: integer
+    required:
+    - product_id
+    - qty
+    - user_id
+    type: object
   dto.AllVariant:
     properties:
       additional_price:
@@ -24,6 +41,31 @@ definitions:
     required:
     - email
     - password
+    type: object
+  dto.CartItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      price:
+        type: integer
+      product_id:
+        type: integer
+      product_image:
+        type: string
+      product_name:
+        type: string
+      qty:
+        type: integer
+      size_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+      variant_id:
+        type: integer
     type: object
   dto.Category:
     properties:
@@ -247,6 +289,19 @@ definitions:
       result:
         items:
           $ref: '#/definitions/dto.Users'
+        type: array
+      success:
+        type: boolean
+    type: object
+  dto.ResponseCart:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.CartItem'
         type: array
       success:
         type: boolean
@@ -1475,6 +1530,58 @@ paths:
       summary: Reset user password
       tags:
       - Authentication
+  /cart:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+      security:
+      - BearerAuth: []
+      summary: Get user cart
+      tags:
+      - Cart
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add To Cart Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddToCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseCart'
+      security:
+      - BearerAuth: []
+      summary: Add product to cart
+      tags:
+      - Cart
   /categories:
     get:
       description: get all category

@@ -79,23 +79,21 @@ CREATE TABLE if not exists "product_variants"  (
 );
 
 
-CREATE TABLE if not exists "cart"  (
+CREATE TABLE IF NOT EXISTS "cart" (
   "id" serial PRIMARY KEY,
   "user_id" int,
   "product_id" int,
   "qty" int,
   "size_id" int,
   "variant_id" int,
-  "is_flash_sale" boolean DEFAULT false,
-  "is_buy1get1" boolean DEFAULT false,
-  "is_birthday_package" boolean DEFAULT false,
   foreign key ("user_id") references "users"("id"),
   foreign key ("product_id") references "products"("id"),
   foreign key ("size_id") references "sizes"("id"),
   foreign key ("variant_id") references "variants"("id"),
   "created_at" timestamp DEFAULT now(),
   "updated_at" timestamp,
-  "deleted_at" timestamp
+  "deleted_at" timestamp,
+  UNIQUE (user_id, product_id, size_id, variant_id)
 );
 
 CREATE TABLE if not exists "images"  (
