@@ -31,7 +31,7 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 // @Failure      400  {object}  dto.Response
 // @Failure      500  {object}  dto.Response
 // @Security     BearerAuth
-// @Router       /users [get]
+// @Router       /admin/users [get]
 func (u *UserHandler) GetUsers(ctx *gin.Context) {
 	datas, err := u.service.GetUsers(ctx.Request.Context())
 
@@ -61,7 +61,7 @@ func (u *UserHandler) GetUsers(ctx *gin.Context) {
 // @Failure      400  {object}  dto.Response
 // @Failure      500  {object}  dto.Response
 // @Security     BearerAuth
-// @Router       /users/{id} [get]
+// @Router       /admin/users/{id} [get]
 func (u *UserHandler) GetUserById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 
@@ -109,7 +109,7 @@ func (u *UserHandler) GetUserById(ctx *gin.Context) {
 // @Failure      400        {object}  dto.ResponseOneData
 // @Failure      500        {object}  dto.ResponseOneData
 // @Security     BearerAuth
-// @Router       /users [patch]
+// @Router       /admin/users [patch]
 func (h *UserHandler) UpdateProfile(c *gin.Context) {
 	// Ambil userID dari JWT
 	idRaw, exists := c.Get("userID")
@@ -190,7 +190,7 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 // @Failure      400  {object}  dto.Response
 // @Failure      500  {object}  dto.Response
 // @Security     BearerAuth
-// @Router       /users/{id} [delete]
+// @Router       /admin/users/{id} [delete]
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -232,7 +232,7 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 // @Success      201 {object} dto.Response
 // @Failure      400 {object} dto.Response
 // @Failure      500 {object} dto.Response
-// @Router       /users [post]
+// @Router       /admin/users [post]
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	// Tangkap file gambar
 	file, err := c.FormFile("picture")
