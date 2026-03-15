@@ -27,6 +27,10 @@ type Container struct {
 	productService *service.ProductService
 	productHandler *handler.ProductHandler
 
+	filterRepo    *repository.SearchRepository
+	filterService *service.SearchService
+	filterHandler *handler.SearchHandler
+
 	orderRepo    *repository.OrderRepository
 	orderService *service.OrderService
 	orderHandler *handler.OrderHandler
@@ -102,6 +106,10 @@ func (c *Container) initDependencies() {
 	c.imagesRepo = repository.NewImageRepository(c.db)
 	c.imagesService = service.NewImageService(c.imagesRepo)
 	c.imagesHandler = handler.NewImageHandler(c.imagesService)
+
+	c.filterRepo = repository.NewSearchRepository(c.db)
+	c.filterService = service.NewSearchService(c.filterRepo, c.categoryRepo)
+	c.filterHandler = handler.NewSearchHandler(c.filterService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -138,4 +146,8 @@ func (c *Container) VariantHandler() *handler.VariantHandler {
 
 func (c *Container) ImagesHandler() *handler.ImageHandler {
 	return c.imagesHandler
+}
+
+func (c *Container) SearchHandler() *handler.SearchHandler {
+	return c.filterHandler
 }

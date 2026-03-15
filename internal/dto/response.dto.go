@@ -185,3 +185,12 @@ type ResponseImage struct {
 	Error   string   `json:"error,omitempty"`
 	Result  ImageDto `json:"result,omitempty"`
 }
+
+type ResponseProductFilter struct {
+	Success bool            `json:"success,omitempty"`
+	Message string          `json:"message,omitempty"`
+	Error   string          `json:"error,omitempty"`
+	Limit   int             `json:"limit"`
+	Page    int             `json:"page"`
+	Result  []ProductFilter `json:"result,omitempty"`
+}
