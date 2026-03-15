@@ -194,3 +194,10 @@ type ResponseProductFilter struct {
 	Page    int             `json:"page"`
 	Result  []ProductFilter `json:"result,omitempty"`
 }
+
+type ResponseCart struct {
+	Success bool       `json:"success"`
+	Message string     `json:"message"`
+	Error   string     `json:"error,omitempty"`
+	Result  []CartItem `json:"result"`
+}

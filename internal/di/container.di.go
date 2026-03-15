@@ -54,6 +54,10 @@ type Container struct {
 	imagesRepo    *repository.ImageRepository
 	imagesService *service.ImageService
 	imagesHandler *handler.ImageHandler
+
+	cartRepo    *repository.CartRepository
+	cartService *service.CartService
+	cartHandler *handler.CartHandler
 }
 
 func NewContainer(db *pgxpool.Pool, rdb *redis.Client) *Container {
@@ -110,6 +114,10 @@ func (c *Container) initDependencies() {
 	c.filterRepo = repository.NewSearchRepository(c.db)
 	c.filterService = service.NewSearchService(c.filterRepo, c.categoryRepo)
 	c.filterHandler = handler.NewSearchHandler(c.filterService)
+
+	c.cartRepo = repository.NewCartRepository(c.db)
+	c.cartService = service.NewCartService(c.cartRepo)
+	c.cartHandler = handler.NewCartHandler(c.cartService)
 }
 
 func (c *Container) UserHandler() *handler.UserHandler {
@@ -150,4 +158,8 @@ func (c *Container) ImagesHandler() *handler.ImageHandler {
 
 func (c *Container) SearchHandler() *handler.SearchHandler {
 	return c.filterHandler
+}
+
+func (c *Container) CartHandler() *handler.CartHandler {
+	return c.cartHandler
 }
