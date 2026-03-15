@@ -171,3 +171,17 @@ type ResponseUpdateVariant struct {
 	Error   string     `json:"error,omitempty"`
 	Result  AllVariant `json:"result,omitempty"`
 }
+
+type ResponseImages struct {
+	Success bool       `json:"success,omitempty"`
+	Message string     `json:"message,omitempty"`
+	Error   string     `json:"error,omitempty"`
+	Result  []ImageDto `json:"result,omitempty"`
+}
+
+type ResponseImage struct {
+	Success bool     `json:"success,omitempty"`
+	Message string   `json:"message,omitempty"`
+	Error   string   `json:"error,omitempty"`
+	Result  ImageDto `json:"result,omitempty"`
+}

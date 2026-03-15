@@ -117,6 +117,13 @@ definitions:
       email:
         type: string
     type: object
+  dto.ImageDto:
+    properties:
+      id:
+        type: integer
+      image_path:
+        type: string
+    type: object
   dto.Product:
     properties:
       created_at:
@@ -281,6 +288,30 @@ definitions:
         type: string
       result:
         $ref: '#/definitions/dto.ForgotPwdResponse'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseImage:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.ImageDto'
+      success:
+        type: boolean
+    type: object
+  dto.ResponseImages:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.ImageDto'
+        type: array
       success:
         type: boolean
     type: object
@@ -668,6 +699,149 @@ paths:
       summary: Edit Coupon
       tags:
       - Coupons
+  /admin/images:
+    get:
+      description: Retrieve all images
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseImages'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseImages'
+      summary: Get all images
+      tags:
+      - Images
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload and create new image
+      parameters:
+      - description: Image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+      summary: Create new image
+      tags:
+      - Images
+  /admin/images/{id}:
+    delete:
+      description: Retrieve image by id
+      parameters:
+      - description: Image ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+      summary: Delete image by id
+      tags:
+      - Images
+    get:
+      description: Retrieve image by id
+      parameters:
+      - description: Image ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+      summary: Get image by id
+      tags:
+      - Images
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update image by id
+      parameters:
+      - description: Image ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseImage'
+      summary: Update image
+      tags:
+      - Images
   /admin/products:
     delete:
       consumes:
