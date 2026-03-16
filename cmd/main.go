@@ -23,11 +23,10 @@ import (
 // @description Type "Bearer" followed by a space and JWT token. Example: "Bearer eyJhbGciO..."
 func main() {
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
+	godotenv.Load()
 
 	db, err := config.InitDB()
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,5 +43,5 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	app.Run(fmt.Sprintf("localhost:%s", port))
+	app.Run(fmt.Sprintf(":%s", port))
 }
