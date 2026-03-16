@@ -14,6 +14,7 @@ type configDB struct {
 	user     string
 	password string
 	dbName   string
+	sslmode  string
 }
 
 func InitDB() (*pgxpool.Pool, error) {
@@ -23,17 +24,18 @@ func InitDB() (*pgxpool.Pool, error) {
 		user:     os.Getenv("DB_USERNAME"),
 		password: os.Getenv("DB_PASSWORD"),
 		dbName:   os.Getenv("DB_NAME"),
+		sslmode:  os.Getenv("DB_SSLMODE"),
 	}
 
-	return pgxpool.New(
-		context.Background(),
-		fmt.Sprintf(
-			"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-			config.user,
-			config.password,
-			config.host,
-			config.port,
-			config.dbName,
-		),
+	connStr := fmt.Sprintf(
+		"postgresql://%s:%s@%s:%s/%s?sslmode=%s",
+		config.user,
+		config.password,
+		config.host,
+		config.port,
+		config.dbName,
+		config.sslmode,
 	)
+
+	return pgxpool.New(context.Background(), connStr)
 }
