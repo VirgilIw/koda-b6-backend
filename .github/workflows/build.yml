@@ -35,3 +35,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: "[SERVER] pull image from ghcr.io"
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd server-virgil
+            docker compose pull
+            docker run --rm --network=server-irul_default migrate/migrate:latest -source github://virgilIw:${{secrets.GITHUB_TOKEN}}@virgilIw/koda-b6-db/migration -database postgresql://postgres:123456@pg:5432/coffeshop?sslmode=disable up
+            docker compose up backend -d
