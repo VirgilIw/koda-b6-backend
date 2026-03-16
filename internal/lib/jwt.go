@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
 type CustomClaims struct { // claim dilakukan ketika generate jwt
@@ -14,7 +13,6 @@ type CustomClaims struct { // claim dilakukan ketika generate jwt
 }
 
 func GenerateToken(userId int) (string, error) {
-	godotenv.Load()
 	mySecret := os.Getenv("SECRET_KEY")
 
 	// claim itu isinya data-data yang disimpan di dalam JWT.
@@ -42,7 +40,6 @@ func GenerateToken(userId int) (string, error) {
 }
 
 func VerifyToken(tokenString string) (*CustomClaims, bool) {
-	godotenv.Load()
 	mySecret := os.Getenv("SECRET_KEY")
 
 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(t *jwt.Token) (any, error) {

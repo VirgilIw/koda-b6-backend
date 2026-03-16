@@ -23,7 +23,10 @@ import (
 // @description Type "Bearer" followed by a space and JWT token. Example: "Bearer eyJhbGciO..."
 func main() {
 
-	godotenv.Load()
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println(".env tidak ditemukan, pakai system env")
+	}
 
 	db, err := config.InitDB()
 
