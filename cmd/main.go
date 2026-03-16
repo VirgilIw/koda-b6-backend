@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -23,17 +22,12 @@ import (
 // @description Type "Bearer" followed by a space and JWT token. Example: "Bearer eyJhbGciO..."
 func main() {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Println(".env tidak ditemukan, pakai system env")
-	}
+	_ = godotenv.Load(".env")
 
 	db, err := config.InitDB()
-
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed connect database: %v", err)
 	}
-
 	defer db.Close()
 
 	rdb := config.InitRedis()
@@ -45,6 +39,9 @@ func main() {
 	router.Init(app, container)
 
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8888"
+	}
 
-	app.Run(fmt.Sprintf(":%s", port))
+	app.Run(":" + port)
 }
