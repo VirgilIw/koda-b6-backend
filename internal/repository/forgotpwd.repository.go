@@ -20,6 +20,7 @@ func NewForgotPwdRepository(db *pgxpool.Pool) *ForgotPwdRepository {
 }
 
 func (f *ForgotPwdRepository) GetDataByEmailAndCode(ctx context.Context, req dto.ForgotPwdRequest, codeOtp int) (model.ForgotPassword, error) {
+
 	query := `
 		SELECT id, email, code_otp, created_at
 		FROM forgot_password
