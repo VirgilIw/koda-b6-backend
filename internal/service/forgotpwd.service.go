@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math/rand"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -23,7 +24,7 @@ func NewForgotPwdService(fpwdrepo *repository.ForgotPwdRepository, userRepo *rep
 }
 
 func (f *ForgotPwdService) RequestForgotPassword(ctx context.Context, req dto.ForgotPwdRequest) (dto.ForgotPwdResponse, error) {
-
+	fmt.Print(req.Email)
 	user, err := f.userRepo.GetByEmail(ctx, req.Email)
 	if err != nil {
 		return dto.ForgotPwdResponse{}, errors.New("email not found")
