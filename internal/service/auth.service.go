@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/lib"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -21,12 +20,7 @@ func NewAuthService(repo *repository.UserRepository) *AuthService {
 func (l *AuthService) AuthLogin(ctx context.Context, email, password string) string {
 
 	user, err := l.repo.GetByEmail(ctx, email)
-	fmt.Println("email:", email)
-	fmt.Println("password:", password)
-	fmt.Println("hash:", user.Password)
 
-	ok := lib.VerifyPassword(password, user.Password)
-	fmt.Println("verify:", ok)
 	if err != nil {
 		return ""
 	}
