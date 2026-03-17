@@ -6,23 +6,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/virgiIw/koda-b6-coffeshopdb/docs"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/config"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/router"
 )
 
-// @title Coffeshop Backend
-// @version 1.0
-// @description Coffeshop BE documentation
-// @host localhost:8888
-// @BasePath /
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-// @description Type "Bearer" followed by a space and JWT token. Example: "Bearer eyJhbGciO..."
 func main() {
-
 	_ = godotenv.Load()
+
+	docs.SwaggerInfo.Title = "Coffeshop Backend"
+	docs.SwaggerInfo.Description = "Coffeshop BE documentation"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = os.Getenv("APP_URL")
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	db, err := config.InitDB()
 	if err != nil {
