@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -13,6 +14,8 @@ import (
 )
 
 func main() {
+	fmt.Println("backend testt")
+
 	_ = godotenv.Load()
 
 	docs.SwaggerInfo.Title = "Coffeshop Backend"
