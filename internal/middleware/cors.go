@@ -17,7 +17,6 @@ func CorsMiddleware() gin.HandlerFunc {
 		origin := ctx.GetHeader("Origin")
 
 		allowOrigins := []string{
-			"http://localhost:5173",
 			os.Getenv("FRONTEND_URL"),
 		}
 
