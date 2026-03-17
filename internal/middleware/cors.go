@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 
@@ -17,6 +18,7 @@ func CorsMiddleware() gin.HandlerFunc {
 
 		allowOrigins := []string{
 			"http://localhost:5173",
+			os.Getenv("FRONTEND_URL"),
 		}
 
 		allowHeaders := []string{
