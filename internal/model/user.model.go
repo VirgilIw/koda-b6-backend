@@ -16,3 +16,10 @@ type UserModel struct {
 	DeletedAt   *time.Time `db:"deleted_at"`
 	LastLoginAt *time.Time `db:"lastlogin_at"`
 }
+
+type UserRegister struct {
+	Id       int    `db:"id"`
+	FullName string `db:"fullname"`
+	Email    string `db:"email"`
+	Password string `db:"password"`
+}
