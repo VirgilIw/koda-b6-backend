@@ -96,7 +96,7 @@ WHERE email = $1;
 	user, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.UserModel])
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return model.UserModel{}, nil
+			return model.UserModel{}, err
 		}
 		return model.UserModel{}, err
 	}
