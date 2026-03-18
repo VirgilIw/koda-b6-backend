@@ -1,5 +1,7 @@
 package dto
 
+import "github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
+
 type Response struct {
 	Success bool    `json:"success"`
 	Message string  `json:"message"`
@@ -10,7 +12,15 @@ type Response struct {
 type ResponseOneData struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+	Error   string `json:"error,omitempty"`
 	Result  Users  `json:"result"`
+}
+
+type ResponseRegister struct {
+	Success bool            `json:"success"`
+	Message string          `json:"message"`
+	Error   string          `json:"error,omitempty"`
+	Result  model.UserModel `json:"result"`
 }
 
 type ResponseToken struct {
