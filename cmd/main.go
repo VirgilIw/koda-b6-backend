@@ -40,9 +40,6 @@ func main() {
 	router.Init(app, container)
 
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8888"
-	}
 
 	app.Run(":" + port)
 }
