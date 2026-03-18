@@ -75,35 +75,28 @@ SELECT
     fullname,
     email,
     password,
- 	phone,
- 	address,
-	picture,
-	role,
-	created_at,
-	updated_at,
+    phone,
+    address,
+    picture,
+    role,
+    created_at,
+    updated_at,
     deleted_at,
-	lastlogin_at
+    lastlogin_at
 FROM users
-WHERE email = $1;`
+WHERE email = $1;
+`
 
-	var user model.UserModel
-
-	err := u.db.QueryRow(ctx, query, email).Scan(
-		&user.Id,
-		&user.FullName,
-		&user.Email,
-		&user.Password,
-		&user.Phone,
-		&user.Address,
-		&user.Picture,
-		&user.Role,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-		&user.DeletedAt,
-		&user.LastLoginAt,
-	)
-
+	rows, err := u.db.Query(ctx, query, email)
 	if err != nil {
+		return model.UserModel{}, err
+	}
+
+	user, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.UserModel])
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return model.UserModel{}, nil
+		}
 		return model.UserModel{}, err
 	}
 
@@ -182,47 +175,36 @@ func (u *UserRepository) DeleteUser(ctx context.Context, id int) error {
 	return nil
 }
 
-func (u *UserRepository) CreateUser(ctx context.Context, user model.UserModel) (model.UserModel, error) {
+func (u *UserRepository) CreateUser(ctx context.Context, req model.UserModel) (model.UserModel, error) {
 	query := `
 INSERT INTO users (fullname, email, password, phone, address, picture, role, created_at, updated_at)
 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
 RETURNING id, fullname, email, password, phone, address, picture, role, created_at, updated_at, deleted_at, lastlogin_at;
 `
-
-	var newUser model.UserModel
-
 	// Simpan hasil QueryRow di variable row
-	row := u.db.QueryRow(ctx, query,
-		user.FullName, // $1
-		user.Email,    // $2
-		user.Password, // $3
-		user.Phone,    // $4
-		user.Address,  // $5
-		user.Picture,  // $6
-		user.Role,     // $7
-		time.Now(),    // $8 created_at
-		time.Now(),    // $9 updated_at
+	data, err := u.db.Query(ctx, query,
+		req.FullName,
+		req.Email,
+		req.Password,
+		req.Phone,
+		req.Address,
+		req.Picture,
+		req.Role,
+		time.Now(),
+		time.Now(),
 	)
 
-	// Panggil Scan dari row
-	err := row.Scan(
-		&newUser.Id,
-		&newUser.FullName,
-		&newUser.Email,
-		&newUser.Password,
-		&newUser.Phone,
-		&newUser.Address,
-		&newUser.Picture,
-		&newUser.Role,
-		&newUser.CreatedAt,
-		&newUser.UpdatedAt,
-		&newUser.DeletedAt,
-		&newUser.LastLoginAt,
-	)
 	if err != nil {
 		return model.UserModel{}, err
 	}
 
+	var newUser model.UserModel
+
+	newUser, err = pgx.CollectOneRow(data, pgx.RowToStructByName[model.UserModel])
+
+	if err != nil {
+		return model.UserModel{}, err
+	}
 	// Hapus cache supaya GetUsers tidak menampilkan data lama
 	u.rdb.Del(ctx, "users:all")
 
