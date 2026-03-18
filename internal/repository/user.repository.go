@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 )
 
@@ -175,35 +176,29 @@ func (u *UserRepository) DeleteUser(ctx context.Context, id int) error {
 	return nil
 }
 
-func (u *UserRepository) CreateUser(ctx context.Context, req model.UserModel) (model.UserModel, error) {
+func (u *UserRepository) CreateUser(ctx context.Context, req dto.AuthRegisterRequest) (model.UserRegister, error) {
 	query := `
-INSERT INTO users (fullname, email, password, phone, address, picture, role, created_at, updated_at)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-RETURNING id, fullname, email, password, phone, address, picture, role, created_at, updated_at, deleted_at, lastlogin_at;
+INSERT INTO users (fullname, email, password)
+VALUES ($1,$2,$3)
+RETURNING id, fullname, email, password;
 `
 	// Simpan hasil QueryRow di variable row
 	data, err := u.db.Query(ctx, query,
 		req.FullName,
 		req.Email,
 		req.Password,
-		req.Phone,
-		req.Address,
-		req.Picture,
-		req.Role,
-		time.Now(),
-		time.Now(),
 	)
 
 	if err != nil {
-		return model.UserModel{}, err
+		return model.UserRegister{}, err
 	}
 
-	var newUser model.UserModel
+	var newUser model.UserRegister
 
-	newUser, err = pgx.CollectOneRow(data, pgx.RowToStructByName[model.UserModel])
+	newUser, err = pgx.CollectOneRow(data, pgx.RowToStructByName[model.UserRegister])
 
 	if err != nil {
-		return model.UserModel{}, err
+		return model.UserRegister{}, err
 	}
 	// Hapus cache supaya GetUsers tidak menampilkan data lama
 	u.rdb.Del(ctx, "users:all")
