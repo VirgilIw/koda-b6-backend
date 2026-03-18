@@ -23,7 +23,12 @@ func NewForgotPwdService(fpwdrepo *repository.ForgotPwdRepository, userRepo *rep
 }
 
 func (f *ForgotPwdService) RequestForgotPassword(ctx context.Context, req dto.ForgotPwdRequest) (dto.ForgotPwdResponse, error) {
+	if req.Email == "" {
+		return dto.ForgotPwdResponse{}, errors.New("email cannot be empty")
+	}
+
 	user, err := f.userRepo.GetByEmail(ctx, req.Email)
+
 	if err != nil {
 		return dto.ForgotPwdResponse{}, errors.New("email not found")
 	}
