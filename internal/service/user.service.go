@@ -116,14 +116,10 @@ func (u *UserService) DeleteUser(ctx context.Context, id int) error {
 
 func (u *UserService) CreateUser(ctx context.Context, req dto.CreateUserRequest) (dto.CreateUserResponse, error) {
 	// Mapping DTO request → Model
-	reqUser := model.UserModel{
+	reqUser := dto.AuthRegisterRequest{
 		FullName: req.FullName,
 		Email:    req.Email,
-		Password: req.Password, // akan di-hash
-		Phone:    &req.Phone,
-		Address:  &req.Address,
-		Picture:  &req.Picture,
-		Role:     &req.Role,
+		Password: req.Password,
 	}
 
 	// Hash password
@@ -140,16 +136,9 @@ func (u *UserService) CreateUser(ctx context.Context, req dto.CreateUserRequest)
 
 	// Mapping Model → DTO response
 	resp := dto.CreateUserResponse{
-		Id:        newUser.Id,
-		FullName:  newUser.FullName,
-		Email:     newUser.Email,
-		Phone:     *newUser.Phone,
-		Address:   *newUser.Address,
-		Picture:   *newUser.Picture,
-		Role:      *newUser.Role,
-		CreatedAt: *newUser.CreatedAt,
-		UpdatedAt: *newUser.UpdatedAt,
-		LastLogin: newUser.LastLoginAt,
+		Id:       newUser.Id,
+		FullName: newUser.FullName,
+		Email:    newUser.Email,
 	}
 
 	return resp, nil
