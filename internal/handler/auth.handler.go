@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/service"
 )
 
@@ -132,5 +133,45 @@ func (a *AuthHandler) ResetPassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, dto.ResponseResetPwd{
 		Success: true,
 		Message: "password reset successful",
+	})
+}
+
+func (a *AuthHandler) Register(ctx *gin.Context) {
+	var req model.UserModel
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, dto.ResponseRegister{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	user, err := a.authService.AuthRegister(ctx, req)
+	if err != nil {
+
+		// cek jika email sudah terdaftar
+		if err.Error() == "email already registered" {
+			ctx.JSON(http.StatusConflict, dto.ResponseRegister{
+				Success: false,
+				Message: "email already registered",
+				Error:   err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, dto.ResponseRegister{
+			Success: false,
+			Message: "internal server error",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, dto.ResponseRegister{
+		Success: true,
+		Message: "success register account",
+		Result:  user,
 	})
 }
