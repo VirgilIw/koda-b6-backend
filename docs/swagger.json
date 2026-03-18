@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Coffeshop BE documentation",
-        "title": "Coffeshop Backend",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:8888",
-    "basePath": "/",
     "paths": {
         "/admin/categories": {
             "get": {
@@ -1827,6 +1822,58 @@
                 }
             }
         },
+        "/auth/register": {
+            "post": {
+                "description": "Register user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register user",
+                "parameters": [
+                    {
+                        "description": "Register Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AuthRegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseRegister"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseRegister"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseRegister"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseRegister"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/reset-password": {
             "patch": {
                 "description": "Reset password using OTP sent to user's email",
@@ -2065,6 +2112,23 @@
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.AuthRegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john@email.com"
+                },
+                "fullname": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password123"
                 }
             }
         },
@@ -2600,6 +2664,9 @@
         "dto.ResponseOneData": {
             "type": "object",
             "properties": {
+                "error": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 },
@@ -2651,6 +2718,23 @@
                     "items": {
                         "$ref": "#/definitions/dto.ProductRecommendedResponse"
                     }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.ResponseRegister": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.AuthRegisterRequest"
                 },
                 "success": {
                     "type": "boolean"
@@ -2983,14 +3067,6 @@
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "BearerAuth": {
-            "description": "Type \"Bearer\" followed by a space and JWT token. Example: \"Bearer eyJhbGciO...\"",
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
 }
