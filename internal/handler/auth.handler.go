@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
-	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/service"
 )
 
@@ -136,8 +135,20 @@ func (a *AuthHandler) ResetPassword(ctx *gin.Context) {
 	})
 }
 
+// Register godoc
+// @Summary Register user
+// @Description Register user
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body dto.AuthRegisterRequest true "Register Request"
+// @Success 201 {object} dto.ResponseRegister
+// @Failure 400 {object} dto.ResponseRegister
+// @Failure 409 {object} dto.ResponseRegister
+// @Failure 500 {object} dto.ResponseRegister
+// @Router /auth/register [post]
 func (a *AuthHandler) Register(ctx *gin.Context) {
-	var req model.UserModel
+	var req dto.AuthRegisterRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ResponseRegister{
@@ -148,7 +159,7 @@ func (a *AuthHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	user, err := a.authService.AuthRegister(ctx, req)
+	err := a.authService.AuthRegister(ctx, req)
 	if err != nil {
 
 		// cek jika email sudah terdaftar
@@ -172,6 +183,5 @@ func (a *AuthHandler) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, dto.ResponseRegister{
 		Success: true,
 		Message: "success register account",
-		Result:  user,
 	})
 }
