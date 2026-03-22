@@ -27,7 +27,6 @@ func (s *SearchService) SearchProducts(ctx context.Context, req dto.SearchProduc
 		if err != nil {
 			return nil, err
 		}
-
 		if !exists {
 			return nil, fmt.Errorf("category '%s' not found", req.Category)
 		}
@@ -38,14 +37,29 @@ func (s *SearchService) SearchProducts(ctx context.Context, req dto.SearchProduc
 		return nil, err
 	}
 
+	if len(data) == 0 && req.Name != "" {
+		return nil, fmt.Errorf("product '%s' not found", req.Name)
+	}
+
 	var result []dto.ProductFilter
 
 	for _, v := range data {
+
+		finalPrice := v.Price
+
+		if v.IsFlashSale {
+			finalPrice = v.Price - 2000
+		}
+
 		result = append(result, dto.ProductFilter{
+			ID:                v.ID,
 			Name:              v.Name,
 			Description:       v.Description,
 			Price:             v.Price,
-			Category:          v.Category,
+			FinalPrice:        finalPrice,
+			Categories:        v.Categories,
+			Images:            v.Images,
+			Rating:            v.Rating,
 			IsFlashSale:       v.IsFlashSale,
 			IsBuy1Get1:        v.IsBuy1Get1,
 			IsBirthdayPackage: v.IsBirthdayPackage,
