@@ -17,8 +17,8 @@ func NewProductService(repo *repository.ProductRepository) *ProductService {
 	}
 }
 
-func (p *ProductService) GetProducts(ctx context.Context) ([]dto.Product, error) {
-	data, err := p.repo.GetProducts(ctx)
+func (p *ProductService) GetProducts(ctx context.Context, page int) ([]dto.Product, error) {
+	data, err := p.repo.GetProducts(ctx, page)
 	if err != nil {
 		return nil, err
 	}
@@ -33,6 +33,7 @@ func (p *ProductService) GetProducts(ctx context.Context) ([]dto.Product, error)
 			IsBuy1Get1:        v.IsBuy1Get1,
 			IsFlashSale:       v.IsFlashSale,
 			IsBirthdayPackage: v.IsBirthdayPackage,
+			ImagePath:         v.Image,
 		})
 	}
 
