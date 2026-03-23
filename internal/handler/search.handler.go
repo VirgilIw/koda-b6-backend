@@ -33,7 +33,6 @@ func NewSearchHandler(service *service.SearchService) *SearchHandler {
 // @Param is_birthday_package query bool false "Birthday package filter"
 // @Param cheap query bool false "Cheap product filter (<25000)"
 // @Param page query int false "Page number"
-// @Param limit query int false "Number of data per page (default 4)"
 // @Success 200 {object} dto.ResponseProductFilter
 // @Failure 400 {object} dto.ResponseProductFilter
 // @Failure 500 {object} dto.ResponseProductFilter
@@ -75,16 +74,10 @@ func (h *SearchHandler) SearchProducts(ctx *gin.Context) {
 		page = 1
 	}
 
-	limit := req.Limit
-	if limit == 0 {
-		limit = 4
-	}
-
 	ctx.JSON(http.StatusOK, dto.ResponseProductFilter{
 		Success: true,
 		Message: "success filter data",
 		Page:    page,
-		Limit:   limit,
 		Result:  data,
 	})
 }

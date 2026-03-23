@@ -21,16 +21,24 @@ func NewProductService(service *service.ProductService) *ProductHandler {
 
 // GetProducts godoc
 // @Summary      Get products
-// @Description  Get products
+// @Description  Get products with pagination
 // @Tags         Products
 // @Produce      json
-// @Success      200  {object}  dto.ProductsResponse
-// @Failure      400  {object}  dto.ProductsResponse
-// @Failure      500  {object}  dto.ProductsResponse
+// @Param        page     query     int     false  "Page number"
+// @Success      200      {object}  dto.ProductsResponse
+// @Failure      400      {object}  dto.ProductsResponse
+// @Failure      500      {object}  dto.ProductsResponse
 // @Security     BearerAuth
 // @Router       /admin/products [get]
 func (p *ProductHandler) GetProducts(ctx *gin.Context) {
-	products, err := p.service.GetProducts(ctx.Request.Context())
+	pageStr := ctx.Query("page")
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	products, err := p.service.GetProducts(ctx.Request.Context(), page)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
 			Success: false,
