@@ -7,6 +7,7 @@ type ProductModel struct {
 	Name              string    `db:"name"`
 	Description       string    `db:"description"`
 	Price             int       `db:"price"`
+	Image             []string  `db:"images"`
 	IsFlashSale       bool      `db:"is_flash_sale"`
 	IsBuy1Get1        bool      `db:"is_buy1get1"`
 	IsBirthdayPackage bool      `db:"is_birthday_package"`
