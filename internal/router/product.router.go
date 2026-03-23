@@ -12,9 +12,8 @@ func RouterProduct(app *gin.RouterGroup, c *di.Container) {
 	searchHandler := c.SearchHandler()
 
 	products.GET("", productHandler.GetProducts)
-	products.GET("/:id", productHandler.GetDetailProductById)
-
 	products.GET("/search", searchHandler.SearchProducts)
+	products.GET("/:id", productHandler.GetDetailProductById)
 
 	products.POST("", productHandler.CreateProduct)
 	products.PATCH("/:id", productHandler.UpdateProduct)
