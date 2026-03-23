@@ -185,8 +185,10 @@ definitions:
         type: string
       id:
         type: integer
-      image_path:
-        type: string
+      images:
+        items:
+          type: string
+        type: array
       is_birthday_package:
         type: boolean
       is_buy1get1:
@@ -236,10 +238,20 @@ definitions:
     type: object
   dto.ProductFilter:
     properties:
-      category:
-        type: string
+      categories:
+        items:
+          type: string
+        type: array
       description:
         type: string
+      final_price:
+        type: integer
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
       is_birthday_package:
         type: boolean
       is_buy1get1:
@@ -250,6 +262,8 @@ definitions:
         type: string
       price:
         type: integer
+      rating:
+        type: number
     type: object
   dto.ProductRecommendedResponse:
     properties:
@@ -1124,7 +1138,12 @@ paths:
       tags:
       - Products
     get:
-      description: Get products
+      description: Get products with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
       produces:
       - application/json
       responses:
@@ -1296,10 +1315,6 @@ paths:
       - description: Page number
         in: query
         name: page
-        type: integer
-      - description: Number of data per page (default 4)
-        in: query
-        name: limit
         type: integer
       produces:
       - application/json

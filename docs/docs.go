@@ -668,7 +668,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get products",
+                "description": "Get products with pagination",
                 "produces": [
                     "application/json"
                 ],
@@ -676,6 +676,14 @@ const docTemplate = `{
                     "Products"
                 ],
                 "summary": "Get products",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -857,12 +865,6 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of data per page (default 4)",
-                        "name": "limit",
                         "in": "query"
                     }
                 ],
@@ -2346,8 +2348,11 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "image_path": {
-                    "type": "string"
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "is_birthday_package": {
                     "type": "boolean"
@@ -2424,11 +2429,26 @@ const docTemplate = `{
         "dto.ProductFilter": {
             "type": "object",
             "properties": {
-                "category": {
-                    "type": "string"
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "description": {
                     "type": "string"
+                },
+                "final_price": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "is_birthday_package": {
                     "type": "boolean"
@@ -2444,6 +2464,9 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "integer"
+                },
+                "rating": {
+                    "type": "number"
                 }
             }
         },
