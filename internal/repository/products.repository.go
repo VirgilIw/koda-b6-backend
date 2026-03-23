@@ -22,33 +22,41 @@ func NewProductRepository(db *pgxpool.Pool, rdb *redis.Client) *ProductRepositor
 		rdb: rdb,
 	}
 }
+func (p *ProductRepository) GetProducts(ctx context.Context, page int) ([]model.ProductModel, error) {
 
-func (p *ProductRepository) GetProducts(ctx context.Context) ([]model.ProductModel, error) {
+	if page == 0 {
+		page = 1
+	}
+
+	limit := 6
+	offset := (page - 1) * limit
+
 	query := `
-	SELECT 
-		id,
-		name,
-		description,
-		price,
-		created_at,
-		is_flash_sale,
-		is_buy1get1,
-		is_birthday_package
-	FROM products
-	ORDER BY id;
+SELECT 
+    p.id,
+    p.name,
+    p.description,
+    p.price,
+    p.created_at,
+    p.is_flash_sale,
+    p.is_buy1get1,
+    p.is_birthday_package,
+    AVG(t.rating) AS rating
+FROM products p
+LEFT JOIN testimonials t ON t.product_id = p.id
+GROUP BY 
+    p.id, p.name, p.description, p.price, p.created_at,
+    p.is_flash_sale, p.is_buy1get1, p.is_birthday_package
+ORDER BY p.id
+LIMIT 6 OFFSET $1;
 	`
 
-	rows, err := p.db.Query(ctx, query)
+	rows, err := p.db.Query(ctx, query, offset)
 	if err != nil {
 		return nil, err
 	}
 
-	products, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.ProductModel])
-	if err != nil {
-		return nil, err
-	}
-
-	return products, nil
+	return pgx.CollectRows(rows, pgx.RowToStructByName[model.ProductModel])
 }
 
 func (p *ProductRepository) UpdateProduct(ctx context.Context, req dto.UpdateProductRequest) error {
