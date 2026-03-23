@@ -11,7 +11,7 @@ type Product struct {
 	IsBuy1Get1        bool      `json:"is_buy1get1"`
 	IsBirthdayPackage bool      `json:"is_birthday_package"`
 	CreatedAt         time.Time `json:"created_at"`
-	ImagePath         *string   `json:"image_path"`
+	ImagePath         []string  `json:"images"`
 }
 
 type ProductDetail struct {
