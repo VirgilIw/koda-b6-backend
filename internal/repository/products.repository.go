@@ -209,5 +209,9 @@ LIMIT 4;`
 		return []model.RecommendedProductModel{}, err
 	}
 
+	if products == nil {
+		products = []model.RecommendedProductModel{}
+	}
+
 	return products, nil
 }
