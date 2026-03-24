@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -40,7 +40,8 @@ func NewSearchHandler(service *service.SearchService) *SearchHandler {
 func (h *SearchHandler) SearchProducts(ctx *gin.Context) {
 
 	var req dto.SearchProductRequest
-
+	fmt.Println("IsBirthdayPackage:", req.IsBirthdayPackage)
+	fmt.Println("Raw query:", ctx.Request.URL.RawQuery)
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ResponseProductFilter{
 			Success: false,
@@ -50,17 +51,12 @@ func (h *SearchHandler) SearchProducts(ctx *gin.Context) {
 		return
 	}
 
-	data, err := h.service.SearchProducts(ctx.Request.Context(), req)
+	if req.Page < 1 {
+		req.Page = 1
+	}
 
+	data, totalCount, err := h.service.SearchProducts(ctx.Request.Context(), req)
 	if err != nil {
-		if strings.Contains(err.Error(), "category") {
-			ctx.JSON(http.StatusNotFound, dto.ResponseProductFilter{
-				Success: false,
-				Message: err.Error(),
-			})
-			return
-		}
-
 		ctx.JSON(http.StatusInternalServerError, dto.ResponseProductFilter{
 			Success: false,
 			Message: "internal server error",
@@ -69,15 +65,15 @@ func (h *SearchHandler) SearchProducts(ctx *gin.Context) {
 		return
 	}
 
-	page := req.Page
-	if page == 0 {
-		page = 1
-	}
+	limit := 6
+	totalPages := (totalCount + limit - 1) / limit
 
 	ctx.JSON(http.StatusOK, dto.ResponseProductFilter{
-		Success: true,
-		Message: "success filter data",
-		Page:    page,
-		Result:  data,
+		Success:    true,
+		Message:    "success filter data",
+		Page:       req.Page,
+		TotalPages: totalPages,
+		TotalCount: totalCount,
+		Result:     data,
 	})
 }
