@@ -195,12 +195,13 @@ type ResponseImage struct {
 }
 
 type ResponseProductFilter struct {
-	Success bool            `json:"success,omitempty"`
-	Message string          `json:"message,omitempty"`
-	Error   string          `json:"error,omitempty"`
-	Limit   int             `json:"limit"`
-	Page    int             `json:"page"`
-	Result  []ProductFilter `json:"result,omitempty"`
+	Success    bool            `json:"success"`
+	Message    string          `json:"message"`
+	Error      string          `json:"error,omitempty"`
+	Page       int             `json:"page"`
+	TotalPages int             `json:"total_pages"`
+	TotalCount int             `json:"total_count"`
+	Result     []ProductFilter `json:"result"`
 }
 
 type ResponseCart struct {
