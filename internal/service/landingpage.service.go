@@ -21,10 +21,10 @@ func (p *ProductService) GetRecommendedProducts(ctx context.Context) ([]dto.Prod
 	data, err := p.repo.GetRecommendedProducts(ctx)
 
 	if err != nil {
-		return nil, err
+		return []dto.ProductRecommendedResponse{}, err
 	}
 
-	var result []dto.ProductRecommendedResponse
+	var result = []dto.ProductRecommendedResponse{}
 
 	for _, v := range data {
 		result = append(result, dto.ProductRecommendedResponse{
