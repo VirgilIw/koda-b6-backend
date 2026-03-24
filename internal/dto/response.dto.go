@@ -62,7 +62,7 @@ type ResponseRecommended struct {
 	Success bool                         `json:"success,omitempty"`
 	Message string                       `json:"message,omitempty"`
 	Error   string                       `json:"error,omitempty"`
-	Result  []ProductRecommendedResponse `json:"result,omitempty"`
+	Result  []ProductRecommendedResponse `json:"result"`
 }
 
 type ProductsResponse struct {
