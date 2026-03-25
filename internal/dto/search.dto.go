@@ -2,7 +2,7 @@ package dto
 
 type SearchProductRequest struct {
 	Name              string `form:"name"`
-	Category          string `form:"category"`
+	Category          string `form:"categories"`
 	MinPrice          int    `form:"min_price"`
 	MaxPrice          int    `form:"max_price"`
 	IsFlashSale       bool   `form:"is_flash_sale"`
