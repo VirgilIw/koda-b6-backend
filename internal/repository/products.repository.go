@@ -181,7 +181,7 @@ func (p *ProductRepository) GetRecommendedProducts(ctx context.Context) ([]model
     p.description,
     p.price,
     AVG(t.rating) AS rating,
-    STRING_AGG(t.message, ' | ') AS review_messages,
+    STRING_AGG(t.message, ' , ') AS review_messages,
     (
         SELECT i.image_path
         FROM product_images pi

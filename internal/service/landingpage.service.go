@@ -28,12 +28,13 @@ func (p *ProductService) GetRecommendedProducts(ctx context.Context) ([]dto.Prod
 
 	for _, v := range data {
 		result = append(result, dto.ProductRecommendedResponse{
-			ID:        v.Id,
-			Name:      v.Name,
-			Price:     v.Price,
-			ImagePath: v.ImagePath,
-			Rating:    *v.Rating,
-			Message:   *v.ReviewMessages,
+			ID:          v.Id,
+			Name:        v.Name,
+			Price:       v.Price,
+			Description: v.Description,
+			ImagePath:   v.ImagePath,
+			Rating:      *v.Rating,
+			Message:     *v.ReviewMessages,
 		})
 	}
 
