@@ -107,7 +107,6 @@ func (r *SearchRepository) SearchProducts(ctx context.Context, req dto.SearchPro
 	if err != nil {
 		return nil, 0, err
 	}
-	defer countRows.Close()
 
 	totalCount, err := pgx.CollectOneRow(countRows, pgx.RowTo[int])
 	if err != nil {
