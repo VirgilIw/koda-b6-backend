@@ -3,22 +3,25 @@ package dto
 import "time"
 
 type Product struct {
-	Id                int       `json:"id"`
+	ID                int       `json:"id"`
 	Name              string    `json:"name"`
 	Description       string    `json:"description"`
 	Price             int       `json:"price"`
+	Rating            float64   `json:"rating"`
 	IsFlashSale       bool      `json:"is_flash_sale"`
 	IsBuy1Get1        bool      `json:"is_buy1get1"`
 	IsBirthdayPackage bool      `json:"is_birthday_package"`
 	CreatedAt         time.Time `json:"created_at"`
-	ImagePath         []string  `json:"images"`
+	Image             string    `json:"image"`
 }
 
 type ProductDetail struct {
 	ID                int      `json:"id"`
 	Name              string   `json:"name"`
 	Price             int      `json:"price"`
-	Variants          string   `json:"variants"`
+	Description       string   `json:"description"`
+	Images            []string `json:"images"`
+	Variants          []string `json:"variants"`
 	VariantPrices     []int    `json:"variant_prices"`
 	TotalTestimonials int      `json:"total_testimonials"`
 	Sizes             []string `json:"sizes"`

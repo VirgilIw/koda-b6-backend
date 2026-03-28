@@ -41,12 +41,21 @@ SELECT
     p.is_flash_sale,
     p.is_buy1get1,
     p.is_birthday_package,
-    AVG(t.rating) AS rating
+    AVG(t.rating) AS rating,
+    (
+        SELECT i.image_path
+        FROM product_images pi
+        JOIN images i ON i.id = pi.image_id
+        WHERE pi.product_id = p.id
+        ORDER BY i.id
+        LIMIT 1
+    ) AS image
 FROM products p
 LEFT JOIN testimonials t ON t.product_id = p.id
 GROUP BY 
     p.id, p.name, p.description, p.price, p.created_at,
     p.is_flash_sale, p.is_buy1get1, p.is_birthday_package
+
 ORDER BY p.id
 LIMIT 6 OFFSET $1;
 	`
@@ -149,11 +158,18 @@ SELECT
     p.id,
     p.name,
     p.price,
-    string_agg(DISTINCT v.variant_name, ', ') AS variants,
+	p.description,
+    ARRAY_AGG(DISTINCT v.variant_name) AS variants,
     ARRAY_AGG(DISTINCT v.additional_price) AS variant_prices,
     COUNT(DISTINCT t.id) AS total_testimonials,
     ARRAY_AGG(DISTINCT s.size_name) AS sizes,
-    ARRAY_AGG(DISTINCT s.additional_price) AS size_prices
+    ARRAY_AGG(DISTINCT s.additional_price) AS size_prices,
+    (
+        SELECT ARRAY_AGG(i.image_path ORDER BY i.id)
+        FROM product_images pi
+        JOIN images i ON i.id = pi.image_id
+        WHERE pi.product_id = p.id
+    ) AS images
 FROM products p
 LEFT JOIN product_variants pv ON pv.product_id = p.id
 LEFT JOIN variants v ON v.id = pv.variant_id
@@ -161,7 +177,7 @@ LEFT JOIN testimonials t ON t.product_id = p.id
 LEFT JOIN product_sizes ps ON ps.product_id = p.id
 LEFT JOIN sizes s ON s.id = ps.size_id
 WHERE p.id = $1
-GROUP BY p.id, p.name,p.price;`
+GROUP BY p.id, p.name, p.price, p.description;`
 
 	rows, err := p.db.Query(ctx, query, id)
 

@@ -23,17 +23,27 @@ func (p *ProductService) GetProducts(ctx context.Context, page int) ([]dto.Produ
 		return nil, err
 	}
 
-	var result []dto.Product
+	result := make([]dto.Product, 0, len(data))
+
 	for _, v := range data {
+		var rating float64
+
+		if v.Rating != nil {
+			rating = *v.Rating
+		} else {
+			rating = 0
+		}
+
 		result = append(result, dto.Product{
-			Id:                v.Id,
+			ID:                v.ID,
 			Name:              v.Name,
+			Rating:            rating,
 			Description:       v.Description,
 			Price:             v.Price,
 			IsBuy1Get1:        v.IsBuy1Get1,
 			IsFlashSale:       v.IsFlashSale,
 			IsBirthdayPackage: v.IsBirthdayPackage,
-			ImagePath:         v.Image,
+			Image:             v.Image,
 		})
 	}
 
@@ -58,7 +68,7 @@ func (p *ProductService) CreateProduct(ctx context.Context, req dto.CreateProduc
 	}
 
 	result = dto.CreateProductResponse{
-		Id:                product.Id,
+		Id:                product.ID,
 		Name:              product.Name,
 		Description:       product.Description,
 		Price:             product.Price,
@@ -86,6 +96,8 @@ func (p *ProductService) GetDetailProductById(ctx context.Context, id int, selec
 	productDetail := dto.ProductDetail{
 		ID:                detail.ID,
 		Name:              detail.Name,
+		Images:            detail.Images,
+		Description:       detail.Description,
 		Price:             detail.Price,
 		Variants:          detail.Variants,
 		VariantPrices:     detail.VariantPrices,

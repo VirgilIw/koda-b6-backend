@@ -3,7 +3,7 @@ package dto
 import "time"
 
 type AddToCartRequest struct {
-	UserID    int `json:"user_id" binding:"required"`
+	UserID    int `json:"-"` // hidden
 	ProductID int `json:"product_id" binding:"required"`
 	Qty       int `json:"qty" binding:"required"`
 	SizeID    int `json:"size_id"`
