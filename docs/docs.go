@@ -2069,8 +2069,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "product_id",
-                "qty",
-                "user_id"
+                "qty"
             ],
             "properties": {
                 "product_id": {
@@ -2080,9 +2079,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "size_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 },
                 "variant_id": {
@@ -2377,6 +2373,12 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "name": {
                     "type": "string"
                 },
@@ -2473,6 +2475,9 @@ const docTemplate = `{
         "dto.ProductRecommendedResponse": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2718,9 +2723,6 @@ const docTemplate = `{
                 "error": {
                     "type": "string"
                 },
-                "limit": {
-                    "type": "integer"
-                },
                 "message": {
                     "type": "string"
                 },
@@ -2735,6 +2737,12 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                },
+                "total_count": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
                 }
             }
         },
@@ -3101,6 +3109,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Masukkan token dengan format: Bearer \u003ctoken\u003e",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -41,6 +41,17 @@ func (c *CartHandler) AddToCart(ctx *gin.Context) {
 		return
 	}
 
+	userID := ctx.GetInt("userID")
+	if userID == 0 {
+		ctx.JSON(http.StatusUnauthorized, dto.ResponseCart{
+			Success: false,
+			Message: "unauthorized",
+		})
+		return
+	}
+
+	req.UserID = userID
+
 	err := c.service.AddToCart(ctx.Request.Context(), req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, dto.ResponseCart{

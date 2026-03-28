@@ -43,21 +43,25 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 		return
 	}
 
-	token := l.authService.AuthLogin(ctx.Request.Context(), data.Email, data.Password)
+	token, err := l.authService.AuthLogin(
+		ctx.Request.Context(),
+		data.Email,
+		data.Password,
+	)
 
-	if token != "" {
-		ctx.JSON(http.StatusOK, dto.ResponseToken{
-			Success: true,
-			Message: "login success",
-			Token:   token,
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, dto.ResponseToken{
+			Success: false,
+			Message: "login failed",
+			Error:   err.Error(),
 		})
 		return
 	}
 
-	ctx.JSON(http.StatusUnauthorized, dto.ResponseToken{
-		Success: false,
-		Message: "login failed",
-		Error:   "invalid email or password",
+	ctx.JSON(http.StatusOK, dto.ResponseToken{
+		Success: true,
+		Message: "login success",
+		Token:   token,
 	})
 }
 
