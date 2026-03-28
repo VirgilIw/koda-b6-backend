@@ -90,10 +90,9 @@ func (p *ProductHandler) GetDetailProductById(ctx *gin.Context) {
 
 	product, err := p.service.GetDetailProductById(ctx, id, selectedSize, selectedVariant)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, dto.ProductsResponse{
+		ctx.JSON(http.StatusNotFound, dto.ProductDetailResponse{
 			Success: false,
 			Message: "product not found",
-			Result:  nil,
 		})
 		return
 	}
