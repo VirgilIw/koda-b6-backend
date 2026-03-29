@@ -35,6 +35,10 @@ func main() {
 
 	app := gin.Default()
 
+	app.MaxMultipartMemory = 1 << 20
+
+	app.Static("/images", "./images")
+
 	container := di.NewContainer(db, rdb)
 
 	router.Init(app, container)
