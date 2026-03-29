@@ -1,8 +1,12 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -38,7 +42,7 @@ func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 		page = 1
 	}
 
-	products, err := p.service.GetProducts(ctx.Request.Context(), page)
+	products, total, err := p.service.GetProducts(ctx.Request.Context(), page)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
 			Success: false,
@@ -52,11 +56,9 @@ func (p *ProductHandler) GetProducts(ctx *gin.Context) {
 		Success: true,
 		Message: "Success get data",
 		Result:  products,
+		Total:   total,
 	})
 }
-
-// bad request dari user
-// internal server dari kode kita
 
 // GetProductsById godoc
 // @Summary      Get product by ID size variant
@@ -156,13 +158,18 @@ func (p *ProductHandler) UpdateProduct(ctx *gin.Context) {
 	})
 }
 
-// UpdateProduct godoc
+// CreateProduct godoc
 // @Summary      Create product
 // @Description  Create new product
 // @Tags         Products
-// @Accept       json
+// @Accept       multipart/form-data
 // @Produce      json
-// @Param        request body  dto.CreateProductRequest true "Create product request"
+// @Param        name formData string true "Product name"
+// @Param        description formData string true "Product description"
+// @Param        price formData number true "Product price"
+// @Param        stock formData int true "Product stock"
+// @Param        sizes formData string true "Product sizes (comma separated: 1,2,3)"
+// @Param        image formData file false "Product image"
 // @Success      201  {object}  dto.SingleProductResponse
 // @Failure      400  {object}  dto.SingleProductResponse
 // @Failure      500  {object}  dto.SingleProductResponse
@@ -171,13 +178,51 @@ func (p *ProductHandler) UpdateProduct(ctx *gin.Context) {
 func (p *ProductHandler) CreateProduct(ctx *gin.Context) {
 	var req dto.CreateProductRequest
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
 			Success: false,
 			Message: "bad request",
 			Error:   err.Error(),
 		})
 		return
+	}
+	sizesStr := ctx.PostForm("sizes")
+
+	var sizes []int64
+	if sizesStr != "" {
+		parts := strings.Split(sizesStr, ",")
+		for _, p := range parts {
+			id, err := strconv.ParseInt(strings.TrimSpace(p), 10, 64)
+			if err == nil {
+				sizes = append(sizes, id)
+			}
+		}
+	}
+
+	req.Sizes = sizes
+	file, err := ctx.FormFile("image")
+	if err == nil {
+
+		if file.Size > 1<<20 {
+			ctx.JSON(http.StatusBadRequest, dto.Response{
+				Success: false,
+				Message: "file size must be less than 1MB",
+			})
+			return
+		}
+
+		filename := fmt.Sprintf("%d_%s", time.Now().Unix(), filepath.Base(file.Filename))
+		path := "./images/"
+
+		if err := ctx.SaveUploadedFile(file, path+filename); err != nil {
+			ctx.JSON(http.StatusInternalServerError, dto.Response{
+				Success: false,
+				Message: "failed to upload picture",
+			})
+			return
+		}
+
+		req.Images = &filename
 	}
 
 	data, err := p.service.CreateProduct(ctx.Request.Context(), req)

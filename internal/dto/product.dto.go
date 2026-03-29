@@ -1,18 +1,17 @@
 package dto
 
-import "time"
-
 type Product struct {
-	ID                int       `json:"id"`
-	Name              string    `json:"name"`
-	Description       string    `json:"description"`
-	Price             int       `json:"price"`
-	Rating            float64   `json:"rating"`
-	IsFlashSale       bool      `json:"is_flash_sale"`
-	IsBuy1Get1        bool      `json:"is_buy1get1"`
-	IsBirthdayPackage bool      `json:"is_birthday_package"`
-	CreatedAt         time.Time `json:"created_at"`
-	Image             string    `json:"image"`
+	ID                int      `json:"id"`
+	Name              string   `json:"name"`
+	Description       string   `json:"description"`
+	Price             int      `json:"price"`
+	Image             string   `json:"image"`
+	Rating            float64  `json:"rating"`
+	Stock             int      `json:"stock"`
+	IsBuy1Get1        bool     `json:"is_buy1_get1"`
+	IsFlashSale       bool     `json:"is_flash_sale"`
+	IsBirthdayPackage bool     `json:"is_birthday_package"`
+	Sizes             []string `json:"sizes"`
 }
 
 type ProductDetail struct {
@@ -39,13 +38,10 @@ type UpdateProductRequest struct {
 }
 
 type CreateProductRequest struct {
-	Id                int     `json:"id"`
-	Name              string  `json:"name"`
-	Description       string  `json:"description"`
-	Price             float64 `json:"price"`
-	IsBuy1Get1        bool    `json:"is_buyget1"`
-	IsFlashSale       bool    `json:"is_flash_sale"`
-	IsBirthdayPackage bool    `json:"is_birthday_package"`
+	Name        string  `form:"name"`
+	Description string  `form:"description"`
+	Price       float64 `form:"price"`
+	Stock       int     `form:"stock"`
+	Images      *string `json:"images"`
+	Sizes       []int64 `form:"sizes[]"`
 }
-
-// DTO untuk single product response

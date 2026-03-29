@@ -42,13 +42,12 @@ type SingleProductResponse struct {
 }
 
 type CreateProductResponse struct {
-	Id                int    `json:"id"`
-	Name              string `json:"name"`
-	Description       string `json:"description"`
-	Price             int    `json:"price"`
-	IsBuy1Get1        bool   `json:"is_buyget1"`
-	IsFlashSale       bool   `json:"is_flash_sale"`
-	IsBirthdayPackage bool   `json:"is_birthday_package"`
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       int     `json:"price"`
+	Stock       int     `json:"stock"`
+	Images      *string `json:"images,omitempty"`
 }
 
 type ProductDetailResponse struct {
@@ -66,10 +65,11 @@ type ResponseRecommended struct {
 }
 
 type ProductsResponse struct {
-	Success bool      `json:"success,omitempty"`
-	Message string    `json:"message,omitempty"`
-	Error   string    `json:"error,omitempty"`
-	Result  []Product `json:"result,omitempty"`
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Result  interface{} `json:"result"`
+	Total   int         `json:"total"`
+	Error   string      `json:"error,omitempty"`
 }
 
 type ResponseCoupon struct {

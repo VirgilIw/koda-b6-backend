@@ -22,7 +22,8 @@ func NewProductRepository(db *pgxpool.Pool, rdb *redis.Client) *ProductRepositor
 		rdb: rdb,
 	}
 }
-func (p *ProductRepository) GetProducts(ctx context.Context, page int) ([]model.ProductModel, error) {
+
+func (p *ProductRepository) GetProducts(ctx context.Context, page int) ([]model.ProductModel, int, error) {
 
 	if page == 0 {
 		page = 1
@@ -40,8 +41,11 @@ SELECT
     p.created_at,
     p.is_flash_sale,
     p.is_buy1get1,
+    ARRAY_AGG(DISTINCT s.size_name) FILTER (WHERE s.size_name IS NOT NULL) AS sizes,
     p.is_birthday_package,
     AVG(t.rating) AS rating,
+	COUNT(p.id) OVER() AS total,
+	p.stock AS stock,
     (
         SELECT i.image_path
         FROM product_images pi
@@ -52,20 +56,31 @@ SELECT
     ) AS image
 FROM products p
 LEFT JOIN testimonials t ON t.product_id = p.id
+LEFT JOIN product_sizes ps ON ps.product_id = p.id
+LEFT JOIN sizes s ON s.id = ps.size_id
 GROUP BY 
     p.id, p.name, p.description, p.price, p.created_at,
     p.is_flash_sale, p.is_buy1get1, p.is_birthday_package
-
 ORDER BY p.id
 LIMIT 6 OFFSET $1;
 	`
 
 	rows, err := p.db.Query(ctx, query, offset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return pgx.CollectRows(rows, pgx.RowToStructByName[model.ProductModel])
+	products, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.ProductModel])
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total := 0
+	if len(products) > 0 {
+		total = products[0].Total
+	}
+
+	return products, total, nil
 }
 
 func (p *ProductRepository) UpdateProduct(ctx context.Context, req dto.UpdateProductRequest) error {
@@ -106,40 +121,100 @@ func (p *ProductRepository) UpdateProduct(ctx context.Context, req dto.UpdatePro
 	return nil
 }
 
-func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreateProductRequest) (model.ProductModel, error) {
-	query := `
-INSERT INTO products (
-    name,
-    description,
-    price,
-    is_buyget1,
-    is_flash_sale,
-    is_birthday_package
-) VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, name, description, price, is_buyget1, is_flash_sale, is_birthday_package, created_at
-`
+func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreateProductRequest) (model.CreateProductModel, error) {
+	tx, err := p.db.Begin(ctx)
+	if err != nil {
+		return model.CreateProductModel{}, err
+	}
+	defer tx.Rollback(ctx)
 
-	rows, err := p.db.Query(
+	// 1. Insert product
+	productQuery := `
+	INSERT INTO products (
+		name,
+		description,
+		price,
+		stock
+	) VALUES ($1, $2, $3, $4)
+	RETURNING id, name, description, price, stock, created_at
+	`
+
+	rows, err := tx.Query(
 		ctx,
-		query,
+		productQuery,
 		req.Name,
 		req.Description,
 		req.Price,
-		req.IsBuy1Get1,
-		req.IsFlashSale,
-		req.IsBirthdayPackage,
+		req.Stock, // ✅ FIX DI SINI
 	)
 	if err != nil {
-		return model.ProductModel{}, err
+		return model.CreateProductModel{}, err
 	}
-	defer rows.Close()
 
-	productModel, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ProductModel])
+	product, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.CreateProductModel])
 	if err != nil {
-		return model.ProductModel{}, err
+		return model.CreateProductModel{}, err
 	}
 
-	return productModel, nil
+	// 2. Insert sizes
+	if len(req.Sizes) > 0 {
+		for _, sizeID := range req.Sizes {
+			_, err := tx.Exec(
+				ctx,
+				`
+				INSERT INTO product_sizes (product_id, size_id)
+				VALUES ($1, $2)
+				`,
+				product.ID,
+				sizeID,
+			)
+			if err != nil {
+				return model.CreateProductModel{}, err
+			}
+		}
+	}
+
+	// 3. Handle image (optional)
+	if req.Images != nil {
+		imageRows, err := tx.Query(
+			ctx,
+			`
+			INSERT INTO images (image_path)
+			VALUES ($1)
+			RETURNING id
+			`,
+			*req.Images, // filename
+		)
+		if err != nil {
+			return model.CreateProductModel{}, err
+		}
+
+		imageID, err := pgx.CollectOneRow(imageRows, pgx.RowTo[int64])
+		if err != nil {
+			return model.CreateProductModel{}, err
+		}
+
+		// insert relation
+		_, err = tx.Exec(
+			ctx,
+			`
+			INSERT INTO product_images (product_id, image_id)
+			VALUES ($1, $2)
+			`,
+			product.ID,
+			imageID,
+		)
+		if err != nil {
+			return model.CreateProductModel{}, err
+		}
+	}
+
+	// 4. Commit
+	if err := tx.Commit(ctx); err != nil {
+		return model.CreateProductModel{}, err
+	}
+
+	return product, nil
 }
 
 func (p *ProductRepository) DeleteProduct(ctx context.Context, id int) error {

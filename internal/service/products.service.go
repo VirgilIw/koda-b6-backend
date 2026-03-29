@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -17,21 +19,32 @@ func NewProductService(repo *repository.ProductRepository) *ProductService {
 	}
 }
 
-func (p *ProductService) GetProducts(ctx context.Context, page int) ([]dto.Product, error) {
-	data, err := p.repo.GetProducts(ctx, page)
+func (p *ProductService) GetProducts(ctx context.Context, page int) ([]dto.Product, int, error) {
+	data, total, err := p.repo.GetProducts(ctx, page)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	result := make([]dto.Product, 0, len(data))
 
 	for _, v := range data {
 		var rating float64
-
 		if v.Rating != nil {
 			rating = *v.Rating
-		} else {
-			rating = 0
+		}
+
+		var image string
+		if v.Image != nil {
+			if strings.HasPrefix(*v.Image, "http") {
+				image = *v.Image
+			} else {
+				image = "/images/" + *v.Image
+			}
+		}
+		fmt.Println("RAW IMAGE FROM DB:", v.Image)
+		sizes := v.Sizes
+		if sizes == nil {
+			sizes = []string{}
 		}
 
 		result = append(result, dto.Product{
@@ -40,14 +53,16 @@ func (p *ProductService) GetProducts(ctx context.Context, page int) ([]dto.Produ
 			Rating:            rating,
 			Description:       v.Description,
 			Price:             v.Price,
+			Stock:             v.Stock,
 			IsBuy1Get1:        v.IsBuy1Get1,
 			IsFlashSale:       v.IsFlashSale,
 			IsBirthdayPackage: v.IsBirthdayPackage,
-			Image:             v.Image,
+			Image:             image,
+			Sizes:             sizes,
 		})
 	}
 
-	return result, nil
+	return result, total, nil
 }
 
 func (p *ProductService) UpdateProduct(ctx context.Context, req dto.UpdateProductRequest) error {
@@ -59,25 +74,19 @@ func (p *ProductService) UpdateProduct(ctx context.Context, req dto.UpdateProduc
 
 func (p *ProductService) CreateProduct(ctx context.Context, req dto.CreateProductRequest) (dto.CreateProductResponse, error) {
 
-	var result dto.CreateProductResponse
-
 	product, err := p.repo.CreateProduct(ctx, req)
-
 	if err != nil {
 		return dto.CreateProductResponse{}, err
 	}
 
-	result = dto.CreateProductResponse{
-		Id:                product.ID,
-		Name:              product.Name,
-		Description:       product.Description,
-		Price:             product.Price,
-		IsBuy1Get1:        product.IsBuy1Get1,
-		IsFlashSale:       product.IsFlashSale,
-		IsBirthdayPackage: product.IsBirthdayPackage,
-	}
-
-	return result, nil
+	return dto.CreateProductResponse{
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+		Images:      req.Images,
+		Stock:       req.Stock,
+	}, nil
 }
 
 func (p *ProductService) DeleteProduct(ctx context.Context, id int) error {
