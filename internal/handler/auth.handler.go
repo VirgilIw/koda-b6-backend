@@ -43,7 +43,7 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 		return
 	}
 
-	token, err := l.authService.AuthLogin(
+	res, err := l.authService.AuthLogin(
 		ctx.Request.Context(),
 		data.Email,
 		data.Password,
@@ -61,7 +61,7 @@ func (l *AuthHandler) AuthLogin(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, dto.ResponseToken{
 		Success: true,
 		Message: "login success",
-		Token:   token,
+		Result:  res,
 	})
 }
 
