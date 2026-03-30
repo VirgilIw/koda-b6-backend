@@ -119,15 +119,36 @@ definitions:
       value:
         type: string
     type: object
+  dto.CreateProductRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      is_birthday_package:
+        type: boolean
+      is_buyget1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+    type: object
   dto.CreateProductResponse:
     properties:
       description:
         type: string
       id:
         type: integer
+      is_birthday_package:
+        type: boolean
+      is_buyget1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
       name:
-        type: string
-      picture:
         type: string
       price:
         type: integer
@@ -153,10 +174,31 @@ definitions:
       image_path:
         type: string
     type: object
-  dto.ProductDetail:
+  dto.Product:
     properties:
+      created_at:
+        type: string
       description:
         type: string
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      is_birthday_package:
+        type: boolean
+      is_buy1get1:
+        type: boolean
+      is_flash_sale:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
+  dto.ProductDetail:
+    properties:
       id:
         type: integer
       images:
@@ -182,9 +224,7 @@ definitions:
           type: integer
         type: array
       variants:
-        items:
-          type: string
-        type: array
+        type: string
     type: object
   dto.ProductDetailResponse:
     properties:
@@ -249,11 +289,12 @@ definitions:
         type: string
       message:
         type: string
-      result: {}
+      result:
+        items:
+          $ref: '#/definitions/dto.Product'
+        type: array
       success:
         type: boolean
-      total:
-        type: integer
     type: object
   dto.ResetPasswordRequest:
     properties:
@@ -1130,38 +1171,15 @@ paths:
       - Products
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       description: Create new product
       parameters:
-      - description: Product name
-        in: formData
-        name: name
+      - description: Create product request
+        in: body
+        name: request
         required: true
-        type: string
-      - description: Product description
-        in: formData
-        name: description
-        required: true
-        type: string
-      - description: Product price
-        in: formData
-        name: price
-        required: true
-        type: number
-      - description: Product stock
-        in: formData
-        name: stock
-        required: true
-        type: integer
-      - description: 'Product sizes (comma separated: 1,2,3)'
-        in: formData
-        name: sizes
-        required: true
-        type: string
-      - description: Product image
-        in: formData
-        name: image
-        type: file
+        schema:
+          $ref: '#/definitions/dto.CreateProductRequest'
       produces:
       - application/json
       responses:
@@ -2001,4 +2019,10 @@ paths:
       summary: Get all reviews
       tags:
       - LandingPage
+securityDefinitions:
+  BearerAuth:
+    description: 'Masukkan token dengan format: Bearer <token>'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

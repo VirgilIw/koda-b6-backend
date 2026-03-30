@@ -13,6 +13,10 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/router"
 )
 
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Masukkan token dengan format: Bearer <token>
 func main() {
 	fmt.Println("backend testt")
 

@@ -713,7 +713,7 @@ const docTemplate = `{
                 ],
                 "description": "Create new product",
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -724,45 +724,13 @@ const docTemplate = `{
                 "summary": "Create product",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Product name",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Product description",
-                        "name": "description",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Product price",
-                        "name": "price",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Product stock",
-                        "name": "stock",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Product sizes (comma separated: 1,2,3)",
-                        "name": "sizes",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Product image",
-                        "name": "image",
-                        "in": "formData"
+                        "description": "Create product request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateProductRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -2279,6 +2247,32 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreateProductRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_birthday_package": {
+                    "type": "boolean"
+                },
+                "is_buyget1": {
+                    "type": "boolean"
+                },
+                "is_flash_sale": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
         "dto.CreateProductResponse": {
             "type": "object",
             "properties": {
@@ -2288,10 +2282,16 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "name": {
-                    "type": "string"
+                "is_birthday_package": {
+                    "type": "boolean"
                 },
-                "picture": {
+                "is_buyget1": {
+                    "type": "boolean"
+                },
+                "is_flash_sale": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 },
                 "price": {
@@ -2332,12 +2332,44 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProductDetail": {
+        "dto.Product": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "is_birthday_package": {
+                    "type": "boolean"
+                },
+                "is_buy1get1": {
+                    "type": "boolean"
+                },
+                "is_flash_sale": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.ProductDetail": {
+            "type": "object",
+            "properties": {
                 "id": {
                     "type": "integer"
                 },
@@ -2375,10 +2407,7 @@ const docTemplate = `{
                     }
                 },
                 "variants": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 }
             }
         },
@@ -2478,12 +2507,14 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "result": {},
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Product"
+                    }
+                },
                 "success": {
                     "type": "boolean"
-                },
-                "total": {
-                    "type": "integer"
                 }
             }
         },
@@ -3078,6 +3109,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Masukkan token dengan format: Bearer \u003ctoken\u003e",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
