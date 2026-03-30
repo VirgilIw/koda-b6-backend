@@ -128,10 +128,9 @@ type ResponseSizeCreate struct {
 	Result  SizeRequest `json:"result"`
 }
 type ForgotPwdResponse struct {
-	Email   string
-	CodeOtp int
+	Email   string `json:"email"`
+	CodeOtp int    `json:"code_otp"`
 }
-
 type ResponseForgotPwd struct {
 	Success bool              `json:"success"`
 	Message string            `json:"message"`
