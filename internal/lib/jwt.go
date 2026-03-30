@@ -8,18 +8,20 @@ import (
 )
 
 type CustomClaims struct { // claim dilakukan ketika generate jwt
-	Id int `json:"id"`
+	Id    int    `json:"id"`
+	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userId int) (string, error) {
+func GenerateToken(userId int, email string) (string, error) {
 	mySecret := os.Getenv("SECRET_KEY")
 
 	// claim itu isinya data-data yang disimpan di dalam JWT.
 	// generate claim, claims = payload
 	claims := CustomClaims{
-		userId,
-		jwt.RegisteredClaims{
+		Id:    userId,
+		Email: email,
+		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},

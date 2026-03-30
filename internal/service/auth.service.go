@@ -19,23 +19,34 @@ func NewAuthService(repo *repository.UserRepository) *AuthService {
 	}
 }
 
-func (l *AuthService) AuthLogin(ctx context.Context, email, password string) (string, error) {
+func (l *AuthService) AuthLogin(ctx context.Context, email, password string) (dto.AuthResponse, error) {
 
 	user, err := l.repo.GetByEmail(ctx, email)
 	if err != nil {
-		return "", errors.New("invalid email or password")
+		return dto.AuthResponse{}, errors.New("invalid email or password")
 	}
 
 	if !lib.VerifyPassword(password, user.Password) {
-		return "", errors.New("invalid email or password")
+		return dto.AuthResponse{}, errors.New("invalid email or password")
 	}
 
-	token, err := lib.GenerateToken(user.Id)
+	token, err := lib.GenerateToken(user.Id, user.Email)
 	if err != nil {
-		return "", err
+		return dto.AuthResponse{}, err
 	}
 
-	return token, nil
+	return dto.AuthResponse{
+		Token: token,
+		User: dto.LoginUser{
+			Id:       user.Id,
+			FullName: user.FullName,
+			Email:    user.Email,
+			Picture:  user.Picture,
+			Phone:    user.Phone,
+			Address:  user.Address,
+			Role:     user.Role,
+		},
+	}, nil
 }
 
 func (l *AuthService) AuthRegister(ctx context.Context, req dto.AuthRegisterRequest) error {
