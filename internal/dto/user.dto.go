@@ -46,3 +46,13 @@ type Users struct {
 	Address  *string `json:"address"`
 	Role     *string `json:"role"`
 }
+
+type LoginUser struct {
+	Id       int     `json:"id"`
+	FullName string  `json:"fullname"`
+	Email    string  `json:"email"`
+	Picture  *string `json:"picture"`
+	Phone    *string `json:"phone"`
+	Address  *string `json:"address"`
+	Role     *string `json:"role"`
+}
