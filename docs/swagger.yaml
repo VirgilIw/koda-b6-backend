@@ -125,13 +125,11 @@ definitions:
         type: string
       id:
         type: integer
-      images:
-        type: string
       name:
         type: string
+      picture:
+        type: string
       price:
-        type: integer
-      stock:
         type: integer
     type: object
   dto.ForgotPwdRequest:
@@ -143,7 +141,7 @@ definitions:
     type: object
   dto.ForgotPwdResponse:
     properties:
-      code_otp:
+      codeOtp:
         type: integer
       email:
         type: string

@@ -2277,16 +2277,13 @@
                 "id": {
                     "type": "integer"
                 },
-                "images": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "integer"
+                "picture": {
+                    "type": "string"
                 },
-                "stock": {
+                "price": {
                     "type": "integer"
                 }
             }
@@ -2305,7 +2302,7 @@
         "dto.ForgotPwdResponse": {
             "type": "object",
             "properties": {
-                "code_otp": {
+                "codeOtp": {
                     "type": "integer"
                 },
                 "email": {

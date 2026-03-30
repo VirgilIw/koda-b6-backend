@@ -2288,16 +2288,13 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "images": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "integer"
+                "picture": {
+                    "type": "string"
                 },
-                "stock": {
+                "price": {
                     "type": "integer"
                 }
             }
@@ -2316,7 +2313,7 @@ const docTemplate = `{
         "dto.ForgotPwdResponse": {
             "type": "object",
             "properties": {
-                "code_otp": {
+                "codeOtp": {
                     "type": "integer"
                 },
                 "email": {
