@@ -96,6 +96,37 @@ func (p *ProductService) DeleteProduct(ctx context.Context, id int) error {
 	return nil
 }
 
+func mapSizes(names []string, prices []int) []dto.SizeResponse {
+	var result []dto.SizeResponse
+
+	for i := range names {
+		price := 0
+		if i < len(prices) {
+			price = prices[i]
+		}
+
+		result = append(result, dto.SizeResponse{
+			Name:  names[i],
+			Price: price,
+		})
+	}
+
+	return result
+}
+
+func mapVariants(names []string, prices []int) []dto.VariantResponse {
+	var result []dto.VariantResponse
+
+	for i := range names {
+		result = append(result, dto.VariantResponse{
+			Name:  names[i],
+			Price: prices[i],
+		})
+	}
+
+	return result
+}
+
 func (p *ProductService) GetDetailProductById(ctx context.Context, id int, selectedSize string, selectedVariant string) (dto.ProductDetail, error) {
 	detail, err := p.repo.GetDetailProductById(ctx, id)
 	if err != nil {
@@ -103,16 +134,16 @@ func (p *ProductService) GetDetailProductById(ctx context.Context, id int, selec
 	}
 
 	productDetail := dto.ProductDetail{
-		ID:                detail.ID,
-		Name:              detail.Name,
-		Images:            detail.Images,
-		Description:       detail.Description,
-		Price:             detail.Price,
-		Variants:          detail.Variants,
-		VariantPrices:     detail.VariantPrices,
-		TotalTestimonials: detail.TotalTestimonials,
-		Sizes:             detail.Sizes,
-		SizePrices:        detail.SizePrices,
+		ID:           detail.ID,
+		Name:         detail.Name,
+		Images:       detail.Images,
+		Description:  detail.Description,
+		Rating:       detail.Rating,
+		Price:        detail.Price,
+		TotalReviews: detail.TotalReviews,
+
+		Sizes:    mapSizes(detail.Sizes, detail.SizePrices),
+		Variants: mapVariants(detail.Variants, detail.VariantPrices),
 	}
 
 	return productDetail, nil

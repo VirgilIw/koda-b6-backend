@@ -28,14 +28,15 @@ type CreateProductModel struct {
 }
 
 type ProductDetail struct {
-	ID                int      `db:"id"`
-	Name              string   `db:"name"`
-	Price             int      `db:"price"`
-	Description       string   `db:"description"`
-	Images            []string `db:"images"`
-	Variants          []string `db:"variants"`
-	VariantPrices     []int    `db:"variant_prices"`
-	TotalTestimonials int      `db:"total_testimonials"`
-	Sizes             []string `db:"sizes"`
-	SizePrices        []int    `db:"size_prices"`
+	ID            int      `db:"id"`
+	Name          string   `db:"name"`
+	Price         int      `db:"price"`
+	Description   string   `db:"description"`
+	Images        []string `db:"images"`
+	Rating        float64  `db:"rating"`
+	Variants      []string `db:"variants"`
+	VariantPrices []int    `db:"variant_prices"`
+	TotalReviews  int      `db:"total_reviews"`
+	Sizes         []string `db:"sizes"`
+	SizePrices    []int    `db:"size_prices"`
 }

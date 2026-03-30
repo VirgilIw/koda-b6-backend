@@ -14,19 +14,27 @@ type Product struct {
 	Sizes             []string `json:"sizes"`
 }
 
-type ProductDetail struct {
-	ID                int      `json:"id"`
-	Name              string   `json:"name"`
-	Price             int      `json:"price"`
-	Description       string   `json:"description"`
-	Images            []string `json:"images"`
-	Variants          []string `json:"variants"`
-	VariantPrices     []int    `json:"variant_prices"`
-	TotalTestimonials int      `json:"total_testimonials"`
-	Sizes             []string `json:"sizes"`
-	SizePrices        []int    `json:"size_prices"`
+type SizeResponse struct {
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 }
 
+type VariantResponse struct {
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+}
+
+type ProductDetail struct {
+	ID           int               `json:"id"`
+	Name         string            `json:"name"`
+	Price        int               `json:"price"`
+	Description  string            `json:"description"`
+	Images       []string          `json:"images"`
+	Rating       float64           `json:"rating"`
+	TotalReviews int               `json:"total_reviews"`
+	Sizes        []SizeResponse    `json:"sizes"`
+	Variants     []VariantResponse `json:"variants"`
+}
 type UpdateProductRequest struct {
 	Id                int     `json:"id"`
 	Name              string  `json:"name"`

@@ -233,12 +233,33 @@ SELECT
     p.id,
     p.name,
     p.price,
-	p.description,
-    ARRAY_AGG(DISTINCT v.variant_name) AS variants,
-    ARRAY_AGG(DISTINCT v.additional_price) AS variant_prices,
-    COUNT(DISTINCT t.id) AS total_testimonials,
-    ARRAY_AGG(DISTINCT s.size_name) AS sizes,
-    ARRAY_AGG(DISTINCT s.additional_price) AS size_prices,
+    p.description,
+    AVG(t.rating) AS rating,
+    COUNT(t.message) AS total_reviews,
+    (
+        SELECT ARRAY_AGG(v.variant_name ORDER BY v.id)
+        FROM product_variants pv
+        JOIN variants v ON v.id = pv.variant_id
+        WHERE pv.product_id = p.id
+    ) AS variants,
+    (
+        SELECT ARRAY_AGG(v.additional_price ORDER BY v.id)
+        FROM product_variants pv
+        JOIN variants v ON v.id = pv.variant_id
+        WHERE pv.product_id = p.id
+    ) AS variant_prices,
+    (
+        SELECT ARRAY_AGG(s.size_name ORDER BY s.id)
+        FROM product_sizes ps
+        JOIN sizes s ON s.id = ps.size_id
+        WHERE ps.product_id = p.id
+    ) AS sizes,
+    (
+        SELECT ARRAY_AGG(s.additional_price ORDER BY s.id)
+        FROM product_sizes ps
+        JOIN sizes s ON s.id = ps.size_id
+        WHERE ps.product_id = p.id
+    ) AS size_prices,
     (
         SELECT ARRAY_AGG(i.image_path ORDER BY i.id)
         FROM product_images pi
@@ -246,11 +267,7 @@ SELECT
         WHERE pi.product_id = p.id
     ) AS images
 FROM products p
-LEFT JOIN product_variants pv ON pv.product_id = p.id
-LEFT JOIN variants v ON v.id = pv.variant_id
 LEFT JOIN testimonials t ON t.product_id = p.id
-LEFT JOIN product_sizes ps ON ps.product_id = p.id
-LEFT JOIN sizes s ON s.id = ps.size_id
 WHERE p.id = $1
 GROUP BY p.id, p.name, p.price, p.description;`
 
