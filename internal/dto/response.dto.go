@@ -7,6 +7,11 @@ type Response struct {
 	Result  []Users `json:"result"`
 }
 
+type AuthResponse struct {
+	Token string    `json:"token"`
+	User  LoginUser `json:"user"`
+}
+
 type ResponseOneData struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
@@ -22,10 +27,10 @@ type ResponseRegister struct {
 }
 
 type ResponseToken struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-	Error   string `json:"error,omitempty"`
-	Token   string `json:"token,omitempty"`
+	Success bool         `json:"success"`
+	Message string       `json:"message"`
+	Error   string       `json:"error,omitempty"`
+	Result  AuthResponse `json:"result"`
 }
 
 type ResponseError struct {
