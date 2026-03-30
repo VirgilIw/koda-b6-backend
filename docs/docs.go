@@ -713,7 +713,7 @@ const docTemplate = `{
                 ],
                 "description": "Create new product",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -724,13 +724,45 @@ const docTemplate = `{
                 "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Create product request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateProductRequest"
-                        }
+                        "type": "string",
+                        "description": "Product name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Product price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Product stock",
+                        "name": "stock",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product sizes (comma separated: 1,2,3)",
+                        "name": "sizes",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Product image",
+                        "name": "image",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -2069,8 +2101,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "product_id",
-                "qty",
-                "user_id"
+                "qty"
             ],
             "properties": {
                 "product_id": {
@@ -2080,9 +2111,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "size_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 },
                 "variant_id": {
@@ -2251,32 +2279,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CreateProductRequest": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buyget1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
         "dto.CreateProductResponse": {
             "type": "object",
             "properties": {
@@ -2286,16 +2288,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buyget1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
                 "name": {
+                    "type": "string"
+                },
+                "picture": {
                     "type": "string"
                 },
                 "price": {
@@ -2336,12 +2332,9 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.Product": {
+        "dto.ProductDetail": {
             "type": "object",
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -2353,29 +2346,6 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
-                },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buy1get1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.ProductDetail": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -2405,7 +2375,10 @@ const docTemplate = `{
                     }
                 },
                 "variants": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -2473,6 +2446,9 @@ const docTemplate = `{
         "dto.ProductRecommendedResponse": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2502,14 +2478,12 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Product"
-                    }
-                },
+                "result": {},
                 "success": {
                     "type": "boolean"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -2718,9 +2692,6 @@ const docTemplate = `{
                 "error": {
                     "type": "string"
                 },
-                "limit": {
-                    "type": "integer"
-                },
                 "message": {
                     "type": "string"
                 },
@@ -2735,6 +2706,12 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                },
+                "total_count": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
                 }
             }
         },
