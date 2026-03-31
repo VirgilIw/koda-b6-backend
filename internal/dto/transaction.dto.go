@@ -21,6 +21,9 @@ type CreateTransactionRequest struct {
 	Items          []TransactionItemRequest `json:"items" validate:"required,dive"`
 }
 
+type UpdateTransactionStatusRequest struct {
+	Status string `json:"status" binding:"required"`
+}
 type TransactionResult struct {
 	TransactionCode string `json:"transaction_code"`
 }

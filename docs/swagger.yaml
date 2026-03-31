@@ -701,6 +701,13 @@ definitions:
       price:
         type: number
     type: object
+  dto.UpdateTransactionStatusRequest:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
   dto.Users:
     properties:
       address:
@@ -1593,6 +1600,37 @@ paths:
       security:
       - BearerAuth: []
       summary: Create new transaction
+      tags:
+      - Transactions
+  /admin/transactions/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update status of transaction (admin)
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Status Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTransactionStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Update transaction status
       tags:
       - Transactions
   /admin/users:

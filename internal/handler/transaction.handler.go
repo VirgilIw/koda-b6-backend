@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -60,5 +61,59 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 		Result: dto.TransactionResult{
 			TransactionCode: code,
 		},
+	})
+}
+
+// UpdateTransactionStatus godoc
+// @Summary Update transaction status
+// @Description Update status of transaction (admin)
+// @Tags Transactions
+// @Accept json
+// @Produce json
+// @Param id path int true "Transaction ID"
+// @Param request body dto.UpdateTransactionStatusRequest true "Update Status Request"
+// @Success 200 {object} dto.Response
+// @Failure 400 {object} dto.Response
+// @Router /admin/transactions/{id}/status [patch]
+func (h *TransactionHandler) UpdateTransactionStatus(c *gin.Context) {
+	transactionID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "invalid transaction id",
+		})
+		return
+	}
+
+	var req dto.UpdateTransactionStatusRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "invalid request body",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	if req.Status == "" || (req.Status != "done" && req.Status != "on progress") {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "status must be either 'done' or 'on progress'",
+		})
+		return
+	}
+
+	if err := h.service.UpdateTransactionStatus(c.Request.Context(), transactionID, req.Status); err != nil {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "bad request",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.Response{
+		Success: true,
+		Message: "transaction status updated successfully",
 	})
 }

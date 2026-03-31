@@ -29,4 +29,5 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterSizes(admin, c)
 	RouterVariant(admin, c)
 	RouterImages(admin, c)
+	RouterTransactions(admin, c)
 }
