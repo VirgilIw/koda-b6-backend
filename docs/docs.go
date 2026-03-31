@@ -713,7 +713,7 @@ const docTemplate = `{
                 ],
                 "description": "Create new product",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -724,13 +724,45 @@ const docTemplate = `{
                 "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Create product request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateProductRequest"
-                        }
+                        "type": "string",
+                        "description": "Product name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Product price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Product stock",
+                        "name": "stock",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product sizes (comma separated: 1,2,3)",
+                        "name": "sizes",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Product image",
+                        "name": "image",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1217,6 +1249,104 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/dto.ResponseSize"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/transactions": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create transaction with products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create new transaction",
+                "parameters": [
+                    {
+                        "description": "Create Transaction Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTransactionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/transactions/{id}/status": {
+            "patch": {
+                "description": "Update status of transaction (admin)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update transaction status",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Status Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateTransactionStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
                         }
                     }
                 }
@@ -2141,6 +2271,17 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.LoginUser"
+                }
+            }
+        },
         "dto.CartItem": {
             "type": "object",
             "properties": {
@@ -2247,32 +2388,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CreateProductRequest": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buyget1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
         "dto.CreateProductResponse": {
             "type": "object",
             "properties": {
@@ -2282,20 +2397,80 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buyget1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
+                "images": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
                 "price": {
                     "type": "integer"
+                },
+                "stock": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+                "address",
+                "delivery_fee",
+                "delivery_method",
+                "email",
+                "full_name",
+                "items",
+                "subtotal_price",
+                "tax",
+                "total_price"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "delivery_fee": {
+                    "type": "integer"
+                },
+                "delivery_method": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TransactionItemRequest"
+                    }
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "subtotal_price": {
+                    "type": "integer"
+                },
+                "tax": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.CreateTransactionResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.TransactionResult"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },
@@ -2313,7 +2488,7 @@ const docTemplate = `{
         "dto.ForgotPwdResponse": {
             "type": "object",
             "properties": {
-                "codeOtp": {
+                "code_otp": {
                     "type": "integer"
                 },
                 "email": {
@@ -2332,12 +2507,35 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.Product": {
+        "dto.LoginUser": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "address": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "picture": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ProductDetail": {
+            "type": "object",
+            "properties": {
                 "description": {
                     "type": "string"
                 },
@@ -2350,64 +2548,29 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buy1get1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.ProductDetail": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "name": {
                     "type": "string"
                 },
                 "price": {
                     "type": "integer"
                 },
-                "size_prices": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                "rating": {
+                    "type": "number"
                 },
                 "sizes": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/dto.SizeResponse"
                     }
                 },
-                "total_testimonials": {
+                "total_reviews": {
                     "type": "integer"
                 },
-                "variant_prices": {
+                "variants": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/dto.VariantResponse"
                     }
-                },
-                "variants": {
-                    "type": "string"
                 }
             }
         },
@@ -2507,14 +2670,12 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Product"
-                    }
-                },
+                "result": {},
                 "success": {
                     "type": "boolean"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -2880,11 +3041,11 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
+                "result": {
+                    "$ref": "#/definitions/dto.AuthResponse"
+                },
                 "success": {
                     "type": "boolean"
-                },
-                "token": {
-                    "type": "string"
                 }
             }
         },
@@ -3019,6 +3180,17 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.SizeResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.SizeUpdateRequest": {
             "type": "object",
             "properties": {
@@ -3026,6 +3198,42 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "size_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TransactionItemRequest": {
+            "type": "object",
+            "required": [
+                "price",
+                "product_id",
+                "qty",
+                "size",
+                "variant"
+            ],
+            "properties": {
+                "price": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "size": {
+                    "type": "string"
+                },
+                "variant": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TransactionResult": {
+            "type": "object",
+            "properties": {
+                "transaction_code": {
                     "type": "string"
                 }
             }
@@ -3053,6 +3261,17 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                }
+            }
+        },
+        "dto.UpdateTransactionStatusRequest": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string"
                 }
             }
         },
@@ -3107,6 +3326,17 @@ const docTemplate = `{
                 },
                 "variant_name": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.VariantResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 }
             }
         }

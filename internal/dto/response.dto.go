@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type Response struct {
 	Success bool    `json:"success"`
 	Message string  `json:"message"`
@@ -213,4 +215,33 @@ type ResponseCart struct {
 	Message string     `json:"message"`
 	Error   string     `json:"error,omitempty"`
 	Result  []CartItem `json:"result"`
+}
+
+type TransactionItemResponse struct {
+	ProductID int    `json:"product_id"`
+	Qty       int    `json:"qty"`
+	Size      string `json:"size"`
+	Variant   string `json:"variant"`
+	Price     int    `json:"price"`
+}
+
+type TransactionResponse struct {
+	ID              int                       `json:"id"`
+	TransactionCode string                    `json:"transaction_code"`
+	FullName        string                    `json:"full_name"`
+	Email           string                    `json:"email"`
+	DeliveryMethod  string                    `json:"delivery_method"`
+	SubtotalPrice   int                       `json:"subtotal_price"`
+	TotalPrice      int                       `json:"total_price"`
+	DeliveryFee     int                       `json:"delivery_fee"`
+	Tax             int                       `json:"tax"`
+	Status          string                    `json:"status"`
+	CreatedAt       time.Time                 `json:"created_at"`
+	Items           []TransactionItemResponse `json:"items"`
+}
+
+type CreateTransactionResponse struct {
+	Success bool              `json:"success"`
+	Message string            `json:"message"`
+	Result  TransactionResult `json:"result"`
 }
