@@ -141,6 +141,50 @@ definitions:
       stock:
         type: integer
     type: object
+  dto.CreateTransactionRequest:
+    properties:
+      address:
+        type: string
+      delivery_fee:
+        type: integer
+      delivery_method:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dto.TransactionItemRequest'
+        type: array
+      payment_method:
+        type: string
+      subtotal_price:
+        type: integer
+      tax:
+        type: integer
+      total_price:
+        type: integer
+    required:
+    - address
+    - delivery_fee
+    - delivery_method
+    - email
+    - full_name
+    - items
+    - subtotal_price
+    - tax
+    - total_price
+    type: object
+  dto.CreateTransactionResponse:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.TransactionResult'
+      success:
+        type: boolean
+    type: object
   dto.ForgotPwdRequest:
     properties:
       email:
@@ -615,6 +659,31 @@ definitions:
       size_name:
         type: string
     type: object
+  dto.TransactionItemRequest:
+    properties:
+      price:
+        type: integer
+      product_id:
+        type: integer
+      qty:
+        minimum: 1
+        type: integer
+      size:
+        type: string
+      variant:
+        type: string
+    required:
+    - price
+    - product_id
+    - qty
+    - size
+    - variant
+    type: object
+  dto.TransactionResult:
+    properties:
+      transaction_code:
+        type: string
+    type: object
   dto.UpdateProductRequest:
     properties:
       description:
@@ -631,6 +700,13 @@ definitions:
         type: string
       price:
         type: number
+    type: object
+  dto.UpdateTransactionStatusRequest:
+    properties:
+      status:
+        type: string
+    required:
+    - status
     type: object
   dto.Users:
     properties:
@@ -1494,6 +1570,69 @@ paths:
       summary: update size
       tags:
       - Sizes
+  /admin/transactions:
+    post:
+      consumes:
+      - application/json
+      description: Create transaction with products
+      parameters:
+      - description: Create Transaction Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateTransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create new transaction
+      tags:
+      - Transactions
+  /admin/transactions/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update status of transaction (admin)
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Status Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTransactionStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Update transaction status
+      tags:
+      - Transactions
   /admin/users:
     get:
       description: Get users

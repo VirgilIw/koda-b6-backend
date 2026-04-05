@@ -1,3126 +1,3054 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "contact": {}
-    },
-    "paths": {
-        "/admin/categories": {
-            "get": {
-                "description": "get all category",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "get all category",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategories"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategories"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategories"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create category",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "create category",
-                "parameters": [
-                    {
-                        "description": "create category",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CategoryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    }
-                }
+  "swagger": "2.0",
+  "info": {
+    "contact": {}
+  },
+  "paths": {
+    "/admin/categories": {
+      "get": {
+        "description": "get all category",
+        "produces": ["application/json"],
+        "tags": ["Categories"],
+        "summary": "get all category",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategories"
             }
-        },
-        "/admin/categories/{id}": {
-            "get": {
-                "description": "get category by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "get category by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "category id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete category",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "Delete category",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "category id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "update category",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "update category",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "category id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "update category",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CategoryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCategory"
-                        }
-                    }
-                }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategories"
             }
-        },
-        "/admin/coupons": {
-            "get": {
-                "description": "Get list of coupons",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupons"
-                ],
-                "summary": "Get All Coupons",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new coupon",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupons"
-                ],
-                "summary": "Create Coupon",
-                "parameters": [
-                    {
-                        "description": "Coupon request body",
-                        "name": "coupon",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CouponRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    }
-                }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategories"
             }
-        },
-        "/admin/coupons/{id}": {
-            "get": {
-                "description": "Get Coupon By ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupons"
-                ],
-                "summary": "Get Coupon",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Coupon ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a coupon",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupons"
-                ],
-                "summary": "Delete Coupon",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Coupon request id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Edit a coupon",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Coupons"
-                ],
-                "summary": "Edit Coupon",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Coupon ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Coupon request",
-                        "name": "coupon",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CouponRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCoupon"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/images": {
-            "get": {
-                "description": "Retrieve all images",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Images"
-                ],
-                "summary": "Get all images",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImages"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImages"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Upload and create new image",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Images"
-                ],
-                "summary": "Create new image",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Image file",
-                        "name": "image",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/images/{id}": {
-            "get": {
-                "description": "Retrieve image by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Images"
-                ],
-                "summary": "Get image by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Image ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Retrieve image by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Images"
-                ],
-                "summary": "Delete image by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Image ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Update image by id",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Images"
-                ],
-                "summary": "Update image",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Image ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Image file",
-                        "name": "image",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseImage"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/products": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get products with pagination",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Get products",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create new product",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Create product",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product name",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Product description",
-                        "name": "description",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "number",
-                        "description": "Product price",
-                        "name": "price",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Product stock",
-                        "name": "stock",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Product sizes (comma separated: 1,2,3)",
-                        "name": "sizes",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Product image",
-                        "name": "image",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.SingleProductResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.SingleProductResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.SingleProductResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Delete product",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/products/search": {
-            "get": {
-                "description": "Get products with optional filters such as name, category, price range, and promotions",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Search products with filters",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product name",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Product category",
-                        "name": "category",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Minimum price",
-                        "name": "min_price",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Maximum price",
-                        "name": "max_price",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Flash sale filter",
-                        "name": "is_flash_sale",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Buy 1 Get 1 filter",
-                        "name": "is_buy1get1",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Birthday package filter",
-                        "name": "is_birthday_package",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Cheap product filter (\u003c25000)",
-                        "name": "cheap",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseProductFilter"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseProductFilter"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseProductFilter"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/products/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get a single product by ID and calculate price based on selected size and variant",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Get product by ID size variant",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "example": "Regular/Medium/Large",
-                        "description": "Size",
-                        "name": "size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "example": "Hot/Iced",
-                        "description": "Variant",
-                        "name": "variant",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductDetailResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update existing product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Update product",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update product request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.UpdateProductRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductsResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/sizes": {
-            "get": {
-                "description": "Get all sizes",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sizes"
-                ],
-                "summary": "get all sizes",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSizes"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSizes"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create New size",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sizes"
-                ],
-                "summary": "Create New size",
-                "parameters": [
-                    {
-                        "description": "Create New Size",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.SizeRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSizeCreate"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSizeCreate"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/sizes/{id}": {
-            "get": {
-                "description": "retrieve size by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sizes"
-                ],
-                "summary": "get size by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "size id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete size",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sizes"
-                ],
-                "summary": "Delete size",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "size id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "update size by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sizes"
-                ],
-                "summary": "update size",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "size id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "update size request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.SizeUpdateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseSize"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/users": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get users",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create user with optional picture upload",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Full Name",
-                        "name": "full_name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone Number",
-                        "name": "phone",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Role",
-                        "name": "role",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Profile Picture",
-                        "name": "picture",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/users/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete users",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Delete users",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User Id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/variants": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve all variants",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Variants"
-                ],
-                "summary": "Get all variants",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariants"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariants"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create new variant",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Variants"
-                ],
-                "summary": "Create new variant",
-                "parameters": [
-                    {
-                        "description": "Create variant request",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.VariantRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseUpdateVariant"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseUpdateVariant"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseUpdateVariant"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/variants/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve variant by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Variants"
-                ],
-                "summary": "Get variant by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "variant id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete variant by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Variants"
-                ],
-                "summary": "Delete variant by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "variant id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseVariant"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update variant by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Variants"
-                ],
-                "summary": "Update variant by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "variant id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "update variant request",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.VariantRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCreateVariant"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCreateVariant"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCreateVariant"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCreateVariant"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/forgot-password": {
-            "post": {
-                "description": "Send OTP code to user's email for password reset",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Request OTP for forgot password",
-                "parameters": [
-                    {
-                        "description": "Forgot Password Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ForgotPwdRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseForgotPwd"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseForgotPwd"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/login": {
-            "post": {
-                "description": "Authenticate user and return JWT token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Login",
-                "parameters": [
-                    {
-                        "description": "Login request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AuthLoginRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseToken"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseToken"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseToken"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/register": {
-            "post": {
-                "description": "Register user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Register user",
-                "parameters": [
-                    {
-                        "description": "Register Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AuthRegisterRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRegister"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRegister"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRegister"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRegister"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/reset-password": {
-            "patch": {
-                "description": "Reset password using OTP sent to user's email",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Reset user password",
-                "parameters": [
-                    {
-                        "description": "Reset Password Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResetPasswordRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseResetPwd"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseResetPwd"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "Get user cart",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "Add product to cart",
-                "parameters": [
-                    {
-                        "description": "Add To Cart Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AddToCartRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseCart"
-                        }
-                    }
-                }
-            }
-        },
-        "/recommended-products": {
-            "get": {
-                "description": "Get recommended product based on minimum 3 reviews",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LandingPage"
-                ],
-                "summary": "Get Recommended product",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRecommended"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseRecommended"
-                        }
-                    }
-                }
-            }
-        },
-        "/reviews": {
-            "get": {
-                "description": "Retrieve all product reviews",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "LandingPage"
-                ],
-                "summary": "Get all reviews",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseReviews"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseReviews"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/profile": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get users by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get users by id",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update the logged-in user's profile, including optional picture upload",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update profile",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Full name",
-                        "name": "fullname",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone number",
-                        "name": "phone",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Role",
-                        "name": "role",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Profile picture",
-                        "name": "picture",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
-                        }
-                    }
-                }
-            }
+          }
         }
-    },
-    "definitions": {
-        "dto.AddToCartRequest": {
-            "type": "object",
-            "required": [
-                "product_id",
-                "qty"
-            ],
-            "properties": {
-                "product_id": {
-                    "type": "integer"
-                },
-                "qty": {
-                    "type": "integer"
-                },
-                "size_id": {
-                    "type": "integer"
-                },
-                "variant_id": {
-                    "type": "integer"
-                }
+      },
+      "post": {
+        "description": "create category",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Categories"],
+        "summary": "create category",
+        "parameters": [
+          {
+            "description": "create category",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CategoryRequest"
             }
-        },
-        "dto.AllVariant": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "variant_name": {
-                    "type": "string"
-                }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
             }
-        },
-        "dto.AuthLoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
             }
-        },
-        "dto.AuthRegisterRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "john@email.com"
-                },
-                "fullname": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password123"
-                }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
             }
-        },
-        "dto.AuthResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/dto.LoginUser"
-                }
-            }
-        },
-        "dto.CartItem": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "product_id": {
-                    "type": "integer"
-                },
-                "product_image": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                },
-                "qty": {
-                    "type": "integer"
-                },
-                "size_id": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                },
-                "variant_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.Category": {
-            "type": "object",
-            "properties": {
-                "categories_name": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CategoryRequest": {
-            "type": "object",
-            "properties": {
-                "categories_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.Coupon": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CouponRequest": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CreateProductResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "images": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "stock": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.ForgotPwdRequest": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.ForgotPwdResponse": {
-            "type": "object",
-            "properties": {
-                "code_otp": {
-                    "type": "integer"
-                },
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.ImageDto": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "image_path": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.LoginUser": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "fullname": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "picture": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.ProductDetail": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "sizes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.SizeResponse"
-                    }
-                },
-                "total_reviews": {
-                    "type": "integer"
-                },
-                "variants": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.VariantResponse"
-                    }
-                }
-            }
-        },
-        "dto.ProductDetailResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.ProductDetail"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ProductFilter": {
-            "type": "object",
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "final_price": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buy1get1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "rating": {
-                    "type": "number"
-                }
-            }
-        },
-        "dto.ProductRecommendedResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image_path": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "rating": {
-                    "type": "number"
-                }
-            }
-        },
-        "dto.ProductsResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {},
-                "success": {
-                    "type": "boolean"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.ResetPasswordRequest": {
-            "type": "object",
-            "properties": {
-                "code_otp": {
-                    "type": "integer",
-                    "example": 123456
-                },
-                "email": {
-                    "type": "string",
-                    "example": "user@email.com"
-                },
-                "new_password": {
-                    "type": "string",
-                    "example": "newpassword123"
-                }
-            }
-        },
-        "dto.Response": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Users"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseCart": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.CartItem"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseCategories": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Category"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseCategory": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.Category"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseCoupon": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.Coupon"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseCreateVariant": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.AllVariant"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseForgotPwd": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.ForgotPwdResponse"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseImage": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.ImageDto"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseImages": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.ImageDto"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseOneData": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.Users"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseProductFilter": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.ProductFilter"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                },
-                "total_count": {
-                    "type": "integer"
-                },
-                "total_pages": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.ResponseRecommended": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.ProductRecommendedResponse"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseRegister": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.AuthRegisterRequest"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseResetPwd": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseReviews": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Reviews"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseSize": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.Size"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseSizeCreate": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.SizeRequest"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseSizes": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.Size"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseToken": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.AuthResponse"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseUpdateVariant": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.AllVariant"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseVariant": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.Variant"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.ResponseVariants": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.AllVariant"
-                    }
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.Reviews": {
-            "type": "object",
-            "properties": {
-                "authorTitle": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                }
-            }
-        },
-        "dto.SingleProductResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "result": {
-                    "$ref": "#/definitions/dto.CreateProductResponse"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "dto.Size": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "size_name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.SizeRequest": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "size_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.SizeResponse": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.SizeUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "size_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.UpdateProductRequest": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_birthday_package": {
-                    "type": "boolean"
-                },
-                "is_buyget1": {
-                    "type": "boolean"
-                },
-                "is_flash_sale": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "dto.Users": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "fullname": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "picture": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.Variant": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "variant_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.VariantRequest": {
-            "type": "object",
-            "properties": {
-                "additional_price": {
-                    "type": "integer"
-                },
-                "variant_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.VariantResponse": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                }
-            }
+          }
         }
+      }
     },
-    "securityDefinitions": {
-        "BearerAuth": {
-            "description": "Masukkan token dengan format: Bearer \u003ctoken\u003e",
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+    "/admin/categories/{id}": {
+      "get": {
+        "description": "get category by id",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Categories"],
+        "summary": "get category by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "category id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          }
         }
+      },
+      "delete": {
+        "description": "Delete category",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Categories"],
+        "summary": "Delete category",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "category id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "update category",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Categories"],
+        "summary": "update category",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "category id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "update category",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CategoryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCategory"
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupons": {
+      "get": {
+        "description": "Get list of coupons",
+        "produces": ["application/json"],
+        "tags": ["Coupons"],
+        "summary": "Get All Coupons",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new coupon",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Coupons"],
+        "summary": "Create Coupon",
+        "parameters": [
+          {
+            "description": "Coupon request body",
+            "name": "coupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CouponRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupons/{id}": {
+      "get": {
+        "description": "Get Coupon By ID",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Coupons"],
+        "summary": "Get Coupon",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Coupon ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a coupon",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Coupons"],
+        "summary": "Delete Coupon",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Coupon request id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Edit a coupon",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Coupons"],
+        "summary": "Edit Coupon",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Coupon ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Coupon request",
+            "name": "coupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CouponRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCoupon"
+            }
+          }
+        }
+      }
+    },
+    "/admin/images": {
+      "get": {
+        "description": "Retrieve all images",
+        "produces": ["application/json"],
+        "tags": ["Images"],
+        "summary": "Get all images",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImages"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImages"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Upload and create new image",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "tags": ["Images"],
+        "summary": "Create new image",
+        "parameters": [
+          {
+            "type": "file",
+            "description": "Image file",
+            "name": "image",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          }
+        }
+      }
+    },
+    "/admin/images/{id}": {
+      "get": {
+        "description": "Retrieve image by id",
+        "produces": ["application/json"],
+        "tags": ["Images"],
+        "summary": "Get image by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Retrieve image by id",
+        "produces": ["application/json"],
+        "tags": ["Images"],
+        "summary": "Delete image by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update image by id",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "tags": ["Images"],
+        "summary": "Update image",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Image ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "Image file",
+            "name": "image",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseImage"
+            }
+          }
+        }
+      }
+    },
+    "/admin/products": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Get products with pagination",
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Get products",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Create new product",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Create product",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Product name",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Product description",
+            "name": "description",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "number",
+            "description": "Product price",
+            "name": "price",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Product stock",
+            "name": "stock",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Product sizes (comma separated: 1,2,3)",
+            "name": "sizes",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "Product image",
+            "name": "image",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.SingleProductResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.SingleProductResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.SingleProductResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Delete product",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Delete product",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Product ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/products/search": {
+      "get": {
+        "description": "Get products with optional filters such as name, category, price range, and promotions",
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Search products with filters",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Product name",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Product category",
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Minimum price",
+            "name": "min_price",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Maximum price",
+            "name": "max_price",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Flash sale filter",
+            "name": "is_flash_sale",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Buy 1 Get 1 filter",
+            "name": "is_buy1get1",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Birthday package filter",
+            "name": "is_birthday_package",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Cheap product filter (\u003c25000)",
+            "name": "cheap",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseProductFilter"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseProductFilter"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseProductFilter"
+            }
+          }
+        }
+      }
+    },
+    "/admin/products/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Get a single product by ID and calculate price based on selected size and variant",
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Get product by ID size variant",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Product ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "example": "Regular/Medium/Large",
+            "description": "Size",
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "example": "Hot/Iced",
+            "description": "Variant",
+            "name": "variant",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Update existing product",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Products"],
+        "summary": "Update product",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Product ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update product request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateProductRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ProductsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sizes": {
+      "get": {
+        "description": "Get all sizes",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Sizes"],
+        "summary": "get all sizes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSizes"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSizes"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create New size",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Sizes"],
+        "summary": "Create New size",
+        "parameters": [
+          {
+            "description": "Create New Size",
+            "name": "req",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SizeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSizeCreate"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSizeCreate"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sizes/{id}": {
+      "get": {
+        "description": "retrieve size by id",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Sizes"],
+        "summary": "get size by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "size id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete size",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Sizes"],
+        "summary": "Delete size",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "size id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "update size by id",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Sizes"],
+        "summary": "update size",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "size id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "update size request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SizeUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseSize"
+            }
+          }
+        }
+      }
+    },
+    "/admin/transactions": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Create transaction with products",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Transactions"],
+        "summary": "Create new transaction",
+        "parameters": [
+          {
+            "description": "Create Transaction Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTransactionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTransactionResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/transactions/{id}/status": {
+      "patch": {
+        "description": "Update status of transaction (admin)",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Transactions"],
+        "summary": "Update transaction status",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Transaction ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Status Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateTransactionStatusRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Get users",
+        "produces": ["application/json"],
+        "tags": ["Users"],
+        "summary": "Get users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create user with optional picture upload",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "tags": ["Users"],
+        "summary": "Create a new user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Full Name",
+            "name": "full_name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Email",
+            "name": "email",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Password",
+            "name": "password",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Phone Number",
+            "name": "phone",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Address",
+            "name": "address",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Role",
+            "name": "role",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "Profile Picture",
+            "name": "picture",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Delete users",
+        "produces": ["application/json"],
+        "tags": ["Users"],
+        "summary": "Delete users",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "User Id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      }
+    },
+    "/admin/variants": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Retrieve all variants",
+        "produces": ["application/json"],
+        "tags": ["Variants"],
+        "summary": "Get all variants",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariants"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariants"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Create new variant",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Variants"],
+        "summary": "Create new variant",
+        "parameters": [
+          {
+            "description": "Create variant request",
+            "name": "req",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.VariantRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseUpdateVariant"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseUpdateVariant"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseUpdateVariant"
+            }
+          }
+        }
+      }
+    },
+    "/admin/variants/{id}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Retrieve variant by id",
+        "produces": ["application/json"],
+        "tags": ["Variants"],
+        "summary": "Get variant by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "variant id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Delete variant by id",
+        "produces": ["application/json"],
+        "tags": ["Variants"],
+        "summary": "Delete variant by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "variant id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseVariant"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Update variant by id",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Variants"],
+        "summary": "Update variant by id",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "variant id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "update variant request",
+            "name": "req",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.VariantRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCreateVariant"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCreateVariant"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCreateVariant"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCreateVariant"
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "description": "Send OTP code to user's email for password reset",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Authentication"],
+        "summary": "Request OTP for forgot password",
+        "parameters": [
+          {
+            "description": "Forgot Password Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ForgotPwdRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseForgotPwd"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseForgotPwd"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Authenticate user and return JWT token",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Authentication"],
+        "summary": "Login",
+        "parameters": [
+          {
+            "description": "Login request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AuthLoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseToken"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseToken"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseToken"
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "Register user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Authentication"],
+        "summary": "Register user",
+        "parameters": [
+          {
+            "description": "Register Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AuthRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRegister"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRegister"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRegister"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRegister"
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "patch": {
+        "description": "Reset password using OTP sent to user's email",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Authentication"],
+        "summary": "Reset user password",
+        "parameters": [
+          {
+            "description": "Reset Password Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ResetPasswordRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseResetPwd"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseResetPwd"
+            }
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "produces": ["application/json"],
+        "tags": ["Cart"],
+        "summary": "Get user cart",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Cart"],
+        "summary": "Add product to cart",
+        "parameters": [
+          {
+            "description": "Add To Cart Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AddToCartRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseCart"
+            }
+          }
+        }
+      }
+    },
+    "/recommended-products": {
+      "get": {
+        "description": "Get recommended product based on minimum 3 reviews",
+        "produces": ["application/json"],
+        "tags": ["LandingPage"],
+        "summary": "Get Recommended product",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRecommended"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseRecommended"
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "get": {
+        "description": "Retrieve all product reviews",
+        "produces": ["application/json"],
+        "tags": ["LandingPage"],
+        "summary": "Get all reviews",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseReviews"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseReviews"
+            }
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Get users by id",
+        "produces": ["application/json"],
+        "tags": ["Users"],
+        "summary": "Get users by id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseOneData"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Response"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Update the logged-in user's profile, including optional picture upload",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "tags": ["Users"],
+        "summary": "Update profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Full name",
+            "name": "fullname",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Email",
+            "name": "email",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Password",
+            "name": "password",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Phone number",
+            "name": "phone",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Address",
+            "name": "address",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Role",
+            "name": "role",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "Profile picture",
+            "name": "picture",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseOneData"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseOneData"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.ResponseOneData"
+            }
+          }
+        }
+      }
     }
+  },
+  "definitions": {
+    "dto.AddToCartRequest": {
+      "type": "object",
+      "required": ["product_id", "qty"],
+      "properties": {
+        "product_id": {
+          "type": "integer"
+        },
+        "qty": {
+          "type": "integer"
+        },
+        "size_id": {
+          "type": "integer"
+        },
+        "variant_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.AllVariant": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "deleted_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "variant_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AuthLoginRequest": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AuthRegisterRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "john@email.com"
+        },
+        "fullname": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "password": {
+          "type": "string",
+          "example": "password123"
+        }
+      }
+    },
+    "dto.AuthResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/dto.LoginUser"
+        }
+      }
+    },
+    "dto.CartItem": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "product_id": {
+          "type": "integer"
+        },
+        "product_image": {
+          "type": "string"
+        },
+        "product_name": {
+          "type": "string"
+        },
+        "qty": {
+          "type": "integer"
+        },
+        "size_id": {
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
+        },
+        "variant_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.Category": {
+      "type": "object",
+      "properties": {
+        "categories_name": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "deleted_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CategoryRequest": {
+      "type": "object",
+      "properties": {
+        "categories_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.Coupon": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "image": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CouponRequest": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateProductResponse": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "images": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "stock": {
+          "type": "integer",
+          "dto.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+              "address",
+              "delivery_fee",
+              "delivery_method",
+              "email",
+              "full_name",
+              "items",
+              "subtotal_price",
+              "tax",
+              "total_price"
+            ],
+            "properties": {
+              "address": { "type": "string" },
+              "delivery_fee": { "type": "integer" },
+              "delivery_method": { "type": "string" },
+              "email": { "type": "string" },
+              "full_name": { "type": "string" },
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/dto.TransactionItemRequest"
+                }
+              },
+              "payment_method": { "type": "string" },
+              "subtotal_price": { "type": "integer" },
+              "tax": { "type": "integer" },
+              "total_price": { "type": "integer" }
+            }
+          },
+          "dto.CreateTransactionResponse": {
+            "type": "object",
+            "properties": {
+              "message": { "type": "string" },
+              "result": {
+                "$ref": "#/definitions/dto.TransactionResult"
+              },
+              "success": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "dto.ForgotPwdRequest": {
+      "type": "object",
+      "required": ["email"],
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ForgotPwdResponse": {
+      "type": "object",
+      "properties": {
+        "code_otp": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ImageDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "image_path": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.LoginUser": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "fullname": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProductDetail": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "rating": {
+          "type": "number"
+        },
+        "sizes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.SizeResponse"
+          }
+        },
+        "total_reviews": {
+          "type": "integer"
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.VariantResponse"
+          }
+        }
+      }
+    },
+    "dto.ProductDetailResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.ProductDetail"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ProductFilter": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "final_price": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_birthday_package": {
+          "type": "boolean"
+        },
+        "is_buy1get1": {
+          "type": "boolean"
+        },
+        "is_flash_sale": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "rating": {
+          "type": "number"
+        }
+      }
+    },
+    "dto.ProductRecommendedResponse": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "image_path": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "rating": {
+          "type": "number"
+        }
+      }
+    },
+    "dto.ProductsResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {},
+        "success": {
+          "type": "boolean"
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "code_otp": {
+          "type": "integer",
+          "example": 123456
+        },
+        "email": {
+          "type": "string",
+          "example": "user@email.com"
+        },
+        "new_password": {
+          "type": "string",
+          "example": "newpassword123"
+        }
+      }
+    },
+    "dto.Response": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.Users"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseCart": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.CartItem"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseCategories": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.Category"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseCategory": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.Category"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseCoupon": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.Coupon"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseCreateVariant": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.AllVariant"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseForgotPwd": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.ForgotPwdResponse"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseImage": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.ImageDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseImages": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ImageDto"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseOneData": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.Users"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseProductFilter": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ProductFilter"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "total_count": {
+          "type": "integer"
+        },
+        "total_pages": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ResponseRecommended": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ProductRecommendedResponse"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseRegister": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.AuthRegisterRequest"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseResetPwd": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseReviews": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.Reviews"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseSize": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.Size"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseSizeCreate": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.SizeRequest"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseSizes": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.Size"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseToken": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.AuthResponse"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseUpdateVariant": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.AllVariant"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseVariant": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.Variant"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ResponseVariants": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AllVariant"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.Reviews": {
+      "type": "object",
+      "properties": {
+        "authorTitle": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "image": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number"
+        }
+      }
+    },
+    "dto.SingleProductResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/dto.CreateProductResponse"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.Size": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "deleted_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "size_name": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SizeRequest": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "size_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SizeResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.SizeUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "size_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TransactionItemRequest": {
+      "type": "object",
+      "required": ["price", "product_id", "qty", "size", "variant"],
+      "properties": {
+        "price": {
+          "type": "integer"
+        },
+        "product_id": {
+          "type": "integer"
+        },
+        "qty": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "size": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TransactionResult": {
+      "type": "object",
+      "properties": {
+        "transaction_code": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateProductRequest": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "is_birthday_package": {
+          "type": "boolean"
+        },
+        "is_buyget1": {
+          "type": "boolean"
+        },
+        "is_flash_sale": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      }
+    },
+    "dto.UpdateTransactionStatusRequest": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.Users": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "fullname": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.Variant": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "variant_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.VariantRequest": {
+      "type": "object",
+      "properties": {
+        "additional_price": {
+          "type": "integer"
+        },
+        "variant_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.VariantResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "description": "Masukkan token dengan format: Bearer \u003ctoken\u003e",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
 }
