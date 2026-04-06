@@ -181,9 +181,16 @@ definitions:
       message:
         type: string
       result:
-        $ref: '#/definitions/dto.TransactionResult'
+        $ref: '#/definitions/dto.CreateTransactionResult'
       success:
         type: boolean
+    type: object
+  dto.CreateTransactionResult:
+    properties:
+      id:
+        type: integer
+      transaction_code:
+        type: string
     type: object
   dto.ForgotPwdRequest:
     properties:
@@ -198,6 +205,26 @@ definitions:
         type: integer
       email:
         type: string
+    type: object
+  dto.GetTransactionDetailResponse:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/dto.TransactionDetailResponse'
+      success:
+        type: boolean
+    type: object
+  dto.GetTransactionResponse:
+    properties:
+      message:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/dto.TransactionResult'
+        type: array
+      success:
+        type: boolean
     type: object
   dto.ImageDto:
     properties:
@@ -659,6 +686,39 @@ definitions:
       size_name:
         type: string
     type: object
+  dto.TransactionDetailResponse:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      delivery_fee:
+        type: integer
+      delivery_method:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.TransactionItemResponse'
+        type: array
+      payment_method:
+        type: string
+      status:
+        type: string
+      subtotal_price:
+        type: integer
+      tax:
+        type: integer
+      total_price:
+        type: integer
+      transaction_code:
+        type: string
+    type: object
   dto.TransactionItemRequest:
     properties:
       price:
@@ -679,8 +739,45 @@ definitions:
     - size
     - variant
     type: object
+  dto.TransactionItemResponse:
+    properties:
+      price:
+        type: integer
+      product_id:
+        type: integer
+      qty:
+        type: integer
+      size:
+        type: string
+      variant:
+        type: string
+    type: object
   dto.TransactionResult:
     properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      delivery_fee:
+        type: string
+      delivery_method:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      payment_method:
+        type: integer
+      status:
+        type: string
+      subtotal_price:
+        type: integer
+      tax:
+        type: integer
+      total_price:
+        type: integer
       transaction_code:
         type: string
     type: object
@@ -1570,38 +1667,6 @@ paths:
       summary: update size
       tags:
       - Sizes
-  /admin/transactions:
-    post:
-      consumes:
-      - application/json
-      description: Create transaction with products
-      parameters:
-      - description: Create Transaction Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateTransactionRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.CreateTransactionResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.Response'
-      security:
-      - BearerAuth: []
-      summary: Create new transaction
-      tags:
-      - Transactions
   /admin/transactions/{id}/status:
     patch:
       consumes:
@@ -1654,6 +1719,60 @@ paths:
       security:
       - BearerAuth: []
       summary: Get users
+      tags:
+      - Users
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update the logged-in user's profile, including optional picture
+        upload
+      parameters:
+      - description: Full name
+        in: formData
+        name: fullname
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        type: string
+      - description: Phone number
+        in: formData
+        name: phone
+        type: string
+      - description: Address
+        in: formData
+        name: address
+        type: string
+      - description: Role
+        in: formData
+        name: role
+        type: string
+      - description: Profile picture
+        in: formData
+        name: picture
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+      security:
+      - BearerAuth: []
+      summary: Update profile
       tags:
       - Users
     post:
@@ -1737,6 +1856,34 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete users
+      tags:
+      - Users
+    get:
+      description: Get users by id
+      parameters:
+      - description: users id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseOneData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Get users by id
       tags:
       - Users
   /admin/variants:
@@ -2092,83 +2239,96 @@ paths:
       summary: Get all reviews
       tags:
       - LandingPage
-  /users/profile:
+  /transactions:
     get:
-      description: Get users by id
+      description: Get all transactions for authenticated user
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ResponseOneData'
-        "400":
-          description: Bad Request
+            $ref: '#/definitions/dto.GetTransactionResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/dto.Response'
         "500":
-          description: Internal Server Error
+          description: Internal server error
           schema:
             $ref: '#/definitions/dto.Response'
       security:
       - BearerAuth: []
-      summary: Get users by id
+      summary: Get user transactions
       tags:
-      - Users
-    patch:
+      - Transactions
+    post:
       consumes:
-      - multipart/form-data
-      description: Update the logged-in user's profile, including optional picture
-        upload
+      - application/json
+      description: Create transaction with products
       parameters:
-      - description: Full name
-        in: formData
-        name: fullname
-        type: string
-      - description: Email
-        in: formData
-        name: email
-        type: string
-      - description: Password
-        in: formData
-        name: password
-        type: string
-      - description: Phone number
-        in: formData
-        name: phone
-        type: string
-      - description: Address
-        in: formData
-        name: address
-        type: string
-      - description: Role
-        in: formData
-        name: role
-        type: string
-      - description: Profile picture
-        in: formData
-        name: picture
-        type: file
+      - description: Create Transaction Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateTransactionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create new transaction
+      tags:
+      - Transactions
+  /transactions/{id}:
+    get:
+      description: Get transaction detail by ID (user only)
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ResponseOneData'
+            $ref: '#/definitions/dto.GetTransactionDetailResponse'
         "400":
-          description: Bad Request
+          description: Invalid request
           schema:
-            $ref: '#/definitions/dto.ResponseOneData'
-        "500":
-          description: Internal Server Error
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
           schema:
-            $ref: '#/definitions/dto.ResponseOneData'
+            additionalProperties: true
+            type: object
+        "404":
+          description: Transaction not found
+          schema:
+            additionalProperties: true
+            type: object
       security:
       - BearerAuth: []
-      summary: Update profile
+      summary: Get transaction detail
       tags:
-      - Users
+      - Transactions
 securityDefinitions:
   BearerAuth:
     description: 'Masukkan token dengan format: Bearer <token>'

@@ -180,7 +180,7 @@ func (u *UserRepository) CreateUser(ctx context.Context, req dto.AuthRegisterReq
 	query := `
 INSERT INTO users (fullname, email, password)
 VALUES ($1,$2,$3)
-RETURNING id, fullname, email, password;
+Returning id, fullname, email, password
 `
 	// Simpan hasil QueryRow di variable row
 	data, err := u.db.Query(ctx, query,

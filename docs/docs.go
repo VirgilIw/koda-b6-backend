@@ -1254,57 +1254,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/transactions": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create transaction with products",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Transactions"
-                ],
-                "summary": "Create new transaction",
-                "parameters": [
-                    {
-                        "description": "Create Transaction Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateTransactionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateTransactionResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/admin/transactions/{id}/status": {
             "patch": {
                 "description": "Update status of transaction (admin)",
@@ -1467,9 +1416,135 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the logged-in user's profile, including optional picture upload",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Full name",
+                        "name": "fullname",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone number",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Role",
+                        "name": "role",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Profile picture",
+                        "name": "picture",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseOneData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseOneData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseOneData"
+                        }
+                    }
+                }
             }
         },
         "/admin/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get users by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "users id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseOneData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
@@ -2067,26 +2142,75 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/profile": {
+        "/transactions": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get users by id",
+                "description": "Get all transactions for authenticated user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Transactions"
                 ],
-                "summary": "Get users by id",
+                "summary": "Get user transactions",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
+                            "$ref": "#/definitions/dto.GetTransactionResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create transaction with products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create new transaction",
+                "parameters": [
+                    {
+                        "description": "Create Transaction Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTransactionResponse"
                         }
                     },
                     "400": {
@@ -2102,85 +2226,58 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "patch": {
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update the logged-in user's profile, including optional picture upload",
-                "consumes": [
-                    "multipart/form-data"
-                ],
+                "description": "Get transaction detail by ID (user only)",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Transactions"
                 ],
-                "summary": "Update profile",
+                "summary": "Get transaction detail",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Full name",
-                        "name": "fullname",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone number",
-                        "name": "phone",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Role",
-                        "name": "role",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Profile picture",
-                        "name": "picture",
-                        "in": "formData"
+                        "type": "integer",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
+                            "$ref": "#/definitions/dto.GetTransactionDetailResponse"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/dto.ResponseOneData"
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -2401,8 +2498,6 @@ const docTemplate = `{
                 },
                 "stock": {
                     "type": "integer"
-<<<<<<< HEAD
-=======
                 }
             }
         },
@@ -2462,11 +2557,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "result": {
-                    "$ref": "#/definitions/dto.TransactionResult"
+                    "$ref": "#/definitions/dto.CreateTransactionResult"
                 },
                 "success": {
                     "type": "boolean"
->>>>>>> 4ae9c04935cf7a3084971897ca98050512d46fd1
+                }
+            }
+        },
+        "dto.CreateTransactionResult": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "transaction_code": {
+                    "type": "string"
                 }
             }
         },
@@ -2489,6 +2594,37 @@ const docTemplate = `{
                 },
                 "email": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.GetTransactionDetailResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/dto.TransactionDetailResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.GetTransactionResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TransactionResult"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },
@@ -3198,6 +3334,56 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.TransactionDetailResponse": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "delivery_fee": {
+                    "type": "integer"
+                },
+                "delivery_method": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TransactionItemResponse"
+                    }
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "subtotal_price": {
+                    "type": "integer"
+                },
+                "tax": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "integer"
+                },
+                "transaction_code": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.TransactionItemRequest": {
             "type": "object",
             "required": [
@@ -3226,9 +3412,65 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.TransactionItemResponse": {
+            "type": "object",
+            "properties": {
+                "price": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "qty": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "variant": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.TransactionResult": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "delivery_fee": {
+                    "type": "string"
+                },
+                "delivery_method": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "payment_method": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "subtotal_price": {
+                    "type": "integer"
+                },
+                "tax": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "integer"
+                },
                 "transaction_code": {
                     "type": "string"
                 }

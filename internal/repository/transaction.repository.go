@@ -6,12 +6,18 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 )
 
 type TransactionRepository struct {
 	db *pgxpool.Pool
+}
+
+func (r *TransactionRepository) UpdateTransactionStatus(ctx context.Context, transactionID int, status string) error {
+	panic("unimplemented")
 }
 
 func NewTransactionRepository(db *pgxpool.Pool) *TransactionRepository {
@@ -20,7 +26,6 @@ func NewTransactionRepository(db *pgxpool.Pool) *TransactionRepository {
 	}
 }
 
-// generate code (support leading zero)
 func generateTransactionCode() string {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -30,24 +35,105 @@ func generateTransactionCode() string {
 	)
 }
 
-func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID int, req dto.CreateTransactionRequest) (string, error) {
+func (r *TransactionRepository) GetTransactionItems(ctx context.Context, transactionID int) ([]model.TransactionItem, error) {
+
+	rows, err := r.db.Query(ctx, `
+		SELECT 
+			product_id,
+			qty,
+			size,
+			variant,
+			price
+		FROM transaction_products
+		WHERE transaction_id = $1
+	`, transactionID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	items, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.TransactionItem])
+	if err != nil {
+		return nil, err
+	}
+
+	return items, nil
+}
+
+func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, userID int) ([]dto.TransactionResult, error) {
+	rows, err := r.db.Query(ctx, `
+		SELECT 
+			id,
+			transaction_code,
+			full_name,
+			email,
+			address,
+			delivery_method,
+			subtotal_price,
+			total_price,
+			delivery_fee,
+			tax,
+			payment_method,
+			status,
+			created_at
+		FROM transactions
+		WHERE user_id = $1
+		ORDER BY created_at DESC
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var transactions []dto.TransactionResult
+
+	for rows.Next() {
+		var t dto.TransactionResult
+
+		err := rows.Scan(
+			&t.ID,
+			&t.TransactionCode,
+			&t.FullName,
+			&t.Email,
+			&t.Address,
+			&t.DeliveryMethod,
+			&t.SubtotalPrice,
+			&t.TotalPrice,
+			&t.DeliveryFee,
+			&t.Tax,
+			&t.PaymentMethod,
+			&t.Status,
+			&t.CreatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		transactions = append(transactions, t)
+	}
+
+	return transactions, nil
+}
+
+func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID int, req dto.CreateTransactionRequest) (int, string, error) {
 
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
 
-	// rollback
+	// rollback kalau error
 	defer func() {
 		if err != nil {
-			tx.Rollback(ctx)
+			_ = tx.Rollback(ctx)
 		}
 	}()
 
 	var transactionID int
 	var transactionCode string
 
-	// retry kalau code duplicate (max 3x)
+	// retry generate code (max 3x)
 	for i := range 3 {
 		transactionCode = generateTransactionCode()
 
@@ -68,21 +154,38 @@ func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID in
 			req.DeliveryFee,
 			req.Tax,
 			req.PaymentMethod,
-			"completed",
+			"pending",
 		).Scan(&transactionID)
 
 		if err == nil {
 			break
 		}
 
-		// retry kalau gagal (misal duplicate)
 		if i == 2 {
-			return "", err
+			return 0, "", fmt.Errorf("failed to generate unique transaction code: %w", err)
 		}
 	}
 
-	// insert transaction_products
 	for _, item := range req.Items {
+
+		// 1. cek & update stock (ANTI OVERSELL)
+		cmd, err := tx.Exec(ctx, `
+			UPDATE products
+			SET stock = stock - $1
+			WHERE id = $2 AND stock >= $1
+		`,
+			item.Qty,
+			item.ProductID,
+		)
+		if err != nil {
+			return 0, "", err
+		}
+
+		if cmd.RowsAffected() == 0 {
+			return 0, "", fmt.Errorf("stock not enough for product_id %d", item.ProductID)
+		}
+
+		// 2. insert ke transaction_products
 		_, err = tx.Exec(ctx, `
 			INSERT INTO transaction_products
 			(product_id, transaction_id, qty, size, variant, price)
@@ -95,30 +198,49 @@ func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID in
 			item.Variant,
 			item.Price,
 		)
-
 		if err != nil {
-			return "", err
+			return 0, "", err
 		}
 	}
 
 	err = tx.Commit(ctx)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
 
-	return transactionCode, nil
+	return transactionID, transactionCode, nil
 }
 
-func (r *TransactionRepository) UpdateTransactionStatus(ctx context.Context, transactionID int, status string) error {
-	_, err := r.db.Exec(ctx, `
-	UPDATE transactions
-	SET status = $1, updated_at = NOW()
-	WHERE id = $2
-`, status, transactionID)
+func (r *TransactionRepository) GetTransactionDetail(ctx context.Context, transactionID, userID int) (model.Transaction, error) {
+	query := `
+	SELECT 
+		id,
+		user_id,
+		transaction_code,
+		full_name,
+		email,
+		address,
+		delivery_method,
+		subtotal_price,
+		total_price,
+		delivery_fee,
+		tax,
+		payment_method,
+		status,
+		created_at
+	FROM transactions
+	WHERE id = $1 AND user_id = $2
+	`
 
+	rows, err := r.db.Query(ctx, query, transactionID, userID)
 	if err != nil {
-		return err
+		return model.Transaction{}, err
 	}
 
-	return nil
+	transaction, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Transaction])
+	if err != nil {
+		return model.Transaction{}, err
+	}
+
+	return transaction, nil
 }

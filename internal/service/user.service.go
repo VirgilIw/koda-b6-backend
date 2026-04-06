@@ -95,7 +95,7 @@ func (u *UserService) UpdateProfile(ctx context.Context, req dto.UpdateUserReque
 	if req.Address != nil {
 		user.Address = req.Address
 	}
-	if req.Role != nil {
+	if req.Role != "" {
 		user.Role = req.Role
 	}
 

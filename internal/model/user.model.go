@@ -10,7 +10,7 @@ type UserModel struct {
 	Picture     *string    `db:"picture"`
 	Phone       *string    `db:"phone"`
 	Address     *string    `db:"address"`
-	Role        *string    `db:"role"`
+	Role        string     `db:"role"`
 	CreatedAt   *time.Time `db:"created_at"`
 	UpdatedAt   *time.Time `db:"updated_at"`
 	DeletedAt   *time.Time `db:"deleted_at"`

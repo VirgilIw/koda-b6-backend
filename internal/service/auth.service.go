@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/lib"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
@@ -30,7 +31,7 @@ func (l *AuthService) AuthLogin(ctx context.Context, email, password string) (dt
 		return dto.AuthResponse{}, errors.New("invalid email or password")
 	}
 
-	token, err := lib.GenerateToken(user.Id, user.Email)
+	token, err := lib.GenerateToken(user.Id, user.Email, user.Role)
 	if err != nil {
 		return dto.AuthResponse{}, err
 	}
@@ -52,8 +53,11 @@ func (l *AuthService) AuthLogin(ctx context.Context, email, password string) (dt
 func (l *AuthService) AuthRegister(ctx context.Context, req dto.AuthRegisterRequest) error {
 
 	user, err := l.repo.GetByEmail(ctx, req.Email)
+
 	if err != nil {
-		return err
+		if err != pgx.ErrNoRows {
+			return err
+		}
 	}
 
 	// kalau user ditemukan

@@ -217,14 +217,6 @@ type ResponseCart struct {
 	Result  []CartItem `json:"result"`
 }
 
-type TransactionItemResponse struct {
-	ProductID int    `json:"product_id"`
-	Qty       int    `json:"qty"`
-	Size      string `json:"size"`
-	Variant   string `json:"variant"`
-	Price     int    `json:"price"`
-}
-
 type TransactionResponse struct {
 	ID              int                       `json:"id"`
 	TransactionCode string                    `json:"transaction_code"`
@@ -241,7 +233,19 @@ type TransactionResponse struct {
 }
 
 type CreateTransactionResponse struct {
-	Success bool              `json:"success"`
-	Message string            `json:"message"`
-	Result  TransactionResult `json:"result"`
+	Success bool                    `json:"success"`
+	Message string                  `json:"message"`
+	Result  CreateTransactionResult `json:"result"`
+}
+
+type GetTransactionResponse struct {
+	Success bool                `json:"success"`
+	Message string              `json:"message"`
+	Result  []TransactionResult `json:"result"`
+}
+
+type GetTransactionDetailResponse struct {
+	Success bool                      `json:"success"`
+	Message string                    `json:"message"`
+	Result  TransactionDetailResponse `json:"result"`
 }

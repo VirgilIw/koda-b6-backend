@@ -20,3 +20,11 @@ type Transaction struct {
 	UpdatedAt       *time.Time `db:"updated_at"`
 	DeletedAt       *time.Time `db:"deleted_at"`
 }
+
+type TransactionItem struct {
+	ProductID int    `db:"product_id"`
+	Qty       int    `db:"qty"`
+	Size      string `db:"size"`
+	Variant   string `db:"variant"`
+	Price     int    `db:"price"`
+}

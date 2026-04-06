@@ -19,6 +19,7 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterRecommendProduct(app, c)
 	RouterLanding(app, c)
 	RouterCart(app, c)
+	RouterTransactions(app, c)
 	// admin routes
 	admin := app.Group("/admin")
 
@@ -29,5 +30,5 @@ func Init(app *gin.Engine, c *di.Container) {
 	RouterSizes(admin, c)
 	RouterVariant(admin, c)
 	RouterImages(admin, c)
-	RouterTransactions(admin, c)
+	RouterAdminTransactions(admin, c)
 }

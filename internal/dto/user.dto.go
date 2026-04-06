@@ -33,7 +33,7 @@ type UpdateUserRequest struct {
 	Picture  *string `json:"picture"`
 	Phone    *string `json:"phone"`
 	Address  *string `json:"address"`
-	Role     *string `json:"role"`
+	Role     string  `json:"role"`
 }
 
 type Users struct {
@@ -44,7 +44,7 @@ type Users struct {
 	Picture  *string `json:"picture"`
 	Phone    *string `json:"phone"`
 	Address  *string `json:"address"`
-	Role     *string `json:"role"`
+	Role     string  `json:"role"`
 }
 
 type LoginUser struct {
@@ -54,5 +54,5 @@ type LoginUser struct {
 	Picture  *string `json:"picture"`
 	Phone    *string `json:"phone"`
 	Address  *string `json:"address"`
-	Role     *string `json:"role"`
+	Role     string  `json:"role"`
 }
