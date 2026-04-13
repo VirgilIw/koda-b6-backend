@@ -124,7 +124,7 @@ func (c *Container) initDependencies() {
 	c.cartHandler = handler.NewCartHandler(c.cartService)
 
 	c.transactionRepo = repository.NewTransactionRepository(c.db)
-	c.transactionService = service.NewTransactionService(c.transactionRepo)
+	c.transactionService = service.NewTransactionService(c.transactionRepo, c.productRepo, c.sizesRepo, c.variantRepo, c.db)
 	c.transactionHandler = handler.NewTransactionHandler(c.transactionService)
 }
 
