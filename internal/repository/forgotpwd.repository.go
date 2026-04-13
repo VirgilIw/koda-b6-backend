@@ -59,7 +59,7 @@ func (f *ForgotPwdRepository) DeleteDataByCode(ctx context.Context, req dto.Forg
 }
 
 func (f *ForgotPwdRepository) CreateForgotRequest(ctx context.Context, req dto.ForgotPwdRequest, codeOtp int) (model.ForgotPassword, error) {
-
+	// otp pakai crypto generate random otp
 	query := `
 			INSERT INTO forgot_password (email, code_otp)
 		VALUES ($1, $2)
