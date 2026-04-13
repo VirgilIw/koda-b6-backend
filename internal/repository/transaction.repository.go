@@ -2,11 +2,13 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
@@ -29,7 +31,7 @@ func NewTransactionRepository(db *pgxpool.Pool) *TransactionRepository {
 func generateTransactionCode() string {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	return fmt.Sprintf("%05d-%05d",
+	return fmt.Sprintf("#%05d-%05d",
 		r.Intn(100000),
 		r.Intn(100000),
 	)
@@ -62,24 +64,34 @@ func (r *TransactionRepository) GetTransactionItems(ctx context.Context, transac
 
 func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, userID int) ([]dto.TransactionResult, error) {
 	rows, err := r.db.Query(ctx, `
-		SELECT 
-			id,
-			transaction_code,
-			full_name,
-			email,
-			address,
-			delivery_method,
-			subtotal_price,
-			total_price,
-			delivery_fee,
-			tax,
-			payment_method,
-			status,
-			created_at
-		FROM transactions
-		WHERE user_id = $1
-		ORDER BY created_at DESC
-	`, userID)
+	SELECT 
+		t.id,
+		t.transaction_code,
+		t.full_name,
+		t.email,
+		t.address,
+		t.delivery_method,
+		t.subtotal_price,
+		t.total_price,
+		t.delivery_fee,
+		t.tax,
+		t.payment_method,
+		t.status,
+		t.user_id,
+		t.created_at,
+		(
+			SELECT i.image_path
+			FROM transaction_products tp
+			LEFT JOIN product_images pi ON pi.product_id = tp.product_id
+			LEFT JOIN images i ON i.id = pi.image_id
+			WHERE tp.transaction_id = t.id
+			LIMIT 1
+		) AS product_image
+	FROM transactions t
+	WHERE t.user_id = $1
+	ORDER BY t.created_at DESC
+`, userID)
+
 	if err != nil {
 		return nil, err
 	}
@@ -103,9 +115,11 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 			&t.Tax,
 			&t.PaymentMethod,
 			&t.Status,
+			&t.UserId,
 			&t.CreatedAt,
+			&t.ProductImage,
 		)
-
+		fmt.Println(err)
 		if err != nil {
 			return nil, err
 		}
@@ -116,28 +130,17 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 	return transactions, nil
 }
 
-func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID int, req dto.CreateTransactionRequest) (int, string, error) {
-
-	tx, err := r.db.Begin(ctx)
-	if err != nil {
-		return 0, "", err
-	}
-
-	// rollback kalau error
-	defer func() {
-		if err != nil {
-			_ = tx.Rollback(ctx)
-		}
-	}()
+func (r *TransactionRepository) InsertTransaction(ctx context.Context, tx pgx.Tx, userID int, req dto.CreateTransactionRequest, subtotal int, total int, deliveryFee int, tax int,
+) (int, string, error) {
 
 	var transactionID int
 	var transactionCode string
 
-	// retry generate code (max 3x)
-	for i := range 3 {
+	for range 3 {
+
 		transactionCode = generateTransactionCode()
 
-		err = tx.QueryRow(ctx, `
+		err := tx.QueryRow(ctx, `
 			INSERT INTO transactions 
 			(user_id, transaction_code, full_name, email, address, delivery_method, subtotal_price, total_price, delivery_fee, tax, payment_method, status)
 			VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
@@ -149,66 +152,69 @@ func (r *TransactionRepository) CreateTransaction(ctx context.Context, userID in
 			req.Email,
 			req.Address,
 			req.DeliveryMethod,
-			req.SubtotalPrice,
-			req.TotalPrice,
-			req.DeliveryFee,
-			req.Tax,
+			subtotal,
+			total,
+			deliveryFee,
+			tax,
 			req.PaymentMethod,
 			"pending",
 		).Scan(&transactionID)
 
 		if err == nil {
-			break
+			return transactionID, transactionCode, nil
 		}
 
-		if i == 2 {
-			return 0, "", fmt.Errorf("failed to generate unique transaction code: %w", err)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			continue
 		}
+
+		return 0, "", fmt.Errorf("insert transaction failed: %w", err)
 	}
 
-	for _, item := range req.Items {
+	return 0, "", fmt.Errorf("failed to generate unique transaction code")
+}
 
-		// 1. cek & update stock (ANTI OVERSELL)
-		cmd, err := tx.Exec(ctx, `
-			UPDATE products
-			SET stock = stock - $1
-			WHERE id = $2 AND stock >= $1
-		`,
-			item.Qty,
-			item.ProductID,
-		)
-		if err != nil {
-			return 0, "", err
-		}
+func (r *ProductRepository) UpdateStock(ctx context.Context, tx pgx.Tx, productID int, qty int) error {
 
-		if cmd.RowsAffected() == 0 {
-			return 0, "", fmt.Errorf("stock not enough for product_id %d", item.ProductID)
-		}
+	cmd, err := tx.Exec(ctx, `
+		UPDATE products
+		SET stock = stock - $1
+		WHERE id = $2 AND stock >= $1
+	`, qty, productID)
 
-		// 2. insert ke transaction_products
-		_, err = tx.Exec(ctx, `
-			INSERT INTO transaction_products
-			(product_id, transaction_id, qty, size, variant, price)
-			VALUES ($1,$2,$3,$4,$5,$6)
-		`,
-			item.ProductID,
-			transactionID,
-			item.Qty,
-			item.Size,
-			item.Variant,
-			item.Price,
-		)
-		if err != nil {
-			return 0, "", err
-		}
-	}
-
-	err = tx.Commit(ctx)
 	if err != nil {
-		return 0, "", err
+		return err
+	}
+	fmt.Println(err)
+
+	if cmd.RowsAffected() == 0 {
+		return fmt.Errorf("stock not enough for product_id %d", productID)
 	}
 
-	return transactionID, transactionCode, nil
+	return nil
+}
+func (r *TransactionRepository) InsertTransactionProduct(ctx context.Context, tx pgx.Tx, transactionID int, item dto.TransactionItemRequest) error {
+
+	_, err := tx.Exec(ctx, `
+		INSERT INTO transaction_products
+		(product_id, transaction_id, qty, size, variant, price, product_name)
+		VALUES ($1,$2,$3,$4,$5,$6,$7)
+	`,
+		item.ProductID,
+		transactionID,
+		item.Qty,
+		item.Size,
+		item.Variant,
+		item.Price,
+		item.ProductName,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to insert transaction product: %w", err)
+	}
+
+	return nil
 }
 
 func (r *TransactionRepository) GetTransactionDetail(ctx context.Context, transactionID, userID int) (model.Transaction, error) {
