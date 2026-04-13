@@ -3,26 +3,23 @@ package dto
 import "time"
 
 type TransactionItemRequest struct {
-	ProductID int    `json:"product_id" validate:"required"`
-	Qty       int    `json:"qty" validate:"required,min=1"`
-	Size      string `json:"size" validate:"required"`
-	Variant   string `json:"variant" validate:"required"`
-	Price     int    `json:"price" validate:"required"`
+	ProductID    int    `json:"product_id" binding:"required"`
+	Qty          int    `json:"qty" binding:"required,min=1"`
+	Size         string `json:"size" binding:"required"`
+	Variant      string `json:"variant" binding:"required"`
+	Price        int    `json:"price" validate:"required"`
+	ProductName  string `json:"product_name"`
+	ProductImage string `json:"product_image"`
 }
 
 type CreateTransactionRequest struct {
-	FullName       string                   `json:"full_name" validate:"required"`
-	Email          string                   `json:"email" validate:"required,email"`
-	Address        string                   `json:"address" validate:"required"`
-	DeliveryMethod string                   `json:"delivery_method" validate:"required"`
-	SubtotalPrice  int                      `json:"subtotal_price" validate:"required"`
-	TotalPrice     int                      `json:"total_price" validate:"required"`
-	DeliveryFee    int                      `json:"delivery_fee" validate:"required"`
-	Tax            int                      `json:"tax" validate:"required"`
+	FullName       string                   `json:"full_name" binding:"required"`
+	Email          string                   `json:"email" binding:"required,email"`
+	Address        string                   `json:"address" binding:"required"`
+	DeliveryMethod string                   `json:"delivery_method" binding:"required"`
 	PaymentMethod  string                   `json:"payment_method"`
-	Items          []TransactionItemRequest `json:"items" validate:"required,dive"`
+	Items          []TransactionItemRequest `json:"items" binding:"required,dive"`
 }
-
 type UpdateTransactionStatusRequest struct {
 	Status string `json:"status" binding:"required"`
 }
@@ -34,12 +31,14 @@ type TransactionResult struct {
 	Address         string     `json:"address"`
 	SubtotalPrice   int        `json:"subtotal_price"`
 	TotalPrice      int        `json:"total_price"`
-	DeliveryFee     string     `json:"delivery_fee"`
+	DeliveryFee     int        `json:"delivery_fee"`
 	Tax             int        `json:"tax"`
+	UserId          int        `json:"user_id"`
 	TransactionCode string     `json:"transaction_code"`
 	Status          string     `json:"status"`
-	PaymentMethod   int        `json:"payment_method"`
+	PaymentMethod   string     `json:"payment_method"`
 	CreatedAt       *time.Time `json:"created_at"`
+	ProductImage    *string    `json:"image_path"`
 }
 
 type CreateTransactionResult struct {
@@ -48,11 +47,13 @@ type CreateTransactionResult struct {
 }
 
 type TransactionItemResponse struct {
-	ProductID int    `json:"product_id"`
-	Qty       int    `json:"qty"`
-	Size      string `json:"size"`
-	Variant   string `json:"variant"`
-	Price     int    `json:"price"`
+	ProductID    int    `json:"product_id"`
+	Qty          int    `json:"qty"`
+	Size         string `json:"size"`
+	Variant      string `json:"variant"`
+	Price        int    `json:"price"`
+	ProductName  string `json:"product_name"`
+	ProductImage string `json:"product_image"`
 }
 
 type TransactionDetailResponse struct {
