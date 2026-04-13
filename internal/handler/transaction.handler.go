@@ -31,7 +31,7 @@ func NewTransactionHandler(service *service.TransactionService) *TransactionHand
 // @Router /transactions [get]
 func (h *TransactionHandler) GetTransactionsByUserID(c *gin.Context) {
 
-	userIDVal, exists := c.Get("user_id")
+	userIDVal, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, dto.Response{
 			Success: false,
@@ -58,6 +58,10 @@ func (h *TransactionHandler) GetTransactionsByUserID(c *gin.Context) {
 		return
 	}
 
+	if result == nil {
+		result = []dto.TransactionResult{}
+	}
+
 	c.JSON(http.StatusOK, dto.GetTransactionResponse{
 		Success: true,
 		Message: "success",
@@ -80,7 +84,7 @@ func (h *TransactionHandler) GetTransactionsByUserID(c *gin.Context) {
 func (h *TransactionHandler) GetTransactionDetail(c *gin.Context) {
 
 	// 1. ambil user_id dari JWT
-	userIDVal, exists := c.Get("user_id")
+	userIDVal, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
@@ -129,14 +133,15 @@ func (h *TransactionHandler) GetTransactionDetail(c *gin.Context) {
 
 // CreateTransaction godoc
 // @Summary Create new transaction
-// @Description Create transaction with products
+// @Description Create new transaction with multiple items and automatically reduce product stock
 // @Tags Transactions
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param request body dto.CreateTransactionRequest true "Create Transaction Request"
+// @Param payload body dto.CreateTransactionRequest true "Transaction payload"
 // @Success 201 {object} dto.CreateTransactionResponse
 // @Failure 400 {object} dto.Response
+// @Failure 401 {object} dto.Response
 // @Failure 500 {object} dto.Response
 // @Router /transactions [post]
 func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
@@ -151,7 +156,7 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	userIDVal, exists := c.Get("user_id")
+	userIDVal, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, dto.Response{
 			Success: false,
@@ -162,18 +167,32 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 
 	userID, ok := userIDVal.(int)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, dto.Response{
-			Success: false,
-			Message: "invalid user",
-		})
-		return
+		// coba convert dari float64 (JWT case umum)
+		if f, ok := userIDVal.(float64); ok {
+			userID = int(f)
+		} else {
+			c.JSON(http.StatusUnauthorized, dto.Response{
+				Success: false,
+				Message: "invalid user",
+			})
+			return
+		}
 	}
 
-	tId, code, err := h.service.CreateTransaction(c.Request.Context(), userID, req)
+	tID, code, err := h.service.CreateTransaction(c.Request.Context(), userID, req)
 	if err != nil {
+
+		if err.Error() == "invalid input" || err.Error() == "items cannot be empty" {
+			c.JSON(http.StatusBadRequest, dto.Response{
+				Success: false,
+				Message: err.Error(),
+			})
+			return
+		}
+
 		c.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
-			Message: "internal server error",
+			Message: "failed to create transaction",
 			Error:   err.Error(),
 		})
 		return
@@ -183,7 +202,7 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 		Success: true,
 		Message: "transaction created successfully",
 		Result: dto.CreateTransactionResult{
-			ID:              tId,
+			ID:              tID,
 			TransactionCode: code,
 		},
 	})
