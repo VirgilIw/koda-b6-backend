@@ -11,8 +11,8 @@ func RouterTransactions(app *gin.Engine, c *di.Container) {
 
 	h := c.TransactionHandler()
 
-	transactions.POST("/", h.CreateTransaction)
-	transactions.GET("/", h.GetTransactionsByUserID)
+	transactions.POST("", h.CreateTransaction)
+	transactions.GET("", h.GetTransactionsByUserID)
 	transactions.GET("/:id", h.GetTransactionDetail)
 }
 
