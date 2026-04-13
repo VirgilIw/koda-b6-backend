@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math/rand"
 
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/dto"
@@ -34,7 +35,7 @@ func (f *ForgotPwdService) RequestForgotPassword(ctx context.Context, req dto.Fo
 	}
 
 	otp := rand.Intn(900000) + 100000
-
+	fmt.Println("otp:", otp)
 	forgotReq := dto.ForgotPwdRequest{
 		Email: user.Email,
 	}
