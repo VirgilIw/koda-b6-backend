@@ -244,6 +244,12 @@ type GetTransactionResponse struct {
 	Result  []TransactionResult `json:"result"`
 }
 
+type TransactionResponseHandler struct {
+	Success bool                  `json:"success"`
+	Message string                `json:"message"`
+	Result  []TransactionResponse `json:"result"`
+}
+
 type GetTransactionDetailResponse struct {
 	Success bool                      `json:"success"`
 	Message string                    `json:"message"`
