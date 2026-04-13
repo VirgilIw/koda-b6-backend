@@ -119,3 +119,19 @@ WHERE id=$1`
 
 	return nil
 }
+
+func (v *VariantRepository) GetVariantPrice(ctx context.Context, tx pgx.Tx, variantName string) (int, error) {
+	var price int
+
+	err := tx.QueryRow(ctx, `
+		SELECT additional_price
+		FROM variants
+		WHERE variant_name = $1
+	`, variantName).Scan(&price)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return price, nil
+}
