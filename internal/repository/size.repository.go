@@ -104,3 +104,19 @@ func (s *SizesRepository) DeleteSizeById(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (s *SizesRepository) GetSizePrice(ctx context.Context, tx pgx.Tx, sizeName string) (int, error) {
+	var price int
+
+	err := tx.QueryRow(ctx, `
+		SELECT additional_price 
+		FROM sizes 
+		WHERE size_name = $1
+	`, sizeName).Scan(&price)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return price, nil
+}
