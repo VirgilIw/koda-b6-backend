@@ -2184,7 +2184,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create transaction with products",
+                "description": "Create new transaction with multiple items and automatically reduce product stock",
                 "consumes": [
                     "application/json"
                 ],
@@ -2197,8 +2197,8 @@ const docTemplate = `{
                 "summary": "Create new transaction",
                 "parameters": [
                     {
-                        "description": "Create Transaction Request",
-                        "name": "request",
+                        "description": "Transaction payload",
+                        "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -2215,6 +2215,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/dto.Response"
                         }
@@ -2346,6 +2352,11 @@ const docTemplate = `{
         },
         "dto.AuthRegisterRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "fullname",
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string",
@@ -2353,10 +2364,14 @@ const docTemplate = `{
                 },
                 "fullname": {
                     "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3,
                     "example": "John Doe"
                 },
                 "password": {
                     "type": "string",
+                    "maxLength": 100,
+                    "minLength": 6,
                     "example": "password123"
                 }
             }
@@ -2505,21 +2520,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "address",
-                "delivery_fee",
                 "delivery_method",
                 "email",
                 "full_name",
-                "items",
-                "subtotal_price",
-                "tax",
-                "total_price"
+                "items"
             ],
             "properties": {
                 "address": {
                     "type": "string"
-                },
-                "delivery_fee": {
-                    "type": "integer"
                 },
                 "delivery_method": {
                     "type": "string"
@@ -2538,15 +2546,6 @@ const docTemplate = `{
                 },
                 "payment_method": {
                     "type": "string"
-                },
-                "subtotal_price": {
-                    "type": "integer"
-                },
-                "tax": {
-                    "type": "integer"
-                },
-                "total_price": {
-                    "type": "integer"
                 }
             }
         },
@@ -3400,6 +3399,12 @@ const docTemplate = `{
                 "product_id": {
                     "type": "integer"
                 },
+                "product_image": {
+                    "type": "string"
+                },
+                "product_name": {
+                    "type": "string"
+                },
                 "qty": {
                     "type": "integer",
                     "minimum": 1
@@ -3420,6 +3425,12 @@ const docTemplate = `{
                 },
                 "product_id": {
                     "type": "integer"
+                },
+                "product_image": {
+                    "type": "string"
+                },
+                "product_name": {
+                    "type": "string"
                 },
                 "qty": {
                     "type": "integer"
@@ -3442,7 +3453,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "delivery_fee": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "delivery_method": {
                     "type": "string"
@@ -3457,7 +3468,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "payment_method": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
@@ -3473,6 +3484,9 @@ const docTemplate = `{
                 },
                 "transaction_code": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

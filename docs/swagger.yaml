@@ -45,10 +45,18 @@ definitions:
         type: string
       fullname:
         example: John Doe
+        maxLength: 100
+        minLength: 3
         type: string
       password:
         example: password123
+        maxLength: 100
+        minLength: 6
         type: string
+    required:
+    - email
+    - fullname
+    - password
     type: object
   dto.AuthResponse:
     properties:
@@ -145,8 +153,6 @@ definitions:
     properties:
       address:
         type: string
-      delivery_fee:
-        type: integer
       delivery_method:
         type: string
       email:
@@ -159,22 +165,12 @@ definitions:
         type: array
       payment_method:
         type: string
-      subtotal_price:
-        type: integer
-      tax:
-        type: integer
-      total_price:
-        type: integer
     required:
     - address
-    - delivery_fee
     - delivery_method
     - email
     - full_name
     - items
-    - subtotal_price
-    - tax
-    - total_price
     type: object
   dto.CreateTransactionResponse:
     properties:
@@ -725,6 +721,10 @@ definitions:
         type: integer
       product_id:
         type: integer
+      product_image:
+        type: string
+      product_name:
+        type: string
       qty:
         minimum: 1
         type: integer
@@ -745,6 +745,10 @@ definitions:
         type: integer
       product_id:
         type: integer
+      product_image:
+        type: string
+      product_name:
+        type: string
       qty:
         type: integer
       size:
@@ -759,7 +763,7 @@ definitions:
       created_at:
         type: string
       delivery_fee:
-        type: string
+        type: integer
       delivery_method:
         type: string
       email:
@@ -769,7 +773,7 @@ definitions:
       id:
         type: integer
       payment_method:
-        type: integer
+        type: string
       status:
         type: string
       subtotal_price:
@@ -780,6 +784,8 @@ definitions:
         type: integer
       transaction_code:
         type: string
+      user_id:
+        type: integer
     type: object
   dto.UpdateProductRequest:
     properties:
@@ -2265,11 +2271,12 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create transaction with products
+      description: Create new transaction with multiple items and automatically reduce
+        product stock
       parameters:
-      - description: Create Transaction Request
+      - description: Transaction payload
         in: body
-        name: request
+        name: payload
         required: true
         schema:
           $ref: '#/definitions/dto.CreateTransactionRequest'
@@ -2282,6 +2289,10 @@ paths:
             $ref: '#/definitions/dto.CreateTransactionResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/dto.Response'
         "500":
