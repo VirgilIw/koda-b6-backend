@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -145,7 +146,7 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 		req.Name,
 		req.Description,
 		req.Price,
-		req.Stock, // ✅ FIX DI SINI
+		req.Stock,
 	)
 	if err != nil {
 		return model.CreateProductModel{}, err
@@ -322,4 +323,57 @@ LIMIT 4;`
 	}
 
 	return products, nil
+}
+
+func (p *ProductRepository) GetPrice(
+	ctx context.Context,
+	tx pgx.Tx,
+	productID int,
+) (int, error) {
+
+	var price int
+
+	err := tx.QueryRow(ctx, `
+		SELECT price FROM products WHERE id = $1
+	`, productID).Scan(&price)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to get product price: %w", err)
+	}
+
+	return price, nil
+}
+
+func (p *ProductRepository) GetProductSnapshot(
+	ctx context.Context,
+	tx pgx.Tx,
+	productID int,
+) (model.ProductModel, string, error) {
+
+	var product model.ProductModel
+	var image string
+
+	err := tx.QueryRow(ctx, `
+	SELECT 
+	p.id,
+	p.name,
+	p.price,
+	COALESCE(i.image_path, '')
+FROM products p
+LEFT JOIN product_images pi ON pi.product_id = p.id
+LEFT JOIN images i ON i.id = pi.image_id
+WHERE p.id = $1
+LIMIT 1;
+	`, productID).Scan(
+		&product.ID,
+		&product.Name,
+		&product.Price,
+		&image,
+	)
+
+	if err != nil {
+		return model.ProductModel{}, "", err
+	}
+
+	return product, image, nil
 }
