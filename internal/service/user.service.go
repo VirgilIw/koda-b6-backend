@@ -8,6 +8,7 @@ import (
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/lib"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/model"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -33,14 +34,16 @@ func (u *UserService) GetUsers(ctx context.Context) ([]dto.Users, error) {
 	var result []dto.Users
 	for _, v := range datas {
 		result = append(result, dto.Users{
-			Id:       v.Id,
-			FullName: v.FullName,
-			Email:    v.Email,
-			Password: v.Password,
-			Picture:  v.Picture,
-			Phone:    v.Phone,
-			Address:  v.Address,
-			Role:     v.Role,
+			Id:        v.Id,
+			FullName:  v.FullName,
+			Email:     v.Email,
+			Password:  v.Password,
+			Picture:   v.Picture,
+			Phone:     v.Phone,
+			Address:   v.Address,
+			Role:      v.Role,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
 		})
 	}
 	return result, nil
@@ -56,51 +59,57 @@ func (u *UserService) GetUserById(ctx context.Context, id int) (dto.Users, error
 	var result dto.Users
 
 	result = dto.Users{
-		Id:       data.Id,
-		FullName: data.FullName,
-		Email:    data.Email,
-		Password: data.Password,
-		Picture:  data.Picture,
-		Phone:    data.Phone,
-		Address:  data.Address,
-		Role:     data.Role,
+		Id:        data.Id,
+		FullName:  data.FullName,
+		Email:     data.Email,
+		Password:  data.Password,
+		Picture:   data.Picture,
+		Phone:     data.Phone,
+		Address:   data.Address,
+		Role:      data.Role,
+		CreatedAt: data.CreatedAt,
+		UpdatedAt: data.UpdatedAt,
 	}
 
 	return result, nil
 }
 
 // UpdateProfile updates user profile based on UpdateUserRequest
-func (u *UserService) UpdateProfile(ctx context.Context, req dto.UpdateUserRequest) (model.UserModel, error) {
-	user, err := u.repo.GetById(ctx, req.Id)
+func (u *UserService) UpdateProfile(ctx context.Context, userId int, req dto.UpdateUserRequest, picture *string) (model.UserModel, error) {
+
+	user, err := u.repo.GetById(ctx, userId)
 	if err != nil {
 		return model.UserModel{}, errors.New("user not found")
 	}
 
-	// Update fields yang diisi
-	if req.FullName != "" {
-		user.FullName = req.FullName
+	if req.FullName != nil {
+		user.FullName = *req.FullName
 	}
-	if req.Email != "" {
-		user.Email = req.Email
+
+	if req.Email != nil {
+		user.Email = *req.Email
 	}
-	if req.Password != "" {
-		user.Password = req.Password
+
+	if req.Password != nil {
+		hashed, _ := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
+		user.Password = string(hashed)
 	}
-	if req.Picture != nil {
-		user.Picture = req.Picture
+
+	if picture != nil {
+		user.Picture = picture
 	}
+
 	if req.Phone != nil {
 		user.Phone = req.Phone
 	}
+
 	if req.Address != nil {
 		user.Address = req.Address
 	}
-	if req.Role != "" {
-		user.Role = req.Role
-	}
 
-	if err := u.repo.UpdateUser(ctx, user); err != nil {
-		return model.UserModel{}, errors.New("failed to update user")
+	err = u.repo.UpdateUser(ctx, user)
+	if err != nil {
+		return model.UserModel{}, err
 	}
 
 	return user, nil
