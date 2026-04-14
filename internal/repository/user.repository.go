@@ -24,46 +24,63 @@ func NewUserRepository(db *pgxpool.Pool, rdb *redis.Client) *UserRepository {
 	}
 }
 
+func (u *UserRepository) invalidateUserCache(ctx context.Context) {
+	u.rdb.Del(ctx, "users:all")
+}
+
 func (u *UserRepository) GetUsers(ctx context.Context) ([]model.UserModel, error) {
 	cachedKey := "users:all"
+
 	valueCache, err := u.rdb.Get(ctx, cachedKey).Result()
 
 	if err == redis.Nil {
 		query := `
 SELECT 
     id,
-    fullname,
+    COALESCE(NULLIF(fullname, ''), 'No Name') AS fullname,
     email,
     password,
     phone,
     address,
     picture,
-    role,
+    COALESCE(NULLIF(role, ''), 'No Role') AS role,
     created_at,
     updated_at,
     deleted_at,
-   	lastlogin_at
-FROM users;
-	`
+    lastlogin_at
+FROM users
+ORDER BY id ASC;
+		`
+
 		rows, err := u.db.Query(ctx, query)
 		if err != nil {
 			return nil, err
 		}
-
 		defer rows.Close()
 
 		users, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.UserModel])
+		if err != nil {
+			return nil, err
+		}
 
-		val, err := json.Marshal(users)
-		u.rdb.Set(ctx, cachedKey, string(val), time.Minute*15)
+		//cache hanya kalau ada data
+		if len(users) > 0 {
+			val, err := json.Marshal(users)
+			if err == nil {
+				u.rdb.Set(ctx, cachedKey, val, time.Minute*15)
+			}
+		}
 
 		return users, nil
+
 	} else if err != nil {
 		return nil, err
+
 	} else {
 		users := []model.UserModel{}
 		if err := json.Unmarshal([]byte(valueCache), &users); err != nil {
-			return nil, err
+			u.rdb.Del(ctx, cachedKey)
+			return u.GetUsers(ctx)
 		}
 		return users, nil
 	}
@@ -95,9 +112,6 @@ WHERE email = $1;
 
 	user, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.UserModel])
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return model.UserModel{}, err
-		}
 		return model.UserModel{}, err
 	}
 
@@ -106,10 +120,13 @@ WHERE email = $1;
 
 func (u *UserRepository) GetById(ctx context.Context, id int) (model.UserModel, error) {
 	query := `
-SELECT id, fullname, email, password, phone, address, picture, role, created_at, updated_at, deleted_at, lastlogin_at
+SELECT 
+    id, fullname, email, password, phone, address, picture, role, 
+    created_at, updated_at, deleted_at, lastlogin_at
 FROM users
 WHERE id = $1;
 `
+
 	var user model.UserModel
 	err := u.db.QueryRow(ctx, query, id).Scan(
 		&user.Id,
@@ -128,7 +145,33 @@ WHERE id = $1;
 	if err != nil {
 		return model.UserModel{}, err
 	}
+
 	return user, nil
+}
+
+func (u *UserRepository) CreateUser(ctx context.Context, req dto.AuthRegisterRequest) (model.UserRegister, error) {
+	query := `
+INSERT INTO users (fullname, email, password)
+VALUES ($1,$2,$3)
+RETURNING id, fullname, email, password;
+`
+
+	rows, err := u.db.Query(ctx, query,
+		req.FullName,
+		req.Email,
+		req.Password,
+	)
+	if err != nil {
+		return model.UserRegister{}, err
+	}
+
+	newUser, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.UserRegister])
+	if err != nil {
+		return model.UserRegister{}, err
+	}
+
+	u.invalidateUserCache(ctx)
+	return newUser, nil
 }
 
 func (u *UserRepository) UpdateUser(ctx context.Context, user model.UserModel) error {
@@ -155,50 +198,22 @@ WHERE id = $8;
 		user.Role,
 		user.Id,
 	)
-
 	if err != nil {
 		return err
 	}
 
-	u.rdb.Del(ctx, "users:all")
+	u.invalidateUserCache(ctx)
 	return nil
 }
 
 func (u *UserRepository) DeleteUser(ctx context.Context, id int) error {
 	query := `DELETE FROM users WHERE id = $1`
+
 	_, err := u.db.Exec(ctx, query, id)
 	if err != nil {
 		return err
 	}
+
+	u.invalidateUserCache(ctx)
 	return nil
-}
-
-func (u *UserRepository) CreateUser(ctx context.Context, req dto.AuthRegisterRequest) (model.UserRegister, error) {
-	query := `
-INSERT INTO users (fullname, email, password)
-VALUES ($1,$2,$3)
-Returning id, fullname, email, password
-`
-	// Simpan hasil QueryRow di variable row
-	data, err := u.db.Query(ctx, query,
-		req.FullName,
-		req.Email,
-		req.Password,
-	)
-
-	if err != nil {
-		return model.UserRegister{}, err
-	}
-
-	var newUser model.UserRegister
-
-	newUser, err = pgx.CollectOneRow(data, pgx.RowToStructByName[model.UserRegister])
-
-	if err != nil {
-		return model.UserRegister{}, err
-	}
-	// Hapus cache supaya GetUsers tidak menampilkan data lama
-	u.rdb.Del(ctx, "users:all")
-
-	return newUser, nil
 }
