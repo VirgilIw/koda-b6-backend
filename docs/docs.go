@@ -1500,30 +1500,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/{id}": {
+        "/admin/users/me": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get users by id",
+                "description": "Get logged-in user profile",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get users by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "users id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get current user",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1544,7 +1535,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/admin/users/{id}": {
             "delete": {
                 "security": [
                     {
@@ -2644,6 +2637,9 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "created_at": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -3467,6 +3463,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "image_path": {
+                    "type": "string"
+                },
                 "payment_method": {
                     "type": "string"
                 },
@@ -3533,6 +3532,9 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "created_at": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -3542,9 +3544,6 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "password": {
-                    "type": "string"
-                },
                 "phone": {
                     "type": "string"
                 },
@@ -3552,6 +3551,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

@@ -233,6 +233,8 @@ definitions:
     properties:
       address:
         type: string
+      created_at:
+        type: string
       email:
         type: string
       fullname:
@@ -772,6 +774,8 @@ definitions:
         type: string
       id:
         type: integer
+      image_path:
+        type: string
       payment_method:
         type: string
       status:
@@ -815,19 +819,21 @@ definitions:
     properties:
       address:
         type: string
+      created_at:
+        type: string
       email:
         type: string
       fullname:
         type: string
       id:
         type: integer
-      password:
-        type: string
       phone:
         type: string
       picture:
         type: string
       role:
+        type: string
+      updated_at:
         type: string
     type: object
   dto.Variant:
@@ -1864,14 +1870,9 @@ paths:
       summary: Delete users
       tags:
       - Users
+  /admin/users/me:
     get:
-      description: Get users by id
-      parameters:
-      - description: users id
-        in: path
-        name: id
-        required: true
-        type: integer
+      description: Get logged-in user profile
       produces:
       - application/json
       responses:
@@ -1889,7 +1890,7 @@ paths:
             $ref: '#/definitions/dto.Response'
       security:
       - BearerAuth: []
-      summary: Get users by id
+      summary: Get current user
       tags:
       - Users
   /admin/variants:
