@@ -141,8 +141,8 @@ UPDATE users SET
 	address = $5,
 	picture = $6,
 	role = $7,
-	updated_at = $8
-WHERE id = $9;
+	updated_at = now()
+WHERE id = $8;
 `
 
 	_, err := u.db.Exec(ctx, query,
@@ -153,7 +153,6 @@ WHERE id = $9;
 		user.Address,
 		user.Picture,
 		user.Role,
-		time.Now(),
 		user.Id,
 	)
 
@@ -161,9 +160,7 @@ WHERE id = $9;
 		return err
 	}
 
-	// Optional: invalidate cache
 	u.rdb.Del(ctx, "users:all")
-
 	return nil
 }
 
