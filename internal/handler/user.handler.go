@@ -51,31 +51,37 @@ func (u *UserHandler) GetUsers(ctx *gin.Context) {
 	})
 }
 
-// GetUsersById godoc
-// @Summary      Get users by id
-// @Description  Get users by id
+// @Summary      Get current user
+// @Description  Get logged-in user profile
 // @Tags         Users
 // @Produce      json
-// @Param        id   path  int  true  "users id"
 // @Success      200  {object}  dto.ResponseOneData
 // @Failure      400  {object}  dto.Response
 // @Failure      500  {object}  dto.Response
 // @Security     BearerAuth
-// @Router       /admin/users/{id} [get]
+// @Router       /admin/users/me [get]
 func (u *UserHandler) GetUserById(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-
-	if err != nil {
+	userId, ok := ctx.Get("userID")
+	if !ok {
 		ctx.JSON(http.StatusBadRequest, dto.Response{
 			Success: false,
-			Message: "bad request",
-			Error:   err.Error(),
+			Message: "user id not found in token",
+			Error:   "invalid token",
+		})
+		return
+	}
+
+	id, ok := userId.(int)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "invalid user id format",
+			Error:   "type assertion failed",
 		})
 		return
 	}
 
 	user, err := u.service.GetUserById(ctx.Request.Context(), id)
-
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
@@ -111,7 +117,6 @@ func (u *UserHandler) GetUserById(ctx *gin.Context) {
 // @Security     BearerAuth
 // @Router       /admin/users [patch]
 func (h *UserHandler) UpdateProfile(c *gin.Context) {
-	// Ambil userID dari JWT
 	idRaw, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, dto.Response{
@@ -120,9 +125,16 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		})
 		return
 	}
-	userId := idRaw.(int)
 
-	// Ambil form data
+	userId, ok := idRaw.(int)
+	if !ok {
+		c.JSON(http.StatusBadRequest, dto.Response{
+			Success: false,
+			Message: "invalid user id",
+		})
+		return
+	}
+
 	var req dto.UpdateUserRequest
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, dto.Response{
@@ -131,27 +143,34 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		})
 		return
 	}
-	req.Id = userId
 
+	var picture *string
 	file, err := c.FormFile("picture")
 	if err == nil {
-
-		// agar nama file tidak sama gunaakn time.now.unix
-		// filepath.base = menghapus bagian folder/path, menyisakan nama file terakhir serta ekstensi filenya.
+		// bikin nama unik
 		filename := fmt.Sprintf("%d_%s", time.Now().Unix(), filepath.Base(file.Filename))
 		path := "./images/"
-		if err := c.SaveUploadedFile(file, path+filename); err != nil {
+		fullPath := path + filename
+
+		// save file (sekali aja)
+		if err := c.SaveUploadedFile(file, fullPath); err != nil {
 			c.JSON(http.StatusInternalServerError, dto.Response{
 				Success: false,
 				Message: "failed to upload picture",
 			})
 			return
 		}
-		req.Picture = &path
+
+		// simpan filename ke DB
+		picture = &filename
 	}
 
-	// Update via service
-	updatedUser, err := h.service.UpdateProfile(c.Request.Context(), req)
+	updatedUser, err := h.service.UpdateProfile(
+		c.Request.Context(),
+		userId,
+		req,
+		picture,
+	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
@@ -161,16 +180,16 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	// **Konversi model.UserModel ke dto.Users**
 	respUser := dto.Users{
-		Id:       updatedUser.Id,
-		FullName: updatedUser.FullName,
-		Email:    updatedUser.Email,
-		Password: updatedUser.Password,
-		Picture:  updatedUser.Picture,
-		Phone:    updatedUser.Phone,
-		Address:  updatedUser.Address,
-		Role:     updatedUser.Role,
+		Id:        updatedUser.Id,
+		FullName:  updatedUser.FullName,
+		Email:     updatedUser.Email,
+		Picture:   updatedUser.Picture,
+		Phone:     updatedUser.Phone,
+		Address:   updatedUser.Address,
+		Role:      updatedUser.Role,
+		CreatedAt: updatedUser.CreatedAt,
+		UpdatedAt: updatedUser.UpdatedAt,
 	}
 
 	c.JSON(http.StatusOK, dto.ResponseOneData{
