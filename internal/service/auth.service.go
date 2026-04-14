@@ -39,13 +39,14 @@ func (l *AuthService) AuthLogin(ctx context.Context, email, password string) (dt
 	return dto.AuthResponse{
 		Token: token,
 		User: dto.LoginUser{
-			Id:       user.Id,
-			FullName: user.FullName,
-			Email:    user.Email,
-			Picture:  user.Picture,
-			Phone:    user.Phone,
-			Address:  user.Address,
-			Role:     user.Role,
+			Id:        user.Id,
+			FullName:  user.FullName,
+			Email:     user.Email,
+			Picture:   user.Picture,
+			Phone:     user.Phone,
+			Address:   user.Address,
+			Role:      user.Role,
+			CreatedAt: user.CreatedAt,
 		},
 	}, nil
 }
