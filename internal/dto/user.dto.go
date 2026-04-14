@@ -26,33 +26,33 @@ type CreateUserResponse struct {
 }
 
 type UpdateUserRequest struct {
-	Id       int     `json:"id"`
-	FullName string  `json:"fullname"`
-	Email    string  `json:"email"`
-	Password string  `json:"password"`
-	Picture  *string `json:"picture"`
-	Phone    *string `json:"phone"`
-	Address  *string `json:"address"`
-	Role     string  `json:"role"`
+	FullName *string `form:"fullname"`
+	Email    *string `form:"email"`
+	Phone    *string `form:"phone"`
+	Address  *string `form:"address"`
+	Password *string `form:"password"`
 }
 
 type Users struct {
-	Id       int     `json:"id"`
-	FullName string  `json:"fullname"`
-	Email    string  `json:"email"`
-	Password string  `json:"password"`
-	Picture  *string `json:"picture"`
-	Phone    *string `json:"phone"`
-	Address  *string `json:"address"`
-	Role     string  `json:"role"`
+	Id        int        `json:"id"`
+	FullName  string     `json:"fullname"`
+	Email     string     `json:"email"`
+	Password  string     `json:"-"`
+	Picture   *string    `json:"picture"`
+	Phone     *string    `json:"phone"`
+	Address   *string    `json:"address"`
+	Role      string     `json:"role"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 type LoginUser struct {
-	Id       int     `json:"id"`
-	FullName string  `json:"fullname"`
-	Email    string  `json:"email"`
-	Picture  *string `json:"picture"`
-	Phone    *string `json:"phone"`
-	Address  *string `json:"address"`
-	Role     string  `json:"role"`
+	Id        int       `json:"id"`
+	FullName  string    `json:"fullname"`
+	Email     string    `json:"email"`
+	Picture   *string   `json:"picture"`
+	Phone     *string   `json:"phone"`
+	Address   *string   `json:"address"`
+	Role      string    `json:"role"`
+	CreatedAt time.Time `json:"created_at"`
 }
