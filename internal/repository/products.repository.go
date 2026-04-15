@@ -24,6 +24,10 @@ func NewProductRepository(db *pgxpool.Pool, rdb *redis.Client) *ProductRepositor
 	}
 }
 
+func (r *ProductRepository) Begin(ctx context.Context) (pgx.Tx, error) {
+	return r.db.Begin(ctx)
+}
+
 func (p *ProductRepository) GetProducts(ctx context.Context, page int) ([]model.ProductModel, int, error) {
 
 	if page == 0 {
@@ -125,6 +129,7 @@ func (p *ProductRepository) UpdateProduct(ctx context.Context, req dto.UpdatePro
 func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreateProductRequest) (model.CreateProductModel, error) {
 	tx, err := p.db.Begin(ctx)
 	if err != nil {
+		fmt.Println("ERROR BEGIN TX:", err)
 		return model.CreateProductModel{}, err
 	}
 	defer tx.Rollback(ctx)
@@ -149,11 +154,14 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 		req.Stock,
 	)
 	if err != nil {
+		fmt.Println("ERROR INSERT PRODUCT:", err)
 		return model.CreateProductModel{}, err
 	}
+	defer rows.Close()
 
 	product, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.CreateProductModel])
 	if err != nil {
+		fmt.Println("ERROR SCAN PRODUCT:", err)
 		return model.CreateProductModel{}, err
 	}
 
@@ -170,6 +178,7 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 				sizeID,
 			)
 			if err != nil {
+				fmt.Println("ERROR INSERT SIZE:", err, "sizeID:", sizeID)
 				return model.CreateProductModel{}, err
 			}
 		}
@@ -177,6 +186,8 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 
 	// 3. Handle image (optional)
 	if req.Images != nil {
+		fmt.Println("DEBUG IMAGE INPUT:", *req.Images)
+
 		imageRows, err := tx.Query(
 			ctx,
 			`
@@ -184,16 +195,21 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 			VALUES ($1)
 			RETURNING id
 			`,
-			*req.Images, // filename
+			*req.Images,
 		)
 		if err != nil {
+			fmt.Println("ERROR INSERT IMAGE:", err)
 			return model.CreateProductModel{}, err
 		}
+		defer imageRows.Close()
 
 		imageID, err := pgx.CollectOneRow(imageRows, pgx.RowTo[int64])
 		if err != nil {
+			fmt.Println("ERROR SCAN IMAGE ID:", err)
 			return model.CreateProductModel{}, err
 		}
+
+		fmt.Println("DEBUG IMAGE ID:", imageID)
 
 		// insert relation
 		_, err = tx.Exec(
@@ -206,26 +222,56 @@ func (p *ProductRepository) CreateProduct(ctx context.Context, req dto.CreatePro
 			imageID,
 		)
 		if err != nil {
+			fmt.Println("ERROR INSERT PRODUCT_IMAGE:", err)
 			return model.CreateProductModel{}, err
 		}
 	}
 
 	// 4. Commit
 	if err := tx.Commit(ctx); err != nil {
+		fmt.Println("ERROR COMMIT:", err)
 		return model.CreateProductModel{}, err
 	}
+
+	fmt.Println("SUCCESS CREATE PRODUCT ID:", product.ID)
 
 	return product, nil
 }
 
-func (p *ProductRepository) DeleteProduct(ctx context.Context, id int) error {
-	query := `DELETE FROM PRODUCTS WHERE ID=$1`
-	_, err := p.db.Exec(ctx, query, id)
+func (p *ProductRepository) DeleteProductTx(ctx context.Context, tx pgx.Tx, id int) error {
+	query := `DELETE FROM products WHERE id = $1`
+	_, err := tx.Exec(ctx, query, id)
+	return err
+}
 
-	if err != nil {
-		return err
-	}
-	return nil
+func (r *ProductRepository) DeleteProductCategoriesTx(ctx context.Context, tx pgx.Tx, productID int) error {
+	query := `DELETE FROM product_categories WHERE product_id = $1`
+	_, err := tx.Exec(ctx, query, productID)
+	return err
+}
+
+func (r *ProductRepository) DeleteProductSizesTx(ctx context.Context, tx pgx.Tx, productID int) error {
+	query := `DELETE FROM product_sizes WHERE product_id = $1`
+	_, err := tx.Exec(ctx, query, productID)
+	return err
+}
+
+func (r *ProductRepository) DeleteProductVariantsTx(ctx context.Context, tx pgx.Tx, productID int) error {
+	query := `DELETE FROM product_variants WHERE product_id = $1`
+	_, err := tx.Exec(ctx, query, productID)
+	return err
+}
+
+func (r *ProductRepository) DeleteProductImagesTx(ctx context.Context, tx pgx.Tx, productID int) error {
+	query := `DELETE FROM product_images WHERE product_id = $1`
+	_, err := tx.Exec(ctx, query, productID)
+	return err
+}
+
+func (r *ProductRepository) DeleteProductTestimonialsTx(ctx context.Context, tx pgx.Tx, productID int) error {
+	query := `DELETE FROM testimonials WHERE product_id = $1`
+	_, err := tx.Exec(ctx, query, productID)
+	return err
 }
 
 func (p *ProductRepository) GetDetailProductById(ctx context.Context, id int) (model.ProductDetail, error) {
