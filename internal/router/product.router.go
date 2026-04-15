@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/virgiIw/koda-b6-coffeshopdb/internal/di"
+	"github.com/virgiIw/koda-b6-coffeshopdb/internal/middleware"
 )
 
 func RouterProduct(app *gin.RouterGroup, c *di.Container) {
@@ -15,7 +16,10 @@ func RouterProduct(app *gin.RouterGroup, c *di.Container) {
 	products.GET("/search", searchHandler.SearchProducts)
 	products.GET("/:id", productHandler.GetDetailProductById)
 
-	products.POST("", productHandler.CreateProduct)
-	products.PATCH("/:id", productHandler.UpdateProduct)
-	products.DELETE("/:id", productHandler.DeleteProduct)
+	protected := products.Group("")
+	protected.Use(middleware.AuthMiddleware(), middleware.RBACMiddleware())
+
+	protected.POST("", productHandler.CreateProduct)
+	protected.PATCH("/:id", productHandler.UpdateProduct)
+	protected.DELETE("/:id", productHandler.DeleteProduct)
 }
