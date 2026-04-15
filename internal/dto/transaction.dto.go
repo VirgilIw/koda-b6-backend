@@ -48,12 +48,12 @@ type CreateTransactionResult struct {
 
 type TransactionItemResponse struct {
 	ProductID    int    `json:"product_id"`
+	ProductName  string `json:"product_name"`
+	ProductImage string `json:"product_image"`
 	Qty          int    `json:"qty"`
 	Size         string `json:"size"`
 	Variant      string `json:"variant"`
 	Price        int    `json:"price"`
-	ProductName  string `json:"product_name"`
-	ProductImage string `json:"product_image"`
 }
 
 type TransactionDetailResponse struct {
