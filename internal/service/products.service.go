@@ -79,21 +79,61 @@ func (p *ProductService) CreateProduct(ctx context.Context, req dto.CreateProduc
 		return dto.CreateProductResponse{}, err
 	}
 
+	productWithSizes, err := p.repo.GetProductWithSizes(ctx, product.ID)
+	if err != nil {
+		return dto.CreateProductResponse{}, err
+	}
+
 	return dto.CreateProductResponse{
-		ID:          product.ID,
-		Name:        product.Name,
-		Description: product.Description,
-		Price:       product.Price,
+		ID:          productWithSizes.ID,
+		Name:        productWithSizes.Name,
+		Description: productWithSizes.Description,
+		Price:       productWithSizes.Price,
+		Sizes:       productWithSizes.Sizes,
 		Images:      req.Images,
-		Stock:       req.Stock,
+		Stock:       productWithSizes.Stock,
 	}, nil
 }
 
-func (p *ProductService) DeleteProduct(ctx context.Context, id int) error {
-	if err := p.repo.DeleteProduct(ctx, id); err != nil {
-		return err
+func (p *ProductService) DeleteProduct(ctx context.Context, id int) (err error) {
+	tx, err := p.repo.Begin(ctx)
+	if err != nil {
+		return
 	}
-	return nil
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(ctx)
+		} else {
+			err = tx.Commit(ctx)
+		}
+	}()
+
+	if err = p.repo.DeleteProductCategoriesTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	if err = p.repo.DeleteProductSizesTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	if err = p.repo.DeleteProductVariantsTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	if err = p.repo.DeleteProductImagesTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	if err = p.repo.DeleteProductTestimonialsTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	if err = p.repo.DeleteProductTx(ctx, tx, id); err != nil {
+		return
+	}
+
+	return
 }
 
 func mapSizes(names []string, prices []int) []dto.SizeResponse {
