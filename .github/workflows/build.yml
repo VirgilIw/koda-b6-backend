@@ -1,6 +1,9 @@
 name: Server CI/CD
 run-name: Build and run latest image on server
-on: [push]
+on:
+  push:
+    branches:
+      - "master"
 jobs:
   Build-and-Run:
     runs-on: ubuntu-latest
