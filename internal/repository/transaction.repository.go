@@ -42,6 +42,8 @@ func (r *TransactionRepository) GetTransactionItems(ctx context.Context, transac
 	rows, err := r.db.Query(ctx, `
 		SELECT 
 			product_id,
+			product_name,
+			product_image,
 			qty,
 			size,
 			variant,
@@ -79,14 +81,6 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 		t.status,
 		t.user_id,
 		t.created_at,
-		(
-			SELECT i.image_path
-			FROM transaction_products tp
-			LEFT JOIN product_images pi ON pi.product_id = tp.product_id
-			LEFT JOIN images i ON i.id = pi.image_id
-			WHERE tp.transaction_id = t.id
-			LIMIT 1
-		) AS product_image
 	FROM transactions t
 	WHERE t.user_id = $1
 	ORDER BY t.created_at DESC
@@ -117,7 +111,6 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 			&t.Status,
 			&t.UserId,
 			&t.CreatedAt,
-			&t.ProductImage,
 		)
 		fmt.Println(err)
 		if err != nil {
@@ -194,13 +187,14 @@ func (r *ProductRepository) UpdateStock(ctx context.Context, tx pgx.Tx, productI
 
 	return nil
 }
+
 func (r *TransactionRepository) InsertTransactionProduct(ctx context.Context, tx pgx.Tx, transactionID int, item dto.TransactionItemRequest) error {
 
 	_, err := tx.Exec(ctx, `
-		INSERT INTO transaction_products
-		(product_id, transaction_id, qty, size, variant, price, product_name)
-		VALUES ($1,$2,$3,$4,$5,$6,$7)
-	`,
+	INSERT INTO transaction_products
+	(product_id, transaction_id, qty, size, variant, price, product_name, product_image)
+	VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+`,
 		item.ProductID,
 		transactionID,
 		item.Qty,
@@ -208,6 +202,7 @@ func (r *TransactionRepository) InsertTransactionProduct(ctx context.Context, tx
 		item.Variant,
 		item.Price,
 		item.ProductName,
+		item.ProductImage,
 	)
 
 	if err != nil {
@@ -219,32 +214,47 @@ func (r *TransactionRepository) InsertTransactionProduct(ctx context.Context, tx
 
 func (r *TransactionRepository) GetTransactionDetail(ctx context.Context, transactionID, userID int) (model.Transaction, error) {
 	query := `
-	SELECT 
-		id,
-		user_id,
-		transaction_code,
-		full_name,
-		email,
-		address,
-		delivery_method,
-		subtotal_price,
-		total_price,
-		delivery_fee,
-		tax,
-		payment_method,
-		status,
-		created_at
-	FROM transactions
-	WHERE id = $1 AND user_id = $2
-	`
+SELECT 
+  t.id,
+  t.user_id,
+  t.transaction_code,
+  t.full_name,
+  t.email,
+  t.address,
+  t.delivery_method,
+  t.subtotal_price,
+  t.total_price,
+  t.delivery_fee,
+  t.tax,
+  t.payment_method,
+  t.status,
+  t.created_at,
 
+  tp.product_name,
+  COALESCE(NULLIF(tp.product_image, ''), '') AS product_image,
+  tp.qty,
+  tp.price
+
+FROM transactions t
+LEFT JOIN transaction_products tp 
+  ON tp.transaction_id = t.id
+
+WHERE t.id = $1 
+  AND t.user_id = $2;
+	`
+	fmt.Printf("transactionID=%d userID=%d\n", transactionID, userID)
 	rows, err := r.db.Query(ctx, query, transactionID, userID)
 	if err != nil {
+		fmt.Println(err, "repo1")
 		return model.Transaction{}, err
 	}
 
 	transaction, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.Transaction])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return model.Transaction{}, fmt.Errorf("transaction not found")
+		}
+		fmt.Println(err, "repo2")
 		return model.Transaction{}, err
 	}
 
