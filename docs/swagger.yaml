@@ -146,6 +146,10 @@ definitions:
         type: string
       price:
         type: integer
+      sizes:
+        items:
+          type: string
+        type: array
       stock:
         type: integer
     type: object
@@ -1290,36 +1294,6 @@ paths:
       tags:
       - Images
   /admin/products:
-    delete:
-      consumes:
-      - application/json
-      description: Delete product
-      parameters:
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/dto.ProductsResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete product
-      tags:
-      - Products
     get:
       description: Get products with pagination
       parameters:
@@ -1402,6 +1376,41 @@ paths:
       tags:
       - Products
   /admin/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete product by ID
+      parameters:
+      - description: Product ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ProductsResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - Products
     get:
       description: Get a single product by ID and calculate price based on selected
         size and variant
