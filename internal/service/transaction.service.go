@@ -46,11 +46,13 @@ func (s *TransactionService) GetTransactionDetail(ctx context.Context, userID, t
 	var itemDTO []dto.TransactionItemResponse
 	for _, i := range items {
 		itemDTO = append(itemDTO, dto.TransactionItemResponse{
-			ProductID: i.ProductID,
-			Qty:       i.Qty,
-			Size:      i.Size,
-			Variant:   i.Variant,
-			Price:     i.Price,
+			ProductID:    i.ProductID,
+			ProductName:  i.ProductName,
+			ProductImage: i.ProductImage,
+			Qty:          i.Qty,
+			Size:         i.Size,
+			Variant:      i.Variant,
+			Price:        i.Price,
 		})
 	}
 
