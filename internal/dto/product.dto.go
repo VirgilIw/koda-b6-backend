@@ -50,6 +50,6 @@ type CreateProductRequest struct {
 	Description string  `form:"description"`
 	Price       float64 `form:"price"`
 	Stock       int     `form:"stock"`
-	Images      *string `json:"images"`
-	Sizes       []int64 `form:"sizes[]"`
+	Images      *string `form:"images"`
+	Sizes       []int64 `json:"sizes[]"`
 }
