@@ -245,19 +245,19 @@ func (p *ProductHandler) CreateProduct(ctx *gin.Context) {
 
 // DeleteProduct godoc
 // @Summary      Delete product
-// @Description  Delete product
+// @Description  Delete product by ID
 // @Tags         Products
 // @Accept       json
 // @Produce      json
-// @Param        id      path  int  true  "Product ID"
+// @Param        id   path  int  true  "Product ID" example(1)
 // @Success      200  {object}  dto.ProductsResponse
 // @Failure      400  {object}  dto.ProductsResponse
+// @Failure      404  {object}  dto.ProductsResponse
 // @Failure      500  {object}  dto.ProductsResponse
 // @Security     BearerAuth
-// @Router       /admin/products [delete]
+// @Router       /admin/products/{id} [delete]
 func (p *ProductHandler) DeleteProduct(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
-
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, dto.ProductsResponse{
 			Success: false,
@@ -267,7 +267,16 @@ func (p *ProductHandler) DeleteProduct(ctx *gin.Context) {
 		return
 	}
 
-	if err := p.service.DeleteProduct(ctx.Request.Context(), id); err != nil {
+	err = p.service.DeleteProduct(ctx.Request.Context(), id)
+	if err != nil {
+		if err.Error() == "product not found" {
+			ctx.JSON(http.StatusNotFound, dto.ProductsResponse{
+				Success: false,
+				Message: "product not found",
+			})
+			return
+		}
+
 		ctx.JSON(http.StatusInternalServerError, dto.ProductsResponse{
 			Success: false,
 			Message: "internal server error",
@@ -275,6 +284,7 @@ func (p *ProductHandler) DeleteProduct(ctx *gin.Context) {
 		})
 		return
 	}
+
 	ctx.JSON(http.StatusOK, dto.ProductsResponse{
 		Success: true,
 		Message: "delete product success",
