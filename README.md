@@ -135,6 +135,99 @@ swag init -g cmd/main.go
 
 ---
 
+## HTTP Response
+
+All API endpoints return a consistent JSON response structure.
+
+### Response Structure
+
+| Field | Type | Description |
+|---|---|---|
+| `success` | `boolean` | `true` if the request was successful, `false` otherwise |
+| `message` | `string` | Human-readable status message |
+| `result` | `object / array` | Returned data (omitted on error) |
+| `total` | `integer` | Total number of records (only on paginated list responses) |
+| `error` | `string` | Error detail message (only on failure) |
+
+### HTTP Status Codes
+
+| Status Code | Description |
+|---|---|
+| `200 OK` | Request succeeded |
+| `201 Created` | Resource successfully created |
+| `400 Bad Request` | Invalid request body or parameters |
+| `404 Not Found` | Resource not found |
+| `500 Internal Server Error` | Unexpected server error |
+
+### Example Responses
+
+**Success — Get List (200)**
+```json
+{
+  "success": true,
+  "message": "Success get data",
+  "result": [
+    {
+      "id": 1,
+      "name": "Espresso",
+      "price": 25000,
+      "stock": 50
+    }
+  ],
+  "total": 1
+}
+```
+
+**Success — Create (201)**
+```json
+{
+  "success": true,
+  "message": "success create product",
+  "result": {
+    "id": 2,
+    "name": "Latte",
+    "price": 30000,
+    "stock": 30
+  }
+}
+```
+
+**Success — Update / Delete (200)**
+```json
+{
+  "success": true,
+  "message": "success update product"
+}
+```
+
+**Error — Bad Request (400)**
+```json
+{
+  "success": false,
+  "message": "bad request",
+  "error": "invalid product id"
+}
+```
+
+**Error — Not Found (404)**
+```json
+{
+  "success": false,
+  "message": "product not found"
+}
+```
+
+**Error — Internal Server Error (500)**
+```json
+{
+  "success": false,
+  "message": "internal server error",
+  "error": "something went wrong"
+}
+```
+
+---
+
 ## License
 
 MIT License
