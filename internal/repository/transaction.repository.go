@@ -81,6 +81,14 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 		t.status,
 		t.user_id,
 		t.created_at,
+		(
+			SELECT i.image_path
+			FROM transaction_products tp
+			LEFT JOIN product_images pi ON pi.product_id = tp.product_id
+			LEFT JOIN images i ON i.id = pi.image_id
+			WHERE tp.transaction_id = t.id
+			LIMIT 1
+		) AS product_image
 	FROM transactions t
 	WHERE t.user_id = $1
 	ORDER BY t.created_at DESC
@@ -111,6 +119,7 @@ func (r *TransactionRepository) GetTransactionsByUserID(ctx context.Context, use
 			&t.Status,
 			&t.UserId,
 			&t.CreatedAt,
+			&t.ProductImage,
 		)
 		fmt.Println(err)
 		if err != nil {
