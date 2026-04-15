@@ -1,158 +1,241 @@
-# Koda B6 — Coffee Shop Backend
-
-A RESTful API backend for a coffee shop application, built with **Go** and the **Gin** framework. This project follows a layered architecture with PostgreSQL, Redis, JWT authentication, and Swagger API documentation.
+# koda-b6-backend
+REST API backend for a Coffee Shop application, built using **Go** with the **Gin** framework.
 
 ---
 
 ## Tech Stack
-
-| Technology | Description |
-|---|---|
-| **Go 1.25** | Primary language |
-| **Gin** | HTTP web framework |
-| **PostgreSQL (pgx/v5)** | Main database |
-| **Redis** | Caching & session management |
-| **JWT (golang-jwt/v5)** | Token-based authentication |
-| **Argon2** | Password hashing |
-| **Swagger (swaggo)** | API documentation |
-| **Docker** | Containerization |
-| **Air** | Hot reload for development |
+- **Language**: Go 1.25.3
+- **Framework**: Gin
+- **Database**: PostgreSQL (via `pgx/v5`)
+- **Cache**: Redis (`go-redis/v9`)
+- **Auth**: JWT (`golang-jwt/jwt/v5`)
+- **Password Hashing**: Argon2 (`matthewhartstonge/argon2`)
+- **API Docs**: Swagger (`swaggo/swag`)
+- **Containerization**: Docker (multi-stage build)
+- **Hot Reload (dev)**: Air
 
 ---
 
 ## Project Structure
-
 ```
 koda-b6-backend/
-├── cmd/                  # Application entry point (main.go)
-├── internal/             # Core application logic (handler, service, repository)
-├── migrations/           # Database migration files
-├── docs/                 # Auto-generated Swagger documentation
-├── images/               # Image assets
-├── .github/workflows/    # CI/CD pipeline
-├── .air.toml             # Air configuration (hot reload)
-├── .env.example          # Environment variable template
-├── Dockerfile            # Multi-stage Docker build configuration
-├── go.mod
-└── go.sum
+├── cmd/
+│   └── main.go               # Entry point
+├── internal/                 # Business logic (handler, service, repository)
+├── migrations/               # Database migration files
+├── docs/                     # Swagger generated docs
+├── images/                   # Static assets
+├── .air.toml                 # Air hot reload config
+├── .env.example              # Environment variable template
+├── Dockerfile                # Multi-stage Docker build
+└── go.mod
 ```
 
 ---
 
-## Environment Configuration
+## Getting Started
 
-Copy the `.env.example` file to `.env` and fill in the appropriate values:
+### 1. Clone the repository
+```bash
+git clone https://github.com/VirgilIw/koda-b6-backend.git
+cd koda-b6-backend
+```
 
+### 2. Install dependencies
+```bash
+go mod tidy
+```
+
+### 3. Setup environment variables
 ```bash
 cp .env.example .env
 ```
 
+Fill in the `.env` file with the appropriate values:
 ```env
-PORT=                  # Application port (e.g. 8888)
-
-DB_HOST=               # PostgreSQL host
-DB_PORT=               # Database port (e.g. 5432)
-DB_USERNAME=           # Database username
-DB_PASSWORD=           # Database password
-DB_NAME=               # Database name
-
-SECRET_KEY=            # Secret key for JWT signing
-
-REDIS_HOST=            # Redis host
-REDIS_PORT=            # Redis port (e.g. 6379)
-REDIS_PASSWORD=        # Redis password (leave empty if none)
-
-FRONTEND_URL=          # Frontend URL (used for CORS)
-APP_URL=               # Backend application URL
+PORT=
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+SECRET_KEY=
+REDIS_HOST=
+REDIS_PORT=
+REDIS_PASSWORD=
+FRONTEND_URL=
+APP_URL=
 ```
 
----
+| Variable | Description |
+|---|---|
+| `PORT` | Port the server runs on |
+| `DB_HOST` | PostgreSQL host |
+| `DB_PORT` | PostgreSQL port (default: `5432`) |
+| `DB_USERNAME` | PostgreSQL username |
+| `DB_PASSWORD` | PostgreSQL password |
+| `DB_NAME` | Database name |
+| `SECRET_KEY` | Secret key for JWT |
+| `REDIS_HOST` | Redis host |
+| `REDIS_PORT` | Redis port (default: `6379`) |
+| `REDIS_PASSWORD` | Redis password (leave empty if not set) |
+| `FRONTEND_URL` | Frontend URL for CORS |
+| `APP_URL` | Base URL of this application |
 
-## Running the Application
-
-### Option 1: Local (Development)
-
-Make sure you have [Go](https://go.dev/dl/) and [Air](https://github.com/air-verse/air) installed.
-
+### 4. Run database migrations
 ```bash
-# Install dependencies
-go mod tidy
+# Make sure the database has been created, then run the migration
+go run cmd/main.go migrate
+```
 
-# Run with hot reload
+### 5. Run the server
+```bash
+# Development (with hot reload using Air)
 air
 
-# Or run directly
+# Or without hot reload
 go run cmd/main.go
 ```
 
-### Option 2: Docker
-
-```bash
-# Build the image
-docker build -t koda-b6-backend .
-
-# Run the container
-docker run -p 8888:8888 --env-file .env koda-b6-backend
-```
-
-The application will run on port **8888**.
+Server runs at `http://localhost:{PORT}`
 
 ---
 
-## 📖 API Documentation
+## Docker
 
-Swagger documentation is available once the application is running. Access it at:
+### Build & Run
+```bash
+# Build image
+docker build -t koda-b6-backend .
 
+# Run container
+docker run -p 8888:8888 --env-file .env koda-b6-backend
 ```
-http://localhost:8888/swagger/index.html
+
+The application will run on port `8888`.
+
+### Multi-stage Build
+The Dockerfile uses two stages:
+- **Stage 1 (build)**: Compiles the Go binary using `golang:1.25.3-alpine`
+- **Stage 2 (run)**: Runs the binary on a lighter `alpine:latest` image
+
+---
+
+## API Documentation
+
+Swagger UI is available once the server is running:
+```
+http://localhost:{PORT}/swagger/index.html
 ```
 
-To regenerate Swagger docs:
-
+To regenerate docs after making changes:
 ```bash
 swag init -g cmd/main.go
 ```
 
 ---
 
-## Database Migration
+## HTTP Response
 
-Migration files are located in the `migrations/` directory. Run the migrations before starting the application for the first time.
+All API endpoints return a consistent JSON response structure.
 
----
+### Response Structure
 
-## Contributing
+| Field | Type | Description |
+|---|---|---|
+| `success` | `boolean` | `true` if the request was successful, `false` otherwise |
+| `message` | `string` | Human-readable status message |
+| `result` | `object / array` | Returned data (omitted on error) |
+| `total` | `integer` | Total number of records (only on paginated list responses) |
+| `error` | `string` | Error detail message (only on failure) |
 
-1. Fork this repository
-2. Create a new feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -m 'feat: add new feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Open a Pull Request
+### HTTP Status Codes
+
+| Status Code | Description |
+|---|---|
+| `200 OK` | Request succeeded |
+| `201 Created` | Resource successfully created |
+| `400 Bad Request` | Invalid request body or parameters |
+| `404 Not Found` | Resource not found |
+| `500 Internal Server Error` | Unexpected server error |
+
+### Example Responses
+
+**Success — Get List (200)**
+```json
+{
+  "success": true,
+  "message": "Success get data",
+  "result": [
+    {
+      "id": 1,
+      "name": "Espresso",
+      "price": 25000,
+      "stock": 50
+    }
+  ],
+  "total": 1
+}
+```
+
+**Success — Create (201)**
+```json
+{
+  "success": true,
+  "message": "success create product",
+  "result": {
+    "id": 2,
+    "name": "Latte",
+    "price": 30000,
+    "stock": 30
+  }
+}
+```
+
+**Success — Update / Delete (200)**
+```json
+{
+  "success": true,
+  "message": "success update product"
+}
+```
+
+**Error — Bad Request (400)**
+```json
+{
+  "success": false,
+  "message": "bad request",
+  "error": "invalid product id"
+}
+```
+
+**Error — Not Found (404)**
+```json
+{
+  "success": false,
+  "message": "product not found"
+}
+```
+
+**Error — Internal Server Error (500)**
+```json
+{
+  "success": false,
+  "message": "internal server error",
+  "error": "something went wrong"
+}
+```
 
 ---
 
 ## License
 
-```
 MIT License
 
 Copyright (c) 2026 VirgilIw
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
