@@ -10,3 +10,13 @@ type Size struct {
 	DeletedAt       *time.Time `db:"deleted_at"`
 	AdditionalPrice int        `db:"additional_price"`
 }
+
+type ProductWithSizes struct {
+	ID          int       `db:"id"`
+	Name        string    `db:"name"`
+	Description string    `db:"description"`
+	Price       int       `db:"price"`
+	Stock       int       `db:"stock"`
+	CreatedAt   time.Time `db:"created_at"`
+	Sizes       []string  `db:"sizes"`
+}
