@@ -120,3 +120,39 @@ func (s *SizesRepository) GetSizePrice(ctx context.Context, tx pgx.Tx, sizeName 
 
 	return price, nil
 }
+
+func (r *ProductRepository) GetProductWithSizes(ctx context.Context, id int) (model.ProductWithSizes, error) {
+	query := `
+	SELECT 
+		p.id,
+		p.name,
+		p.description,
+		p.price,
+		p.stock,
+		p.created_at,
+
+		COALESCE(
+			ARRAY_AGG(s.size_name) FILTER (WHERE s.size_name IS NOT NULL),
+			'{}'
+		) AS sizes
+
+	FROM products p
+	LEFT JOIN product_sizes ps ON ps.product_id = p.id
+	LEFT JOIN sizes s ON s.id = ps.size_id
+
+	WHERE p.id = $1
+	GROUP BY p.id;
+	`
+
+	rows, err := r.db.Query(ctx, query, id)
+	if err != nil {
+		return model.ProductWithSizes{}, err
+	}
+
+	result, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[model.ProductWithSizes])
+	if err != nil {
+		return model.ProductWithSizes{}, err
+	}
+
+	return result, nil
+}
