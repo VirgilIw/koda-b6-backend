@@ -1,22 +1,20 @@
-# Koda B6 — Coffee Shop Backend
+# koda-b6-backend
 
-A RESTful API backend for a coffee shop application, built with **Go** and the **Gin** framework. This project follows a layered architecture with PostgreSQL, Redis, JWT authentication, and Swagger API documentation.
+REST API backend untuk aplikasi Coffee Shop, dibangun menggunakan **Go** dengan framework **Gin**.
 
 ---
 
 ## Tech Stack
 
-| Technology | Description |
-|---|---|
-| **Go 1.25** | Primary language |
-| **Gin** | HTTP web framework |
-| **PostgreSQL (pgx/v5)** | Main database |
-| **Redis** | Caching & session management |
-| **JWT (golang-jwt/v5)** | Token-based authentication |
-| **Argon2** | Password hashing |
-| **Swagger (swaggo)** | API documentation |
-| **Docker** | Containerization |
-| **Air** | Hot reload for development |
+- **Language**: Go 1.25.3
+- **Framework**: Gin
+- **Database**: PostgreSQL (via `pgx/v5`)
+- **Cache**: Redis (`go-redis/v9`)
+- **Auth**: JWT (`golang-jwt/jwt/v5`)
+- **Password Hashing**: Argon2 (`matthewhartstonge/argon2`)
+- **API Docs**: Swagger (`swaggo/swag`)
+- **Containerization**: Docker (multi-stage build)
+- **Hot Reload (dev)**: Air
 
 ---
 
@@ -24,90 +22,129 @@ A RESTful API backend for a coffee shop application, built with **Go** and the *
 
 ```
 koda-b6-backend/
-├── cmd/                  # Application entry point (main.go)
-├── internal/             # Core application logic (handler, service, repository)
-├── migrations/           # Database migration files
-├── docs/                 # Auto-generated Swagger documentation
-├── images/               # Image assets
-├── .github/workflows/    # CI/CD pipeline
-├── .air.toml             # Air configuration (hot reload)
-├── .env.example          # Environment variable template
-├── Dockerfile            # Multi-stage Docker build configuration
-├── go.mod
-└── go.sum
+├── cmd/
+│   └── main.go               # Entry point
+├── internal/                 # Business logic (handler, service, repository)
+├── migrations/               # Database migration files
+├── docs/                     # Swagger generated docs
+├── images/                   # Static assets
+├── .air.toml                 # Air hot reload config
+├── .env.example              # Environment variable template
+├── Dockerfile                # Multi-stage Docker build
+└── go.mod
 ```
 
 ---
 
-## Environment Configuration
+## Getting Started
 
-Copy the `.env.example` file to `.env` and fill in the appropriate values:
+### 1. Clone repository
+
+```bash
+git clone https://github.com/VirgilIw/koda-b6-backend.git
+cd koda-b6-backend
+```
+
+### 2. Install dependencies
+
+```bash
+go mod tidy
+```
+
+### 3. Setup environment variables
 
 ```bash
 cp .env.example .env
 ```
 
+Isi file `.env` dengan value yang sesuai:
+
 ```env
-PORT=                  # Application port (e.g. 8888)
+PORT=
 
-DB_HOST=               # PostgreSQL host
-DB_PORT=               # Database port (e.g. 5432)
-DB_USERNAME=           # Database username
-DB_PASSWORD=           # Database password
-DB_NAME=               # Database name
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
 
-SECRET_KEY=            # Secret key for JWT signing
+SECRET_KEY=
 
-REDIS_HOST=            # Redis host
-REDIS_PORT=            # Redis port (e.g. 6379)
-REDIS_PASSWORD=        # Redis password (leave empty if none)
+REDIS_HOST=
+REDIS_PORT=
+REDIS_PASSWORD=
 
-FRONTEND_URL=          # Frontend URL (used for CORS)
-APP_URL=               # Backend application URL
+FRONTEND_URL=
+APP_URL=
 ```
 
----
+| Variable | Deskripsi |
+|---|---|
+| `PORT` | Port server berjalan |
+| `DB_HOST` | Host PostgreSQL |
+| `DB_PORT` | Port PostgreSQL (default: `5432`) |
+| `DB_USERNAME` | Username PostgreSQL |
+| `DB_PASSWORD` | Password PostgreSQL |
+| `DB_NAME` | Nama database |
+| `SECRET_KEY` | Secret key untuk JWT |
+| `REDIS_HOST` | Host Redis |
+| `REDIS_PORT` | Port Redis (default: `6379`) |
+| `REDIS_PASSWORD` | Password Redis (kosongkan jika tidak ada) |
+| `FRONTEND_URL` | URL frontend untuk CORS |
+| `APP_URL` | URL base aplikasi ini |
 
-## Running the Application
-
-### Option 1: Local (Development)
-
-Make sure you have [Go](https://go.dev/dl/) and [Air](https://github.com/air-verse/air) installed.
+### 4. Jalankan migrasi database
 
 ```bash
-# Install dependencies
-go mod tidy
+# Pastikan database sudah dibuat, lalu jalankan migration
+go run cmd/main.go migrate
+```
 
-# Run with hot reload
+### 5. Jalankan server
+
+```bash
+# Development (dengan hot reload menggunakan Air)
 air
 
-# Or run directly
+# Atau tanpa hot reload
 go run cmd/main.go
 ```
 
-### Option 2: Docker
-
-```bash
-# Build the image
-docker build -t koda-b6-backend .
-
-# Run the container
-docker run -p 8888:8888 --env-file .env koda-b6-backend
-```
-
-The application will run on port **8888**.
+Server berjalan di `http://localhost:{PORT}`
 
 ---
 
-## 📖 API Documentation
+## Docker
 
-Swagger documentation is available once the application is running. Access it at:
+### Build & Run
+
+```bash
+# Build image
+docker build -t koda-b6-backend .
+
+# Run container
+docker run -p 8888:8888 --env-file .env koda-b6-backend
+```
+
+Aplikasi akan berjalan di port `8888`.
+
+### Multi-stage Build
+
+Dockerfile menggunakan dua stage:
+- **Stage 1 (build)**: Compile Go binary menggunakan `golang:1.25.3-alpine`
+- **Stage 2 (run)**: Jalankan binary di image `alpine:latest` yang lebih ringan
+
+---
+
+## API Documentation
+
+Swagger UI tersedia setelah server berjalan:
 
 ```
-http://localhost:8888/swagger/index.html
+http://localhost:{PORT}/swagger/index.html
 ```
 
-To regenerate Swagger docs:
+Untuk regenerate docs setelah ada perubahan:
 
 ```bash
 swag init -g cmd/main.go
@@ -115,28 +152,11 @@ swag init -g cmd/main.go
 
 ---
 
-## Database Migration
-
-Migration files are located in the `migrations/` directory. Run the migrations before starting the application for the first time.
-
----
-
-## Contributing
-
-1. Fork this repository
-2. Create a new feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -m 'feat: add new feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Open a Pull Request
-
----
-
 ## License
 
-```
 MIT License
 
-Copyright (c) 2026 VirgilIw
+Copyright (c) 2025 VirgilIw
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -155,4 +175,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```
