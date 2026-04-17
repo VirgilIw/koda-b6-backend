@@ -25,7 +25,9 @@ func NewUserRepository(db *pgxpool.Pool, rdb *redis.Client) *UserRepository {
 }
 
 func (u *UserRepository) invalidateUserCache(ctx context.Context) {
-	u.rdb.Del(ctx, "users:all")
+	if u.rdb != nil {
+		u.rdb.Del(ctx, "users:all")
+	}
 }
 
 func (u *UserRepository) GetUsers(ctx context.Context) ([]model.UserModel, error) {
